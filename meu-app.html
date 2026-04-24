@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Treino & Dieta">
+<title>Treino & Dieta</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #22222e;
+    --text: #f0eee8;
+    --muted: #555570;
+    --gold: #fbbf24;
+    --green: #86efac;
+    --cyan: #67e8f9;
+    --purple: #c084fc;
+    --red: #fca5a5;
+    --orange: #fb923c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+    overscroll-behavior: none;
+  }
+
+  /* ── NAV BAR ── */
+  .nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 10px;
+    padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  }
+  .nav-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 400;
+    color: var(--text); text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: -0.3px;
+  }
+  .nav-tabs {
+    display: flex; gap: 6px;
+  }
+  .nav-tab {
+    flex: 1; padding: 8px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .nav-tab.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #0a0a0f; font-weight: 500;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; padding: 16px; }
+  .screen.active { display: block; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .card-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-label {
+    font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 400;
+  }
+  .card-note {
+    font-size: 11px; color: var(--muted);
+    line-height: 1.5; margin-top: 6px;
+  }
+
+  /* ── TREINO ── */
+  .day-selector {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .day-btn {
+    flex: 1; padding: 12px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; cursor: pointer;
+    transition: all 0.2s; text-align: center;
+  }
+  .day-btn .day-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+  .day-btn.active {
+    border-color: var(--purple);
+    background: rgba(192,132,252,0.1);
+    color: var(--purple);
+  }
+
+  .exercise-row {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .exercise-row:last-child { border-bottom: none; }
+  .ex-num {
+    font-size: 10px; color: var(--purple);
+    width: 20px; flex-shrink: 0; padding-top: 2px;
+  }
+  .ex-info { flex: 1; }
+  .ex-name { font-size: 13px; color: var(--text); margin-bottom: 4px; }
+  .ex-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .ex-tag {
+    font-size: 10px; padding: 2px 7px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px; color: var(--muted);
+  }
+  .ex-check {
+    width: 24px; height: 24px;
+    border: 1px solid var(--border);
+    border-radius: 6px; cursor: pointer;
+    flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 13px; transition: all 0.15s;
+    background: var(--surface2);
+  }
+  .ex-check.done {
+    background: var(--purple);
+    border-color: var(--purple); color: #fff;
+  }
+  .ex-tip {
+    font-size: 11px; color: var(--muted);
+    line-height: 1.4; margin-top: 5px;
+    padding: 6px 10px;
+    background: var(--bg);
+    border-radius: 6px;
+    border-left: 2px solid var(--purple);
+  }
+
+  /* Timer */
+  .timer-bar {
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+  }
+  .timer-display {
+    font-size: 28px; font-weight: 500;
+    color: var(--gold); flex: 1; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-btn {
+    padding: 10px 16px;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    background: transparent; color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .timer-btn:active { background: var(--gold); color: #0a0a0f; }
+  .timer-btn.running { border-color: var(--red); color: var(--red); }
+
+  /* Progress bar */
+  .progress-wrap { padding: 12px 16px; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted); margin-bottom: 6px;
+  }
+  .progress-track {
+    height: 4px; background: var(--border);
+    border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--purple);
+    border-radius: 2px; transition: width 0.4s ease;
+  }
+
+  /* ── DIETA ── */
+  .meal-selector {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
+  }
+  .meal-opt-btn {
+    padding: 6px 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px; color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; cursor: pointer;
+    transition: all 0.18s;
+  }
+  .meal-opt-btn.active {
+    color: #0a0a0f; font-weight: 500;
+  }
+
+  .food-row {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .food-row:last-child { border-bottom: none; }
+  .food-name { font-size: 13px; color: var(--text); margin-bottom: 3px; }
+  .food-qty { font-size: 11px; color: var(--muted); line-height: 1.4; margin-bottom: 5px; }
+  .food-macros { display: flex; flex-wrap: wrap; gap: 5px; }
+  .food-macro {
+    font-size: 10px; padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .meal-total {
+    padding: 10px 16px;
+    display: flex; justify-content: flex-end; gap: 8px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .meal-total span { font-size: 11px; }
+
+  /* Macro summary */
+  .macro-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px; margin-bottom: 12px;
+  }
+  .macro-summary-title {
+    font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .macro-row { margin-bottom: 10px; }
+  .macro-row-top {
+    display: flex; justify-content: space-between;
+    font-size: 11px; margin-bottom: 4px;
+  }
+  .macro-track {
+    height: 4px; background: var(--border);
+    border-radius: 2px; overflow: hidden;
+  }
+  .macro-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* Beliscos */
+  .belisco-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px; margin-bottom: 10px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .belisco-card.sel {
+    border-color: var(--purple);
+    background: rgba(192,132,252,0.08);
+  }
+  .belisco-top {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 8px;
+  }
+  .belisco-name { font-size: 14px; color: var(--text); margin-bottom: 3px; }
+  .belisco-qty { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .belisco-tip { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .belisco-badge {
+    margin-top: 8px; padding: 5px 10px;
+    background: rgba(192,132,252,0.15);
+    border-radius: 6px; font-size: 10px;
+    color: var(--purple); text-align: center;
+  }
+
+  /* Pesos guide */
+  .peso-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .peso-row:last-child { border-bottom: none; }
+  .peso-emoji { font-size: 20px; flex-shrink: 0; }
+  .peso-item { font-size: 13px; color: var(--text); margin-bottom: 3px; }
+  .peso-regra { font-size: 11px; font-weight: 500; margin-bottom: 3px; }
+  .peso-detalhe { font-size: 10px; color: var(--muted); line-height: 1.4; }
+
+  /* Section label */
+  .section-label {
+    font-size: 10px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin: 16px 0 8px;
+  }
+
+  /* Tip block */
+  .tip-block {
+    padding: 10px 14px;
+    background: var(--bg);
+    font-size: 11px; color: var(--muted);
+    line-height: 1.5; border-top: 1px solid var(--border);
+  }
+
+  /* Day type pill */
+  .day-type-row {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .day-type-btn {
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px; color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .day-type-btn.active { color: #0a0a0f; font-weight: 500; }
+
+  /* Separator */
+  .sep-row {
+    padding: 6px 16px;
+    background: var(--bg);
+    font-size: 10px; color: var(--muted);
+    font-style: italic;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-title">Treino & Dieta</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showScreen('treino')">💪 Treino</button>
+    <button class="nav-tab" onclick="showScreen('dieta')">🥗 Dieta</button>
+    <button class="nav-tab" onclick="showScreen('belisco')">🍫 Beliscos</button>
+    <button class="nav-tab" onclick="showScreen('pesos')">⚖️ Pesos</button>
+  </div>
+</div>
+
+<!-- ═══════════════ TREINO ═══════════════ -->
+<div class="screen active" id="screen-treino">
+
+  <div class="day-selector">
+    <button class="day-btn active" onclick="showDay('A')"><span class="day-icon">🍑</span>A</button>
+    <button class="day-btn" onclick="showDay('B')"><span class="day-icon">🏗️</span>B</button>
+    <button class="day-btn" onclick="showDay('C')"><span class="day-icon">🦵</span>C</button>
+    <button class="day-btn" onclick="showDay('D')"><span class="day-icon">💪</span>D</button>
+  </div>
+
+  <!-- Treino A -->
+  <div class="day-content" id="day-A">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--purple)">Treino A · ~60 min</div>
+        <div class="card-title">Glúteos + Posterior de Coxa</div>
+        <div class="card-note">Foco glúteo. Todos os exercícios bilaterais ou com apoio — adaptado para pé chato.</div>
+      </div>
+      <div id="exs-A">
+        <div class="exercise-row">
+          <div class="ex-num">01</div>
+          <div class="ex-info">
+            <div class="ex-name">Hip Thrust (barra)</div>
+            <div class="ex-tags">
+              <span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">descanso 90s</span>
+            </div>
+            <div class="ex-tip">Empurre o quadril alto e segure 1s no topo. Ativação máxima de glúteo.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num">02</div>
+          <div class="ex-info">
+            <div class="ex-name">Leg Press 45° (pés altos e afastados)</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">Pés altos recrutam mais glúteo e posterior.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num">03</div>
+          <div class="ex-info">
+            <div class="ex-name">Stiff com barra ou halteres</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">Sinta o alongamento do posterior. Não arredonde a lombar.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num">04</div>
+          <div class="ex-info">
+            <div class="ex-name">Cadeira Flexora</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Isolar o bíceps femoral — controle na descida.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num">05</div>
+          <div class="ex-info">
+            <div class="ex-name">Glúteo na polia (cabo baixo, alça no pé)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 cada lado</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Apoie em algo firme — seguro para pé chato.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num">06</div>
+          <div class="ex-info">
+            <div class="ex-name">Abdução de quadril na máquina</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15–20 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Essencial para lipedema: ativa face lateral do glúteo médio.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Progresso</span><span id="prog-A">0/6</span></div>
+        <div class="progress-track"><div class="progress-fill" id="fill-A" style="width:0%"></div></div>
+      </div>
+      <div class="timer-bar">
+        <button class="timer-btn" id="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
+        <div class="timer-display" id="timer-display">--:--</div>
+        <button class="timer-btn" onclick="resetTimer()">✕</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-label">Bônus — se sobrar tempo</div></div>
+      <div class="exercise-row">
+        <div class="ex-num">+</div>
+        <div class="ex-info"><div class="ex-name">Abdominal infra (elevação de pernas deitada)</div>
+        <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 reps</span></div></div>
+        <div class="ex-check" onclick="toggleCheck(this)"></div>
+      </div>
+      <div class="exercise-row">
+        <div class="ex-num">+</div>
+        <div class="ex-info"><div class="ex-name">Prancha frontal</div>
+        <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">30–40s</span></div></div>
+        <div class="ex-check" onclick="toggleCheck(this)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Treino B -->
+  <div class="day-content hidden" id="day-B">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--cyan)">Treino B · ~60 min</div>
+        <div class="card-title">Costas + Bíceps + Postura</div>
+        <div class="card-note">Costas largas e postura correta compensam o dia inteiro sentada.</div>
+      </div>
+      <div id="exs-B">
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--cyan)">01</div>
+          <div class="ex-info">
+            <div class="ex-name">Puxada frontal (pegada pronada)</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">Pense em "puxar os cotovelos para o chão", não nas mãos.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--cyan)">02</div>
+          <div class="ex-info">
+            <div class="ex-name">Remada curvada com barra</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">Retração escapular antes de puxar — ótimo para postura.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--cyan)">03</div>
+          <div class="ex-info">
+            <div class="ex-name">Remada unilateral c/ haltere (joelho no banco)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Apoio no banco = seguro para pé chato.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--cyan)">04</div>
+          <div class="ex-info">
+            <div class="ex-name">Puxada na polia (pegada supinada/neutra)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Varia o ângulo da puxada anterior.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--cyan)">05</div>
+          <div class="ex-info">
+            <div class="ex-name">Rosca direta com barra</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Cotovelos fixos ao lado do corpo.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--cyan)">06</div>
+          <div class="ex-info">
+            <div class="ex-name">Rosca martelo com halteres</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Trabalha braquial e braquiorradial também.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Progresso</span><span id="prog-B">0/6</span></div>
+        <div class="progress-track"><div class="progress-fill" id="fill-B" style="width:0%; background:var(--cyan)"></div></div>
+      </div>
+      <div class="timer-bar">
+        <button class="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
+        <div class="timer-display" id="timer-display-B">--:--</div>
+        <button class="timer-btn" onclick="resetTimer()">✕</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-label">Bônus</div></div>
+      <div class="exercise-row">
+        <div class="ex-num">+</div>
+        <div class="ex-info"><div class="ex-name">Face pull na polia</div>
+        <div class="ex-tags"><span class="ex-tag">3×15</span></div>
+        <div class="ex-tip">Excelente para postura e manguito rotador.</div></div>
+        <div class="ex-check" onclick="toggleCheck(this)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Treino C -->
+  <div class="day-content hidden" id="day-C">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--green)">Treino C · ~60 min</div>
+        <div class="card-title">Quadríceps + Panturrilha</div>
+        <div class="card-note">Sem exercícios com equilíbrio unilateral sem apoio. Cargas moderadas-altas.</div>
+      </div>
+      <div id="exs-C">
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--green)">01</div>
+          <div class="ex-info">
+            <div class="ex-name">Agachamento livre (barra)</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">8–10 reps</span><span class="ex-tag">90s</span></div>
+            <div class="ex-tip">Calço sob o calcanhar se precisar de conforto.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--green)">02</div>
+          <div class="ex-info">
+            <div class="ex-name">Leg Press 45° (pés baixos e próximos)</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">Pés baixos = mais quadríceps.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--green)">03</div>
+          <div class="ex-info">
+            <div class="ex-name">Cadeira Extensora</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Isolamento do quad — útil para pé chato.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--green)">04</div>
+          <div class="ex-info">
+            <div class="ex-name">Agachamento sumô com haltere (goblet)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Posição ampla ativa mais adutor e glúteo médio.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--green)">05</div>
+          <div class="ex-info">
+            <div class="ex-name">Panturrilha na máquina sentada</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">15–20 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Sentada isola o sóleo.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--green)">06</div>
+          <div class="ex-info">
+            <div class="ex-name">Panturrilha em pé na plataforma (bilateral)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Bilateral = sem risco de equilíbrio.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Progresso</span><span id="prog-C">0/6</span></div>
+        <div class="progress-track"><div class="progress-fill" id="fill-C" style="width:0%; background:var(--green)"></div></div>
+      </div>
+      <div class="timer-bar">
+        <button class="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
+        <div class="timer-display">--:--</div>
+        <button class="timer-btn" onclick="resetTimer()">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Treino D -->
+  <div class="day-content hidden" id="day-D">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--red)">Treino D · ~60 min</div>
+        <div class="card-title">Ombros + Tríceps + Peito</div>
+        <div class="card-note">Parte superior completa. Ombros desenvolvidos criam proporção com o quadril.</div>
+      </div>
+      <div id="exs-D">
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--red)">01</div>
+          <div class="ex-info">
+            <div class="ex-name">Desenvolvimento com halteres (sentada)</div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">Sentada = mais estabilidade, menos compensação lombar.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--red)">02</div>
+          <div class="ex-info">
+            <div class="ex-name">Elevação lateral com halteres</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Cotovelo ligeiramente flexionado, suba até a linha do ombro.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--red)">03</div>
+          <div class="ex-info">
+            <div class="ex-name">Crucifixo inverso (polia ou máquina voador inverso)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Deltóide posterior — fundamental para postura.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--red)">04</div>
+          <div class="ex-info">
+            <div class="ex-name">Supino inclinado 30° com halteres</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
+            <div class="ex-tip">30° foca no peitoral superior com menos interferência do ombro.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--red)">05</div>
+          <div class="ex-info">
+            <div class="ex-name">Tríceps pulley (corda)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Abra a corda no final para ativar a cabeça lateral.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+        <div class="exercise-row">
+          <div class="ex-num" style="color:var(--red)">06</div>
+          <div class="ex-info">
+            <div class="ex-name">Mergulho no banco (bench dip)</div>
+            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
+            <div class="ex-tip">Apoio nas mãos — sem exigência de equilíbrio.</div>
+          </div>
+          <div class="ex-check" onclick="toggleCheck(this)"></div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Progresso</span><span id="prog-D">0/6</span></div>
+        <div class="progress-track"><div class="progress-fill" id="fill-D" style="width:0%; background:var(--red)"></div></div>
+      </div>
+      <div class="timer-bar">
+        <button class="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
+        <div class="timer-display">--:--</div>
+        <button class="timer-btn" onclick="resetTimer()">✕</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DIETA ═══════════════ -->
+<div class="screen" id="screen-dieta">
+
+  <!-- Macro summary -->
+  <div class="macro-summary" id="macro-box">
+    <div class="macro-summary-title">Total do dia selecionado</div>
+    <div class="macro-row">
+      <div class="macro-row-top"><span style="color:var(--muted)">Calorias</span><span id="m-kcal" style="color:var(--gold)">-- / 1980</span></div>
+      <div class="macro-track"><div class="macro-fill" id="mf-kcal" style="background:var(--gold);width:0%"></div></div>
+    </div>
+    <div class="macro-row">
+      <div class="macro-row-top"><span style="color:var(--muted)">Proteína</span><span id="m-prot" style="color:var(--green)">-- / 120g</span></div>
+      <div class="macro-track"><div class="macro-fill" id="mf-prot" style="background:var(--green);width:0%"></div></div>
+    </div>
+    <div class="macro-row">
+      <div class="macro-row-top"><span style="color:var(--muted)">Carboidratos</span><span id="m-carb" style="color:var(--cyan)">-- / 200g</span></div>
+      <div class="macro-track"><div class="macro-fill" id="mf-carb" style="background:var(--cyan);width:0%"></div></div>
+    </div>
+    <div class="macro-row">
+      <div class="macro-row-top"><span style="color:var(--muted)">Gordura</span><span id="m-fat" style="color:var(--red)">-- / 60g</span></div>
+      <div class="macro-track"><div class="macro-fill" id="mf-fat" style="background:var(--red);width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- CAFÉ DA MANHÃ -->
+  <div class="section-label">☀️ Café da Manhã</div>
+  <div class="meal-selector" id="sel-cafe">
+    <button class="meal-opt-btn active" style="--mc:var(--gold)" onclick="selectMeal('cafe',0,this)">Treino manhã</button>
+    <button class="meal-opt-btn" onclick="selectMeal('cafe',1,this)">Pós-treino / Musculação</button>
+    <button class="meal-opt-btn" onclick="selectMeal('cafe',2,this)">Pilates / Cardio / Descanso</button>
+  </div>
+  <div class="card" id="meal-cafe"><!-- filled by JS --></div>
+
+  <!-- ALMOÇO -->
+  <div class="section-label">🍽️ Almoço</div>
+  <div class="meal-selector">
+    <button class="meal-opt-btn active" onclick="selectMeal('almoco',0,this)">Musculação / Cardio</button>
+    <button class="meal-opt-btn" onclick="selectMeal('almoco',1,this)">Pilates / Descanso</button>
+  </div>
+  <div class="card" id="meal-almoco"></div>
+
+  <!-- LANCHE -->
+  <div class="section-label">🫐 Lanche da Tarde</div>
+  <div class="meal-selector">
+    <button class="meal-opt-btn active" onclick="selectMeal('lanche',0,this)">Pré-treino noturno</button>
+    <button class="meal-opt-btn" onclick="selectMeal('lanche',1,this)">Pilates / Descanso</button>
+    <button class="meal-opt-btn" onclick="selectMeal('lanche',2,this)">Cardio</button>
+  </div>
+  <div class="card" id="meal-lanche"></div>
+
+  <!-- JANTAR -->
+  <div class="section-label">🌙 Jantar</div>
+  <div class="meal-selector">
+    <button class="meal-opt-btn active" onclick="selectMeal('janta',0,this)">Rápido</button>
+    <button class="meal-opt-btn" onclick="selectMeal('janta',1,this)">Musculação / Cardio</button>
+    <button class="meal-opt-btn" onclick="selectMeal('janta',2,this)">Sem tempo</button>
+    <button class="meal-opt-btn" onclick="selectMeal('janta',3,this)">Véspera musculação 🍝</button>
+    <button class="meal-opt-btn" onclick="selectMeal('janta',4,this)">Sem fome</button>
+  </div>
+  <div class="card" id="meal-janta"></div>
+
+</div>
+
+<!-- ═══════════════ BELISCOS ═══════════════ -->
+<div class="screen" id="screen-belisco">
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <div class="card-label" style="color:var(--purple)">Beliscos & Docinhos</div>
+      <div class="card-note" style="margin-top:0">Belisque depois do almoço ou da janta. Escolha um por dia — incluso nos macros quando selecionado.</div>
+    </div>
+  </div>
+
+  <div id="belisco-list"></div>
+
+  <div class="card" style="margin-top:4px">
+    <div class="card-header">
+      <div class="card-label">Quando beliscar</div>
+    </div>
+    <div class="tip-block">
+      🍽️ Depois do almoço — mata a vontade de doce pós-refeição<br><br>
+      🌙 Depois da janta — melhor que beliscar à noite sem controle<br><br>
+      😤 TPM / dia difícil — já está no plano, use sem culpa<br><br>
+      <span style="color:var(--muted);font-size:10px">Selecione 1 por dia. Não precisa ser todo dia.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PESOS ═══════════════ -->
+<div class="screen" id="screen-pesos">
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <div class="card-label" style="color:var(--gold)">⚖️ Guia de Pesagem</div>
+      <div class="card-note" style="margin-top:4px">Se encolhe ou absorve água ao cozinhar → pese CRU. Se expande ou só drena → pese COZIDO.</div>
+    </div>
+  </div>
+  <div class="card" id="peso-list"></div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="card-header"><div class="card-label">Resumo rápido</div></div>
+    <div class="tip-block">
+      <span style="color:var(--green)">CRU:</span> Arroz · Macarrão · Aveia · Farelo · Whey (pó)<br><br>
+      <span style="color:var(--cyan)">COZIDO:</span> Feijão · Batata doce · Legumes · Frango desfiado · Atum escorrido<br><br>
+      <span style="color:var(--gold)">UNIDADES:</span> Ovos · Bolachas de arroz · Frutas · Iogurte (embalagem já indica)
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// DATA
+// ══════════════════════════════════
+const MEALS = {
+  cafe: [
+    {
+      name: "Super Café com Leite", tag: "Treino manhã (jejum)",
+      tip: "Tome 15–20 min antes de treinar. Após o treino, faça o café pós-treino em até 60–90 min.",
+      items: [
+        { name: "Super Café (1 scoop)", qty: "30g pó seco — pesar antes de misturar", kcal:120, p:10, c:12, g:3 },
+        { name: "Leite desnatado", qty: "200ml", kcal:65, p:6, c:9, g:0.3 },
+      ]
+    },
+    {
+      name: "Ovos + Carboidrato", tag: "Pós-treino / Musculação",
+      tip: "Ovo conta por unidade. Bolacha use 2 unidades como referência.",
+      items: [
+        { name: "Ovos mexidos", qty: "3 unidades (não precisa pesar)", kcal:210, p:18, c:1, g:15 },
+        { name: "Requeijão light", qty: "20g = 1 colher de sopa cheia", kcal:35, p:3, c:1, g:2 },
+        { name: "Bolacha de arroz Natural Life grande", qty: "2 unidades (~18g cada = 36g total)", kcal:140, p:2, c:30, g:1 },
+        { name: "Café + leite desnatado", qty: "café à vontade + 100ml leite", kcal:35, p:3, c:5, g:0 },
+      ]
+    },
+    {
+      name: "Ovos simples", tag: "Pilates / Cardio / Descanso",
+      tip: "Sem carboidrato sólido aqui — você vai repor no almoço.",
+      items: [
+        { name: "Ovos mexidos", qty: "2 unidades (não precisa pesar)", kcal:140, p:12, c:1, g:10 },
+        { name: "Requeijão light", qty: "20g = 1 colher de sopa cheia", kcal:35, p:3, c:1, g:2 },
+        { name: "Café + leite desnatado", qty: "café à vontade + 100ml leite", kcal:35, p:3, c:5, g:0 },
+      ]
+    }
+  ],
+  almoco: [
+    {
+      name: "Frango + Arroz + Feijão", tag: "Musculação / Cardio",
+      tip: "Arroz e macarrão → pese CRU. Feijão e batata doce → pese COZIDO.",
+      items: [
+        { name: "Peito de frango grelhado", qty: "150g CRU (rende ~110g cozido)", kcal:165, p:35, c:0, g:2 },
+        { name: "Arroz branco", qty: "60g CRU (rende ~180g cozido) — SEMPRE pese cru", kcal:210, p:4, c:46, g:0.5 },
+        { name: "Feijão cozido", qty: "80g COZIDO = 1 concha média", kcal:75, p:5, c:14, g:0.5 },
+        { name: "Salada folhas + tomate", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
+        { name: "Azeite de oliva", qty: "5ml = 1 colher de chá", kcal:44, p:0, c:0, g:5 },
+      ]
+    },
+    {
+      name: "Frango + Legumes (menos carbo)", tag: "Pilates / Descanso",
+      tip: "Requeijão light (20g) pode entrar no frango sem problema.",
+      items: [
+        { name: "Peito de frango grelhado", qty: "150g CRU (rende ~110g cozido)", kcal:165, p:35, c:0, g:2 },
+        { name: "Arroz integral", qty: "40g CRU (rende ~120g cozido)", kcal:140, p:3, c:29, g:1 },
+        { name: "Abobrinha + cenoura refogada", qty: "150g COZIDO", kcal:50, p:2, c:8, g:1 },
+        { name: "Azeite de oliva", qty: "5ml = 1 colher de chá", kcal:44, p:0, c:0, g:5 },
+      ]
+    }
+  ],
+  lanche: [
+    {
+      name: "Panqueca proteica", tag: "Pré-treino noturno (musculação)",
+      tip: "Essa refeição já é o pré-treino — não precisa de nada mais antes da academia.",
+      items: [
+        { name: "Banana madura", qty: "1 unidade média (~85g sem casca)", kcal:77, p:1, c:20, g:0.3 },
+        { name: "Ovos", qty: "2 unidades", kcal:140, p:12, c:1, g:10 },
+        { name: "Farelo de aveia", qty: "20g CRU = 2 col de sopa — pese seco", kcal:68, p:3, c:12, g:1 },
+        { name: "Whey protein", qty: "1 scoop = ~30g pó seco", kcal:120, p:24, c:3, g:2 },
+      ]
+    },
+    {
+      name: "Iogurte + Fruta", tag: "Pilates / Descanso / Dia normal",
+      tip: "Se proteína baixa: misture 1 scoop de whey no iogurte.",
+      items: [
+        { name: "Iogurte desnatado zero", qty: "170g (peso na embalagem)", kcal:60, p:10, c:6, g:0 },
+        { name: "Fruta (maçã, pera ou laranja)", qty: "1 unidade média (~150g com casca)", kcal:80, p:0.5, c:20, g:0.2 },
+      ]
+    },
+    {
+      name: "Shake de Whey", tag: "Cardio (pré ou pós)",
+      tip: "Batido com leite desnatado fica cremoso. Com banana vira pré-cardio completo.",
+      items: [
+        { name: "Whey protein", qty: "1 scoop = ~30g pó seco", kcal:120, p:24, c:3, g:2 },
+        { name: "Leite desnatado", qty: "200ml", kcal:65, p:6, c:9, g:0.3 },
+        { name: "Banana (opcional)", qty: "1/2 unidade (~50g sem casca)", kcal:45, p:0.5, c:11, g:0.1 },
+      ]
+    }
+  ],
+  janta: [
+    {
+      name: "Omelete proteica", tag: "Qualquer dia — rápido",
+      tip: "Outros recheios: atum escorrido, frango desfiado, ricota.",
+      items: [
+        { name: "Ovos", qty: "3 unidades", kcal:210, p:18, c:1, g:15 },
+        { name: "Queijo minas ou cottage", qty: "30g — cottage: 2 col de sopa", kcal:60, p:6, c:1, g:3 },
+        { name: "Recheio: tomate + espinafre", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
+        { name: "Bolacha de arroz (opcional)", qty: "1 unidade grande (~18g)", kcal:70, p:1, c:15, g:0.5 },
+      ]
+    },
+    {
+      name: "Atum + Batata doce", tag: "Musculação / Cardio — proteico",
+      tip: "Batch: cozinhe 600g batata doce no domingo. Pese sempre cozida.",
+      items: [
+        { name: "Atum em água (lata)", qty: "170g ESCORRIDO — pese depois de escorrer", kcal:150, p:34, c:0, g:1 },
+        { name: "Batata doce cozida", qty: "150g COZIDA sem casca", kcal:129, p:2, c:30, g:0.1 },
+        { name: "Azeite + limão", qty: "5ml azeite = 1 colher de chá", kcal:44, p:0, c:0, g:5 },
+        { name: "Salada folhas", qty: "à vontade", kcal:10, p:0.5, c:1, g:0 },
+      ]
+    },
+    {
+      name: "Frango desfiado + Legumes", tag: "Home office — sem tempo",
+      tip: "Batch: 400g frango desfiado em potinhos de 120g. Dura 4–5 dias.",
+      items: [
+        { name: "Frango desfiado (já cozido)", qty: "120g COZIDO DESFIADO", kcal:140, p:28, c:0, g:2 },
+        { name: "Legumes refogados", qty: "150g COZIDO", kcal:50, p:2, c:8, g:1 },
+        { name: "Arroz integral", qty: "40g CRU (rende ~120g cozido)", kcal:140, p:3, c:29, g:1 },
+      ]
+    },
+    {
+      name: "Macarrão com frango", tag: "Véspera de musculação 🍝",
+      tip: "80g cru → ~200g cozido. SEMPRE pese cru. Molho: verifique sem açúcar adicionado.",
+      items: [
+        { name: "Macarrão (espaguete ou penne)", qty: "80g CRU (rende ~200g cozido)", kcal:280, p:10, c:58, g:1 },
+        { name: "Frango desfiado (já cozido)", qty: "100g COZIDO DESFIADO", kcal:116, p:23, c:0, g:1.5 },
+        { name: "Molho de tomate (sem açúcar)", qty: "80g = 3 col de sopa cheias", kcal:30, p:1, c:6, g:0.5 },
+        { name: "Queijo parmesão ralado", qty: "10g = 1 col de sopa rasa", kcal:40, p:3.5, c:0.3, g:2.8 },
+      ]
+    },
+    {
+      name: "Iogurte grego + Whey", tag: "Sem fome / dia leve",
+      tip: "Misture o whey no iogurte com garfo. Cacau em pó (5g) dá sabor de chocolate.",
+      items: [
+        { name: "Iogurte grego integral", qty: "200g — pese o pote", kcal:120, p:12, c:6, g:5 },
+        { name: "Whey protein", qty: "1 scoop = ~30g pó seco", kcal:120, p:24, c:3, g:2 },
+        { name: "Granola sem açúcar (opcional)", qty: "20g = 2 col de sopa — pese seco", kcal:80, p:2, c:14, g:2 },
+      ]
+    }
+  ]
+};
+
+const BELISCOS = [
+  { emoji:"🍫", name:"Chocolate meio amargo 70%", qty:"20g = 2 quadradinhos", kcal:114, p:2, c:8, g:8, tip:"O mais equilibrado: gordura boa, antioxidantes, menos açúcar que ao leite." },
+  { emoji:"🥛", name:"Leite condensado", qty:"20g = 1 colher de sopa", kcal:65, p:1.5, c:12, g:1.5, tip:"Ótimo puro, com fruta ou como cobertura leve no iogurte." },
+  { emoji:"🍮", name:"Doce de leite", qty:"20g = 1 colher de sopa", kcal:60, p:1.5, c:11, g:1.5, tip:"Sabor mais intenso que leite condensado com menos açúcar." },
+  { emoji:"🍬", name:"Suspiro", qty:"3 unidades médias (~15g)", kcal:55, p:0.5, c:13, g:0, tip:"O mais leve em gordura. Boa opção quando quer algo crocante e doce." },
+];
+
+const PESOS = [
+  { emoji:"🍚", item:"Arroz (branco ou integral)", regra:"CRU — pese antes de cozinhar", cor:"#86efac", detalhe:"60g cru → ~180g cozido (branco)  |  40g cru → ~120g cozido (integral)" },
+  { emoji:"🍝", item:"Macarrão", regra:"CRU — pese antes de cozinhar", cor:"#86efac", detalhe:"80g cru → ~200g cozido (absorve muita água)" },
+  { emoji:"🥣", item:"Aveia / Farelo / Whey (pó)", regra:"SECO — pese antes de misturar", cor:"#86efac", detalhe:"1 scoop whey ≈ 30g  |  2 col sopa farelo ≈ 20g" },
+  { emoji:"🍗", item:"Frango (peito)", regra:"CRU ou COZIDO — veja referência", cor:"#fbbf24", detalhe:"150g CRU → ~110g cozido grelhado  |  120g COZIDO desfiado ≈ 160g cru" },
+  { emoji:"🫘", item:"Feijão", regra:"COZIDO — pese depois de cozido", cor:"#67e8f9", detalhe:"1 concha média ≈ 80g cozido" },
+  { emoji:"🍠", item:"Batata doce", regra:"COZIDA sem casca", cor:"#67e8f9", detalhe:"200g crua → ~150g cozida" },
+  { emoji:"🐟", item:"Atum em lata", regra:"ESCORRIDO — pese após escorrer a água", cor:"#67e8f9", detalhe:"1 lata (170g líquido) → ~140–150g escorrido" },
+  { emoji:"🥦", item:"Legumes refogados / cozidos", regra:"COZIDO — pese depois de pronto", cor:"#67e8f9", detalhe:"Perdem volume no calor" },
+  { emoji:"🥚", item:"Ovos", regra:"Unidades — não precisa pesar", cor:"#fbbf24", detalhe:"1 ovo médio ≈ 50g sem casca" },
+  { emoji:"🍌", item:"Frutas inteiras", regra:"Unidades — não precisa pesar", cor:"#fbbf24", detalhe:"Banana média ≈ 85g sem casca  |  maçã média ≈ 130g" },
+  { emoji:"🧴", item:"Iogurte (pote)", regra:"Peso já na embalagem", cor:"#fbbf24", detalhe:"Potinho padrão ≈ 170g  |  pote grego ≈ 200g" },
+  { emoji:"🧀", item:"Requeijão / Queijo / Cottage", regra:"Pese no estado em que vai consumir", cor:"#fbbf24", detalhe:"Requeijão: 1 col sopa cheia ≈ 20g  |  Cottage: 2 col sopa ≈ 30g" },
+];
+
+// ══════════════════════════════════
+// STATE
+// ══════════════════════════════════
+let selectedMeals = { cafe:0, almoco:0, lanche:0, janta:0 };
+let selectedBelisco = null;
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+let currentDay = 'A';
+let checkCounts = { A:0, B:0, C:0, D:0 };
+const TOTAL_EX = { A:6, B:6, C:6, D:6 };
+
+// ══════════════════════════════════
+// SCREENS
+// ══════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ══════════════════════════════════
+// TREINO
+// ══════════════════════════════════
+function showDay(day) {
+  currentDay = day;
+  document.querySelectorAll('.day-content').forEach(d => d.classList.add('hidden'));
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('day-' + day).classList.remove('hidden');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleCheck(el) {
+  const day = currentDay;
+  const wasDone = el.classList.contains('done');
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  checkCounts[day] += wasDone ? -1 : 1;
+  updateProgress(day);
+}
+
+function updateProgress(day) {
+  const count = checkCounts[day];
+  const total = TOTAL_EX[day];
+  const pct = Math.round((count / total) * 100);
+  const progEl = document.getElementById('prog-' + day);
+  const fillEl = document.getElementById('fill-' + day);
+  if (progEl) progEl.textContent = count + '/' + total;
+  if (fillEl) fillEl.style.width = pct + '%';
+}
+
+// Timer
+let timerDisplays = [];
+function startTimer(secs) {
+  secs = secs || 90;
+  clearInterval(timerInterval);
+  timerSeconds = secs;
+  timerRunning = true;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.querySelectorAll('.timer-display').forEach(d => d.textContent = '✓ Pronto!');
+    }
+  }, 1000);
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  timerSeconds = 0;
+  document.querySelectorAll('.timer-display').forEach(d => d.textContent = '--:--');
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  const str = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  document.querySelectorAll('.timer-display').forEach(d => d.textContent = str);
+}
+
+// ══════════════════════════════════
+// DIETA
+// ══════════════════════════════════
+function renderMeal(key) {
+  const opts = MEALS[key];
+  const idx = selectedMeals[key];
+  const opt = opts[idx];
+  const el = document.getElementById('meal-' + key);
+  const colors = { kcal:'#fbbf24', p:'#86efac', c:'#67e8f9', g:'#fca5a5' };
+  const mealColors = { cafe:'#fbbf24', almoco:'#86efac', lanche:'#c084fc', janta:'#67e8f9' };
+  const mc = mealColors[key];
+
+  let html = `<div style="border-left:3px solid ${mc};padding:14px 16px;border-bottom:1px solid var(--border)">
+    <div style="font-size:13px;color:var(--text);margin-bottom:4px">${opt.name}</div>
+    <div style="font-size:11px;color:var(--muted)">${opt.tag}</div>
+  </div>`;
+
+  opt.items.forEach(item => {
+    html += `<div class="food-row">
+      <div class="food-name">${item.name}</div>
+      <div class="food-qty">${item.qty}</div>
+      <div class="food-macros">
+        <span class="food-macro" style="color:${colors.kcal};background:${colors.kcal}18">kcal: ${item.kcal}</span>
+        <span class="food-macro" style="color:${colors.p};background:${colors.p}18">P: ${item.p}g</span>
+        <span class="food-macro" style="color:${colors.c};background:${colors.c}18">C: ${item.c}g</span>
+        <span class="food-macro" style="color:${colors.g};background:${colors.g}18">G: ${item.g}g</span>
+      </div>
+    </div>`;
+  });
+
+  const tot = opt.items.reduce((a,i) => ({kcal:a.kcal+i.kcal, p:a.p+i.p, c:a.c+i.c, g:a.g+i.g}), {kcal:0,p:0,c:0,g:0});
+  html += `<div class="meal-total">
+    <span style="color:${colors.kcal}">kcal: <b>${Math.round(tot.kcal)}</b></span>
+    <span style="color:${colors.p}">P: <b>${Math.round(tot.p)}g</b></span>
+    <span style="color:${colors.c}">C: <b>${Math.round(tot.c)}g</b></span>
+    <span style="color:${colors.g}">G: <b>${Math.round(tot.g)}g</b></span>
+  </div>`;
+
+  if (opt.tip) html += `<div class="tip-block">💡 ${opt.tip}</div>`;
+
+  el.innerHTML = html;
+  updateMacroSummary();
+}
+
+function selectMeal(key, idx, btn) {
+  selectedMeals[key] = idx;
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.meal-opt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const mc = { cafe:'#fbbf24', almoco:'#86efac', lanche:'#c084fc', janta:'#67e8f9' }[key];
+  btn.style.background = mc;
+  btn.style.borderColor = mc;
+  renderMeal(key);
+}
+
+function updateMacroSummary() {
+  const goals = { kcal:1980, p:120, c:200, g:60 };
+  const total = { kcal:0, p:0, c:0, g:0 };
+  Object.keys(MEALS).forEach(key => {
+    const opt = MEALS[key][selectedMeals[key]];
+    opt.items.forEach(item => {
+      total.kcal += item.kcal; total.p += item.p; total.c += item.c; total.g += item.g;
+    });
+  });
+  if (selectedBelisco !== null) {
+    const b = BELISCOS[selectedBelisco];
+    total.kcal += b.kcal; total.p += b.p; total.c += b.c; total.g += b.g;
+  }
+  const pairs = [
+    ['kcal', 'm-kcal', 'mf-kcal', Math.round(total.kcal), goals.kcal, 'kcal'],
+    ['p', 'm-prot', 'mf-prot', Math.round(total.p), goals.p, 'g'],
+    ['c', 'm-carb', 'mf-carb', Math.round(total.c), goals.c, 'g'],
+    ['g', 'm-fat', 'mf-fat', Math.round(total.g), goals.g, 'g'],
+  ];
+  pairs.forEach(([,txtId, fillId, val, goal, unit]) => {
+    const pct = Math.min(100, Math.round((val/goal)*100));
+    document.getElementById(txtId).textContent = val + ' / ' + goal + unit;
+    document.getElementById(fillId).style.width = pct + '%';
+  });
+}
+
+// ══════════════════════════════════
+// BELISCOS
+// ══════════════════════════════════
+function renderBeliscos() {
+  const el = document.getElementById('belisco-list');
+  const colors = { kcal:'#fbbf24', p:'#86efac', c:'#67e8f9', g:'#fca5a5' };
+  el.innerHTML = BELISCOS.map((b,i) => `
+    <div class="belisco-card ${selectedBelisco===i?'sel':''}" onclick="toggleBelisco(${i})">
+      <div class="belisco-top">
+        <div>
+          <div class="belisco-name">${b.emoji} ${b.name}</div>
+          <div class="belisco-qty">${b.qty}</div>
+          <div class="belisco-tip">${b.tip}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0">
+          <span style="font-size:10px;color:${colors.kcal};background:${colors.kcal}18;padding:2px 6px;border-radius:4px">kcal: ${b.kcal}</span>
+          <span style="font-size:10px;color:${colors.p};background:${colors.p}18;padding:2px 6px;border-radius:4px">P: ${b.p}g</span>
+          <span style="font-size:10px;color:${colors.c};background:${colors.c}18;padding:2px 6px;border-radius:4px">C: ${b.c}g</span>
+          <span style="font-size:10px;color:${colors.g};background:${colors.g}18;padding:2px 6px;border-radius:4px">G: ${b.g}g</span>
+        </div>
+      </div>
+      ${selectedBelisco===i ? '<div class="belisco-badge">✓ Incluído nos macros do dia</div>' : ''}
+    </div>
+  `).join('');
+}
+
+function toggleBelisco(i) {
+  selectedBelisco = (selectedBelisco === i) ? null : i;
+  renderBeliscos();
+  updateMacroSummary();
+}
+
+// ══════════════════════════════════
+// PESOS
+// ══════════════════════════════════
+function renderPesos() {
+  const el = document.getElementById('peso-list');
+  el.innerHTML = PESOS.map(p => `
+    <div class="peso-row">
+      <div class="peso-emoji">${p.emoji}</div>
+      <div>
+        <div class="peso-item">${p.item}</div>
+        <div class="peso-regra" style="color:${p.cor}">${p.regra}</div>
+        <div class="peso-detalhe">${p.detalhe}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════
+// MEAL OPTION BUTTON STYLING
+// ══════════════════════════════════
+function styleActiveBtn(btn, color) {
+  btn.style.background = color;
+  btn.style.borderColor = color;
+  btn.style.color = '#0a0a0f';
+}
+
+function initMealButtons() {
+  const colors = { cafe:'#fbbf24', almoco:'#86efac', lanche:'#c084fc', janta:'#67e8f9' };
+  ['cafe','almoco','lanche','janta'].forEach(key => {
+    const btns = document.querySelectorAll(`#sel-${key} .meal-opt-btn, .meal-selector`);
+  });
+  // Style first active buttons
+  document.querySelectorAll('.meal-opt-btn.active').forEach((btn, i) => {
+    const keys = ['cafe','almoco','lanche','janta'];
+    const sectionColors = ['#fbbf24','#86efac','#c084fc','#67e8f9'];
+    // find parent section
+    const section = btn.closest('.screen') ? btn.parentElement : null;
+  });
+}
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  ['cafe','almoco','lanche','janta'].forEach(k => renderMeal(k));
+  renderBeliscos();
+  renderPesos();
+
+  // Style initial active meal buttons
+  const mealColors = { 0:'#fbbf24', 1:'#86efac', 2:'#c084fc', 3:'#67e8f9' };
+  document.querySelectorAll('.meal-selector').forEach((sel, i) => {
+    const firstBtn = sel.querySelector('.meal-opt-btn.active');
+    if (firstBtn) {
+      firstBtn.style.background = mealColors[i];
+      firstBtn.style.borderColor = mealColors[i];
+      firstBtn.style.color = '#0a0a0f';
+    }
+  });
+});
+
+// Prevent double-tap zoom on iOS
+document.addEventListener('touchend', e => {
+  e.preventDefault();
+}, { passive: false });
+</script>
+</body>
+</html>
