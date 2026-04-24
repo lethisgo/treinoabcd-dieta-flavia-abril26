@@ -7,22 +7,33 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Treino & Dieta">
 <title>Treino & Dieta</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;500&display=swap');
-
   :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #18181f;
-    --border: #22222e;
-    --text: #f0eee8;
-    --muted: #555570;
-    --gold: #fbbf24;
-    --green: #86efac;
-    --cyan: #67e8f9;
-    --purple: #c084fc;
-    --red: #fca5a5;
-    --orange: #fb923c;
+    --bg: #0c0c10;
+    --surface: #131318;
+    --surface2: #1a1a22;
+    --border: #242430;
+    --border2: #2e2e3c;
+    --text: #ede9e0;
+    --text2: #a09d96;
+    --muted: #4e4e63;
+    --gold: #f5c542;
+    --gold-dim: rgba(245,197,66,0.12);
+    --green: #6de8a0;
+    --green-dim: rgba(109,232,160,0.1);
+    --cyan: #5fd4f4;
+    --cyan-dim: rgba(95,212,244,0.1);
+    --purple: #b57bff;
+    --purple-dim: rgba(181,123,255,0.1);
+    --red: #ff7b7b;
+    --red-dim: rgba(255,123,123,0.1);
+    --orange: #ff9d5c;
+    --orange-dim: rgba(255,157,92,0.1);
+    --pink: #f472b6;
+    --pink-dim: rgba(244,114,182,0.1);
+    --radius: 14px;
+    --radius-sm: 8px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -30,58 +41,70 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'DM Mono', monospace;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     min-height: 100vh;
-    padding-bottom: env(safe-area-inset-bottom, 20px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
     overscroll-behavior: none;
+    font-size: 14px;
+    line-height: 1.5;
   }
 
-  /* ── NAV BAR ── */
+  /* ── NAV ── */
   .nav {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,15,0.92);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    background: rgba(12,12,16,0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
     border-bottom: 1px solid var(--border);
-    padding: 14px 16px 10px;
-    padding-top: calc(14px + env(safe-area-inset-top, 0px));
+    padding: 12px 14px 10px;
+    padding-top: calc(12px + env(safe-area-inset-top, 0px));
   }
   .nav-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px; font-weight: 400;
+    font-family: 'Syne', sans-serif;
+    font-size: 17px; font-weight: 700;
     color: var(--text); text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     letter-spacing: -0.3px;
   }
+  .nav-title span { color: var(--gold); }
+
   .nav-tabs {
-    display: flex; gap: 6px;
+    display: flex; gap: 5px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
   }
+  .nav-tabs::-webkit-scrollbar { display: none; }
   .nav-tab {
-    flex: 1; padding: 8px 4px;
+    flex-shrink: 0;
+    padding: 7px 10px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius-sm);
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s;
-    letter-spacing: 0.3px;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
   }
   .nav-tab.active {
     background: var(--gold);
     border-color: var(--gold);
-    color: #0a0a0f; font-weight: 500;
+    color: #0c0c10;
   }
 
   /* ── SCREENS ── */
-  .screen { display: none; padding: 16px; }
+  .screen { display: none; padding: 14px; }
   .screen.active { display: block; }
 
   /* ── CARDS ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: var(--radius);
     overflow: hidden;
     margin-bottom: 12px;
   }
@@ -90,37 +113,40 @@
     border-bottom: 1px solid var(--border);
   }
   .card-label {
-    font-size: 10px; letter-spacing: 2px;
+    font-size: 10px; letter-spacing: 1.5px;
     text-transform: uppercase; color: var(--muted);
+    font-weight: 600;
     margin-bottom: 4px;
   }
   .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 17px; font-weight: 400;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 600;
+    color: var(--text);
   }
   .card-note {
-    font-size: 11px; color: var(--muted);
-    line-height: 1.5; margin-top: 6px;
+    font-size: 12px; color: var(--text2);
+    line-height: 1.5; margin-top: 5px;
   }
 
   /* ── TREINO ── */
   .day-selector {
-    display: flex; gap: 8px; margin-bottom: 14px;
+    display: flex; gap: 7px; margin-bottom: 14px;
   }
   .day-btn {
-    flex: 1; padding: 12px 4px;
+    flex: 1; padding: 11px 4px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius);
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 13px; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s; text-align: center;
   }
-  .day-btn .day-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+  .day-btn .day-icon { font-size: 15px; display: block; margin-bottom: 3px; }
   .day-btn.active {
     border-color: var(--purple);
-    background: rgba(192,132,252,0.1);
+    background: var(--purple-dim);
     color: var(--purple);
   }
 
@@ -133,23 +159,25 @@
   .ex-num {
     font-size: 10px; color: var(--purple);
     width: 20px; flex-shrink: 0; padding-top: 2px;
+    font-weight: 700;
   }
   .ex-info { flex: 1; }
-  .ex-name { font-size: 13px; color: var(--text); margin-bottom: 4px; }
-  .ex-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .ex-name { font-size: 13px; color: var(--text); margin-bottom: 4px; font-weight: 500; }
+  .ex-tags { display: flex; flex-wrap: wrap; gap: 4px; }
   .ex-tag {
     font-size: 10px; padding: 2px 7px;
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 5px; color: var(--muted);
+    border-radius: 5px; color: var(--text2);
+    font-weight: 500;
   }
   .ex-check {
     width: 24px; height: 24px;
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border2);
     border-radius: 6px; cursor: pointer;
     flex-shrink: 0; display: flex;
     align-items: center; justify-content: center;
-    font-size: 13px; transition: all 0.15s;
+    font-size: 12px; transition: all 0.15s;
     background: var(--surface2);
   }
   .ex-check.done {
@@ -157,7 +185,7 @@
     border-color: var(--purple); color: #fff;
   }
   .ex-tip {
-    font-size: 11px; color: var(--muted);
+    font-size: 11px; color: var(--text2);
     line-height: 1.4; margin-top: 5px;
     padding: 6px 10px;
     background: var(--bg);
@@ -167,33 +195,52 @@
 
   /* Timer */
   .timer-bar {
-    padding: 14px 16px;
-    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px;
+    display: flex; align-items: center; gap: 10px;
     background: var(--surface2);
     border-top: 1px solid var(--border);
   }
   .timer-display {
-    font-size: 28px; font-weight: 500;
+    font-size: 26px; font-weight: 700;
     color: var(--gold); flex: 1; text-align: center;
     font-variant-numeric: tabular-nums;
+    font-family: 'Syne', sans-serif;
   }
   .timer-btn {
-    padding: 10px 16px;
+    padding: 9px 14px;
     border: 1px solid var(--gold);
-    border-radius: 10px;
+    border-radius: 9px;
     background: transparent; color: var(--gold);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px; cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
     transition: all 0.2s;
   }
-  .timer-btn:active { background: var(--gold); color: #0a0a0f; }
+  .timer-btn:active { background: var(--gold); color: #0c0c10; }
   .timer-btn.running { border-color: var(--red); color: var(--red); }
 
-  /* Progress bar */
+  /* Save btn */
+  .save-btn {
+    width: 100%; padding: 13px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    color: var(--gold);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+  }
+  .save-btn:active { background: var(--gold); color: #0c0c10; }
+
+  /* Progress */
   .progress-wrap { padding: 12px 16px; }
   .progress-label {
     display: flex; justify-content: space-between;
     font-size: 11px; color: var(--muted); margin-bottom: 6px;
+    font-weight: 600;
   }
   .progress-track {
     height: 4px; background: var(--border);
@@ -206,34 +253,27 @@
 
   /* ── DIETA ── */
   .meal-selector {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
+    display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px;
   }
   .meal-opt-btn {
-    padding: 6px 11px;
+    padding: 6px 10px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px; color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; cursor: pointer;
+    border-radius: var(--radius-sm); color: var(--muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    cursor: pointer;
     transition: all 0.18s;
   }
-  .meal-opt-btn.active {
-    color: #0a0a0f; font-weight: 500;
-  }
-
   .food-row {
     padding: 10px 16px;
     border-bottom: 1px solid var(--border);
   }
   .food-row:last-child { border-bottom: none; }
-  .food-name { font-size: 13px; color: var(--text); margin-bottom: 3px; }
-  .food-qty { font-size: 11px; color: var(--muted); line-height: 1.4; margin-bottom: 5px; }
-  .food-macros { display: flex; flex-wrap: wrap; gap: 5px; }
-  .food-macro {
-    font-size: 10px; padding: 2px 6px;
-    border-radius: 4px;
-  }
-
+  .food-name { font-size: 13px; color: var(--text); margin-bottom: 3px; font-weight: 500; }
+  .food-qty { font-size: 11px; color: var(--text2); line-height: 1.4; margin-bottom: 5px; }
+  .food-macros { display: flex; flex-wrap: wrap; gap: 4px; }
+  .food-macro { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
   .meal-total {
     padding: 10px 16px;
     display: flex; justify-content: flex-end; gap: 8px;
@@ -247,55 +287,43 @@
   .macro-summary {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: var(--radius);
     padding: 16px; margin-bottom: 12px;
   }
   .macro-summary-title {
-    font-size: 10px; letter-spacing: 2px;
+    font-size: 10px; letter-spacing: 1.5px;
     text-transform: uppercase; color: var(--muted);
-    margin-bottom: 12px;
+    margin-bottom: 12px; font-weight: 600;
   }
   .macro-row { margin-bottom: 10px; }
   .macro-row-top {
     display: flex; justify-content: space-between;
-    font-size: 11px; margin-bottom: 4px;
+    font-size: 11px; margin-bottom: 4px; font-weight: 600;
   }
-  .macro-track {
-    height: 4px; background: var(--border);
-    border-radius: 2px; overflow: hidden;
-  }
-  .macro-fill {
-    height: 100%; border-radius: 2px;
-    transition: width 0.4s ease;
-  }
+  .macro-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .macro-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
 
   /* Beliscos */
   .belisco-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: var(--radius);
     padding: 14px 16px; margin-bottom: 10px;
     cursor: pointer; transition: all 0.2s;
   }
-  .belisco-card.sel {
-    border-color: var(--purple);
-    background: rgba(192,132,252,0.08);
-  }
-  .belisco-top {
-    display: flex; justify-content: space-between;
-    align-items: flex-start; gap: 8px;
-  }
-  .belisco-name { font-size: 14px; color: var(--text); margin-bottom: 3px; }
-  .belisco-qty { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-  .belisco-tip { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .belisco-card.sel { border-color: var(--purple); background: var(--purple-dim); }
+  .belisco-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .belisco-name { font-size: 14px; color: var(--text); margin-bottom: 3px; font-weight: 600; }
+  .belisco-qty { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+  .belisco-tip { font-size: 11px; color: var(--text2); line-height: 1.4; }
   .belisco-badge {
     margin-top: 8px; padding: 5px 10px;
-    background: rgba(192,132,252,0.15);
+    background: var(--purple-dim);
     border-radius: 6px; font-size: 10px;
-    color: var(--purple); text-align: center;
+    color: var(--purple); text-align: center; font-weight: 700;
   }
 
-  /* Pesos guide */
+  /* Pesos */
   .peso-row {
     display: flex; gap: 12px; align-items: flex-start;
     padding: 12px 16px;
@@ -303,61 +331,417 @@
   }
   .peso-row:last-child { border-bottom: none; }
   .peso-emoji { font-size: 20px; flex-shrink: 0; }
-  .peso-item { font-size: 13px; color: var(--text); margin-bottom: 3px; }
-  .peso-regra { font-size: 11px; font-weight: 500; margin-bottom: 3px; }
-  .peso-detalhe { font-size: 10px; color: var(--muted); line-height: 1.4; }
+  .peso-item { font-size: 13px; color: var(--text); margin-bottom: 3px; font-weight: 500; }
+  .peso-regra { font-size: 11px; font-weight: 700; margin-bottom: 3px; }
+  .peso-detalhe { font-size: 10px; color: var(--text2); line-height: 1.4; }
 
   /* Section label */
   .section-label {
-    font-size: 10px; letter-spacing: 2px;
+    font-size: 10px; letter-spacing: 1.5px;
     text-transform: uppercase; color: var(--muted);
-    margin: 16px 0 8px;
+    margin: 16px 0 8px; font-weight: 700;
   }
 
   /* Tip block */
   .tip-block {
     padding: 10px 14px;
     background: var(--bg);
-    font-size: 11px; color: var(--muted);
+    font-size: 11px; color: var(--text2);
     line-height: 1.5; border-top: 1px solid var(--border);
   }
 
-  /* Day type pill */
-  .day-type-row {
-    display: flex; flex-wrap: wrap; gap: 6px;
+  /* Hidden */
+  .hidden { display: none !important; }
+
+  /* ── CARDIO ── */
+  .cardio-selector {
+    display: flex; gap: 7px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .cardio-btn {
+    flex: 1; min-width: 60px;
+    padding: 10px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s; text-align: center;
+  }
+  .cardio-btn .c-icon { font-size: 15px; display: block; margin-bottom: 3px; }
+  .cardio-btn.active {
+    border-color: var(--orange);
+    background: var(--orange-dim);
+    color: var(--orange);
+  }
+
+  .cardio-phase {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .cardio-phase:last-child { border-bottom: none; }
+  .phase-num {
+    font-size: 10px; color: var(--orange);
+    width: 22px; flex-shrink: 0; padding-top: 2px; font-weight: 700;
+  }
+  .phase-info { flex: 1; }
+  .phase-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .phase-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+  .phase-tag {
+    font-size: 10px; padding: 2px 7px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px; color: var(--text2); font-weight: 500;
+  }
+  .phase-tip { font-size: 11px; color: var(--text2); line-height: 1.4; }
+
+  .cardio-timer-bar {
+    padding: 13px 16px;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+  }
+  .cardio-timer-display {
+    font-size: 26px; font-weight: 700;
+    color: var(--orange); flex: 1; text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-family: 'Syne', sans-serif;
+  }
+  .cardio-timer-btn {
+    padding: 9px 14px;
+    border: 1px solid var(--orange);
+    border-radius: 9px;
+    background: transparent; color: var(--orange);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .cardio-timer-btn:active { background: var(--orange); color: #0c0c10; }
+
+  /* ── EVOLUÇÃO DE CARGAS ── */
+  .carga-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .carga-form-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 12px; color: var(--text);
+  }
+  .carga-select-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .carga-select {
+    flex: 1; min-width: 120px;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .carga-input {
+    flex: 1; min-width: 80px;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 500;
+  }
+  .carga-input:focus, .carga-select:focus { outline: none; border-color: var(--green); }
+  .carga-input::placeholder { color: var(--muted); }
+  .carga-add-btn {
+    width: 100%;
+    padding: 11px;
+    background: var(--green-dim);
+    border: 1px solid var(--green);
+    border-radius: var(--radius-sm);
+    color: var(--green);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .carga-add-btn:active { background: var(--green); color: #0c0c10; }
+
+  .chart-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .chart-title-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .chart-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--text);
+  }
+  .chart-subtitle { font-size: 10px; color: var(--muted); font-weight: 600; }
+  .chart-area {
+    width: 100%; height: 120px;
+    position: relative;
+  }
+  .chart-svg { width: 100%; height: 100%; }
+  .chart-empty {
+    display: flex; align-items: center; justify-content: center;
+    height: 80px;
+    font-size: 11px; color: var(--muted);
+    border: 1px dashed var(--border2);
+    border-radius: 8px;
+    font-weight: 500;
+  }
+  .ex-tab-row {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .ex-tab-btn {
+    padding: 5px 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .ex-tab-btn.active {
+    background: var(--green-dim);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .carga-history-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 12px;
+    background: var(--surface2);
+    border-radius: 8px; margin-bottom: 5px;
+  }
+  .carga-history-date { font-size: 11px; color: var(--text2); font-weight: 500; }
+  .carga-history-val { font-size: 13px; color: var(--green); font-weight: 700; font-family: 'Syne', sans-serif; }
+  .carga-del-btn {
+    font-size: 11px; color: var(--muted);
+    background: none; border: none; cursor: pointer; padding: 2px 6px;
+  }
+
+  /* ── INLINE WEIGHT INPUT ── */
+  .ex-kg-wrap {
+    display: flex; align-items: center; gap: 5px;
+    margin-top: 7px;
+  }
+  .ex-kg-input {
+    width: 66px;
+    padding: 5px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    color: var(--green);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 700;
+    text-align: center;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.15s;
+  }
+  .ex-kg-input:focus { outline: none; border-color: var(--green); }
+  .ex-kg-input::placeholder { color: var(--muted); font-weight: 400; }
+  .ex-kg-label {
+    font-size: 10px; color: var(--muted); font-weight: 600;
+  }
+  .ex-kg-vol {
+    font-size: 10px; color: var(--green);
+    font-weight: 700; margin-left: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .ex-kg-vol.visible { opacity: 1; }
+
+  /* ── CARGAS TAB — TREINO TABS ── */
+  .carga-day-tabs {
+    display: flex; gap: 6px; margin-bottom: 14px;
+  }
+  .carga-day-tab {
+    flex: 1; padding: 9px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s; text-align: center;
+  }
+  .carga-day-tab.active {
+    background: var(--green-dim);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .carga-vol-summary {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex; gap: 10px; align-items: center;
+  }
+  .carga-vol-icon { font-size: 22px; flex-shrink: 0; }
+  .carga-vol-info { flex: 1; }
+  .carga-vol-title {
+    font-size: 10px; color: var(--muted); font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px;
+  }
+  .carga-vol-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px; font-weight: 700; color: var(--green);
+  }
+  .carga-vol-diff {
+    font-size: 11px; font-weight: 700; margin-left: 6px;
+  }
+
+  /* ── DIAS DE TREINO ── */
+  .calendar-header {
+    display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 14px;
   }
-  .day-type-btn {
-    padding: 6px 12px;
+  .cal-nav-btn {
+    width: 32px; height: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--text2); transition: all 0.2s;
+  }
+  .cal-nav-btn:active { background: var(--surface2); }
+  .cal-month {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; color: var(--text);
+  }
+  .cal-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 4px; margin-bottom: 6px;
+  }
+  .cal-wd {
+    text-align: center;
+    font-size: 10px; font-weight: 700;
+    color: var(--muted); padding: 4px 0;
+    letter-spacing: 0.5px;
+  }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    border-radius: 9px;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    position: relative;
+    color: var(--text2);
+    background: var(--surface2);
+    border: 1px solid transparent;
+  }
+  .cal-day.empty { background: transparent; cursor: default; }
+  .cal-day.today {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .cal-day.done {
+    background: var(--green-dim);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .cal-day.done::after {
+    content: '✓';
+    font-size: 7px;
+    position: absolute;
+    bottom: 3px;
+    font-weight: 900;
+  }
+  .cal-day-type {
+    font-size: 7px;
+    margin-top: 1px;
+    opacity: 0.7;
+  }
+  .streak-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex; gap: 12px;
+  }
+  .streak-stat {
+    flex: 1; text-align: center;
+    padding: 10px 6px;
+    background: var(--surface2);
+    border-radius: 10px;
+  }
+  .streak-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px; font-weight: 700;
+    color: var(--gold); display: block;
+  }
+  .streak-label {
+    font-size: 9px; color: var(--muted);
+    font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; margin-top: 2px;
+  }
+  .cal-type-select {
+    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .cal-type-btn {
+    padding: 5px 10px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 20px; color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    font-size: 11px; cursor: pointer;
-    transition: all 0.2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
   }
-  .day-type-btn.active { color: #0a0a0f; font-weight: 500; }
-
-  /* Separator */
-  .sep-row {
-    padding: 6px 16px;
-    background: var(--bg);
-    font-size: 10px; color: var(--muted);
-    font-style: italic;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+  .cal-type-btn.active {
+    background: var(--purple-dim);
+    border-color: var(--purple);
+    color: var(--purple);
+  }
+  .recent-list-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 12px;
+    background: var(--surface2);
+    border-radius: 8px; margin-bottom: 5px;
+  }
+  .recent-date { font-size: 12px; color: var(--text); font-weight: 500; }
+  .recent-type {
+    font-size: 11px; padding: 2px 8px;
+    border-radius: 5px; font-weight: 700;
+  }
+  .recent-del {
+    font-size: 11px; color: var(--muted);
+    background: none; border: none; cursor: pointer;
+    padding: 2px 6px;
   }
 </style>
 </head>
 <body>
 
 <div class="nav">
-  <div class="nav-title">Treino & Dieta</div>
+  <div class="nav-title">🏋️ <span>Treino</span> & Dieta</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showScreen('treino')">💪 Treino</button>
-    <button class="nav-tab" onclick="showScreen('dieta')">🥗 Dieta</button>
-    <button class="nav-tab" onclick="showScreen('belisco')">🍫 Beliscos</button>
-    <button class="nav-tab" onclick="showScreen('pesos')">⚖️ Pesos</button>
+    <button class="nav-tab active" onclick="showScreen('treino', this)">💪 Treino</button>
+    <button class="nav-tab" onclick="showScreen('cardio', this)">🏃 Cardio</button>
+    <button class="nav-tab" onclick="showScreen('dieta', this)">🥗 Dieta</button>
+    <button class="nav-tab" onclick="showScreen('belisco', this)">🍫 Beliscos</button>
+    <button class="nav-tab" onclick="showScreen('pesos', this)">⚖️ Pesos</button>
+    <button class="nav-tab" onclick="showScreen('cargas', this)">📈 Cargas</button>
+    <button class="nav-tab" onclick="showScreen('dias', this)">📅 Dias</button>
   </div>
 </div>
 
@@ -365,10 +749,10 @@
 <div class="screen active" id="screen-treino">
 
   <div class="day-selector">
-    <button class="day-btn active" onclick="showDay('A')"><span class="day-icon">🍑</span>A</button>
-    <button class="day-btn" onclick="showDay('B')"><span class="day-icon">🏗️</span>B</button>
-    <button class="day-btn" onclick="showDay('C')"><span class="day-icon">🦵</span>C</button>
-    <button class="day-btn" onclick="showDay('D')"><span class="day-icon">💪</span>D</button>
+    <button class="day-btn active" onclick="showDay('A', this)"><span class="day-icon">🍑</span>A</button>
+    <button class="day-btn" onclick="showDay('B', this)"><span class="day-icon">🏗️</span>B</button>
+    <button class="day-btn" onclick="showDay('C', this)"><span class="day-icon">🦵</span>C</button>
+    <button class="day-btn" onclick="showDay('D', this)"><span class="day-icon">💪</span>D</button>
   </div>
 
   <!-- Treino A -->
@@ -380,59 +764,87 @@
         <div class="card-note">Foco glúteo. Todos os exercícios bilaterais ou com apoio — adaptado para pé chato.</div>
       </div>
       <div id="exs-A">
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Hip Thrust (barra)" data-series="4">
           <div class="ex-num">01</div>
           <div class="ex-info">
             <div class="ex-name">Hip Thrust (barra)</div>
-            <div class="ex-tags">
-              <span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">descanso 90s</span>
-            </div>
+            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">descanso 90s</span></div>
             <div class="ex-tip">Empurre o quadril alto e segure 1s no topo. Ativação máxima de glúteo.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Leg Press 45°" data-series="4">
           <div class="ex-num">02</div>
           <div class="ex-info">
             <div class="ex-name">Leg Press 45° (pés altos e afastados)</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">Pés altos recrutam mais glúteo e posterior.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Stiff" data-series="3">
           <div class="ex-num">03</div>
           <div class="ex-info">
             <div class="ex-name">Stiff com barra ou halteres</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">Sinta o alongamento do posterior. Não arredonde a lombar.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Cadeira Flexora" data-series="3">
           <div class="ex-num">04</div>
           <div class="ex-info">
             <div class="ex-name">Cadeira Flexora</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Isolar o bíceps femoral — controle na descida.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Glúteo na polia" data-series="3">
           <div class="ex-num">05</div>
           <div class="ex-info">
             <div class="ex-name">Glúteo na polia (cabo baixo, alça no pé)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 cada lado</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Apoie em algo firme — seguro para pé chato.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Abdução de quadril" data-series="3">
           <div class="ex-num">06</div>
           <div class="ex-info">
             <div class="ex-name">Abdução de quadril na máquina</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15–20 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Essencial para lipedema: ativa face lateral do glúteo médio.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
@@ -442,9 +854,9 @@
         <div class="progress-track"><div class="progress-fill" id="fill-A" style="width:0%"></div></div>
       </div>
       <div class="timer-bar">
-        <button class="timer-btn" id="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
-        <div class="timer-display" id="timer-display">--:--</div>
-        <button class="timer-btn" onclick="resetTimer()">✕</button>
+        <button class="timer-btn" id="timer-btn-A" onclick="startTimer('A')">⏱ Iniciar</button>
+        <div class="timer-display" id="timer-display-A">--:--</div>
+        <button class="timer-btn" onclick="resetTimer('A')">✕</button>
       </div>
     </div>
     <div class="card">
@@ -462,6 +874,7 @@
         <div class="ex-check" onclick="toggleCheck(this)"></div>
       </div>
     </div>
+    <button class="save-btn" onclick="saveWorkout('A')">✓ Salvar Treino A — Glúteos</button>
   </div>
 
   <!-- Treino B -->
@@ -473,57 +886,87 @@
         <div class="card-note">Costas largas e postura correta compensam o dia inteiro sentada.</div>
       </div>
       <div id="exs-B">
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Puxada frontal" data-series="4">
           <div class="ex-num" style="color:var(--cyan)">01</div>
           <div class="ex-info">
             <div class="ex-name">Puxada frontal (pegada pronada)</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">Pense em "puxar os cotovelos para o chão", não nas mãos.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Remada curvada" data-series="4">
           <div class="ex-num" style="color:var(--cyan)">02</div>
           <div class="ex-info">
             <div class="ex-name">Remada curvada com barra</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">Retração escapular antes de puxar — ótimo para postura.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Remada unilateral" data-series="3">
           <div class="ex-num" style="color:var(--cyan)">03</div>
           <div class="ex-info">
             <div class="ex-name">Remada unilateral c/ haltere (joelho no banco)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Apoio no banco = seguro para pé chato.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Puxada polia supinada" data-series="3">
           <div class="ex-num" style="color:var(--cyan)">04</div>
           <div class="ex-info">
             <div class="ex-name">Puxada na polia (pegada supinada/neutra)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Varia o ângulo da puxada anterior.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Rosca direta" data-series="3">
           <div class="ex-num" style="color:var(--cyan)">05</div>
           <div class="ex-info">
             <div class="ex-name">Rosca direta com barra</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Cotovelos fixos ao lado do corpo.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Rosca martelo" data-series="3">
           <div class="ex-num" style="color:var(--cyan)">06</div>
           <div class="ex-info">
             <div class="ex-name">Rosca martelo com halteres</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Trabalha braquial e braquiorradial também.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
@@ -533,9 +976,9 @@
         <div class="progress-track"><div class="progress-fill" id="fill-B" style="width:0%; background:var(--cyan)"></div></div>
       </div>
       <div class="timer-bar">
-        <button class="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
-        <div class="timer-display" id="timer-display-B">--:--</div>
-        <button class="timer-btn" onclick="resetTimer()">✕</button>
+        <button class="timer-btn" style="border-color:var(--cyan);color:var(--cyan)" onclick="startTimer('B')">⏱ Iniciar</button>
+        <div class="timer-display" id="timer-display-B" style="color:var(--cyan)">--:--</div>
+        <button class="timer-btn" style="border-color:var(--cyan);color:var(--cyan)" onclick="resetTimer('B')">✕</button>
       </div>
     </div>
     <div class="card">
@@ -548,6 +991,7 @@
         <div class="ex-check" onclick="toggleCheck(this)"></div>
       </div>
     </div>
+    <button class="save-btn" onclick="saveWorkout('B')" style="border-color:var(--cyan);color:var(--cyan);background:rgba(95,212,244,0.08)">✓ Salvar Treino B — Costas</button>
   </div>
 
   <!-- Treino C -->
@@ -559,57 +1003,87 @@
         <div class="card-note">Sem exercícios com equilíbrio unilateral sem apoio. Cargas moderadas-altas.</div>
       </div>
       <div id="exs-C">
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Agachamento livre" data-series="4">
           <div class="ex-num" style="color:var(--green)">01</div>
           <div class="ex-info">
             <div class="ex-name">Agachamento livre (barra)</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">8–10 reps</span><span class="ex-tag">90s</span></div>
             <div class="ex-tip">Calço sob o calcanhar se precisar de conforto.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Leg Press 45° quad" data-series="4">
           <div class="ex-num" style="color:var(--green)">02</div>
           <div class="ex-info">
             <div class="ex-name">Leg Press 45° (pés baixos e próximos)</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">Pés baixos = mais quadríceps.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Cadeira Extensora" data-series="3">
           <div class="ex-num" style="color:var(--green)">03</div>
           <div class="ex-info">
             <div class="ex-name">Cadeira Extensora</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Isolamento do quad — útil para pé chato.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Agachamento sumô" data-series="3">
           <div class="ex-num" style="color:var(--green)">04</div>
           <div class="ex-info">
             <div class="ex-name">Agachamento sumô com haltere (goblet)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Posição ampla ativa mais adutor e glúteo médio.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Panturrilha sentada" data-series="4">
           <div class="ex-num" style="color:var(--green)">05</div>
           <div class="ex-info">
             <div class="ex-name">Panturrilha na máquina sentada</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">15–20 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Sentada isola o sóleo.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Panturrilha em pé" data-series="3">
           <div class="ex-num" style="color:var(--green)">06</div>
           <div class="ex-info">
             <div class="ex-name">Panturrilha em pé na plataforma (bilateral)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Bilateral = sem risco de equilíbrio.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
@@ -619,11 +1093,12 @@
         <div class="progress-track"><div class="progress-fill" id="fill-C" style="width:0%; background:var(--green)"></div></div>
       </div>
       <div class="timer-bar">
-        <button class="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
-        <div class="timer-display">--:--</div>
-        <button class="timer-btn" onclick="resetTimer()">✕</button>
+        <button class="timer-btn" style="border-color:var(--green);color:var(--green)" onclick="startTimer('C')">⏱ Iniciar</button>
+        <div class="timer-display" id="timer-display-C" style="color:var(--green)">--:--</div>
+        <button class="timer-btn" style="border-color:var(--green);color:var(--green)" onclick="resetTimer('C')">✕</button>
       </div>
     </div>
+    <button class="save-btn" onclick="saveWorkout('C')" style="border-color:var(--green);color:var(--green);background:rgba(109,232,160,0.08)">✓ Salvar Treino C — Quadríceps</button>
   </div>
 
   <!-- Treino D -->
@@ -635,57 +1110,87 @@
         <div class="card-note">Parte superior completa. Ombros desenvolvidos criam proporção com o quadril.</div>
       </div>
       <div id="exs-D">
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Desenvolvimento ombros" data-series="4">
           <div class="ex-num" style="color:var(--red)">01</div>
           <div class="ex-info">
             <div class="ex-name">Desenvolvimento com halteres (sentada)</div>
             <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">Sentada = mais estabilidade, menos compensação lombar.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 4 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Elevação lateral" data-series="3">
           <div class="ex-num" style="color:var(--red)">02</div>
           <div class="ex-info">
             <div class="ex-name">Elevação lateral com halteres</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Cotovelo ligeiramente flexionado, suba até a linha do ombro.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Crucifixo inverso" data-series="3">
           <div class="ex-num" style="color:var(--red)">03</div>
           <div class="ex-info">
             <div class="ex-name">Crucifixo inverso (polia ou máquina voador inverso)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Deltóide posterior — fundamental para postura.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Supino inclinado" data-series="3">
           <div class="ex-num" style="color:var(--red)">04</div>
           <div class="ex-info">
             <div class="ex-name">Supino inclinado 30° com halteres</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
             <div class="ex-tip">30° foca no peitoral superior com menos interferência do ombro.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Tríceps pulley" data-series="3">
           <div class="ex-num" style="color:var(--red)">05</div>
           <div class="ex-info">
             <div class="ex-name">Tríceps pulley (corda)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Abra a corda no final para ativar a cabeça lateral.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
-        <div class="exercise-row">
+        <div class="exercise-row" data-ex="Mergulho no banco" data-series="3">
           <div class="ex-num" style="color:var(--red)">06</div>
           <div class="ex-info">
             <div class="ex-name">Mergulho no banco (bench dip)</div>
             <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
             <div class="ex-tip">Apoio nas mãos — sem exigência de equilíbrio.</div>
+            <div class="ex-kg-wrap">
+              <input class="ex-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0" oninput="updateVolLabel(this)">
+              <span class="ex-kg-label">× 3 séries =</span>
+              <span class="ex-kg-vol"></span>
+            </div>
           </div>
           <div class="ex-check" onclick="toggleCheck(this)"></div>
         </div>
@@ -695,48 +1200,221 @@
         <div class="progress-track"><div class="progress-fill" id="fill-D" style="width:0%; background:var(--red)"></div></div>
       </div>
       <div class="timer-bar">
-        <button class="timer-btn" onclick="startTimer()">⏱ Iniciar</button>
-        <div class="timer-display">--:--</div>
-        <button class="timer-btn" onclick="resetTimer()">✕</button>
+        <button class="timer-btn" style="border-color:var(--red);color:var(--red)" onclick="startTimer('D')">⏱ Iniciar</button>
+        <div class="timer-display" id="timer-display-D" style="color:var(--red)">--:--</div>
+        <button class="timer-btn" style="border-color:var(--red);color:var(--red)" onclick="resetTimer('D')">✕</button>
       </div>
     </div>
+    <button class="save-btn" onclick="saveWorkout('D')" style="border-color:var(--red);color:var(--red);background:rgba(255,123,123,0.08)">✓ Salvar Treino D — Ombros</button>
   </div>
+</div>
+
+<!-- ═══════════════ CARDIO ═══════════════ -->
+<div class="screen" id="screen-cardio">
+
+  <div class="cardio-selector">
+    <button class="cardio-btn active" onclick="showCardio('esteira', this)"><span class="c-icon">🏃</span>Esteira</button>
+    <button class="cardio-btn" onclick="showCardio('bike', this)"><span class="c-icon">🚴</span>Bike</button>
+    <button class="cardio-btn" onclick="showCardio('hiit', this)"><span class="c-icon">⚡</span>HIIT</button>
+    <button class="cardio-btn" onclick="showCardio('pulo', this)"><span class="c-icon">🪢</span>Corda</button>
+  </div>
+
+  <!-- Esteira -->
+  <div class="cardio-content" id="cardio-esteira">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--orange)">Esteira · 30–40 min</div>
+        <div class="card-title">Caminhada em Inclinação</div>
+        <div class="card-note">Método 12-3-30: excelente para lipedema. Baixo impacto, alto gasto calórico.</div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">01</div>
+        <div class="phase-info">
+          <div class="phase-name">Aquecimento</div>
+          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">inclinação 0</span><span class="phase-tag">vel. 4–5 km/h</span></div>
+          <div class="phase-tip">Acelera o metabolismo sem sobrecarregar as articulações.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">02</div>
+        <div class="phase-info">
+          <div class="phase-name">Zona de Queima</div>
+          <div class="phase-tags"><span class="phase-tag">20–30 min</span><span class="phase-tag">inclinação 12</span><span class="phase-tag">vel. 3 km/h</span></div>
+          <div class="phase-tip">FC alvo: 65–75% da máxima. Fala mas fica ofegante levemente.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">03</div>
+        <div class="phase-info">
+          <div class="phase-name">Desaceleração</div>
+          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">inclinação 0</span><span class="phase-tag">vel. 3–4 km/h</span></div>
+          <div class="phase-tip">Não pare bruscamente — deixe a FC baixar gradualmente.</div>
+        </div>
+      </div>
+      <div class="cardio-timer-bar">
+        <button class="cardio-timer-btn" id="ctimer-btn-esteira" onclick="startCardioTimer('esteira', 1800)">▶ 30 min</button>
+        <div class="cardio-timer-display" id="ctimer-esteira">--:--</div>
+        <button class="cardio-timer-btn" onclick="resetCardioTimer('esteira')">✕</button>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveWorkout('Cardio Esteira')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — Cardio Esteira</button>
+  </div>
+
+  <!-- Bike -->
+  <div class="cardio-content hidden" id="cardio-bike">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--orange)">Bike · 30–45 min</div>
+        <div class="card-title">Ciclismo Indoor / Ergométrica</div>
+        <div class="card-note">Zero impacto nas articulações. Ótimo para recuperação ativa entre treinos de força.</div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">01</div>
+        <div class="phase-info">
+          <div class="phase-name">Aquecimento</div>
+          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">carga leve</span><span class="phase-tag">80–90 rpm</span></div>
+          <div class="phase-tip">Pedalada leve e cadência alta — ativa a circulação sem forçar.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">02</div>
+        <div class="phase-info">
+          <div class="phase-name">Ritmo Contínuo</div>
+          <div class="phase-tags"><span class="phase-tag">25–35 min</span><span class="phase-tag">carga moderada</span><span class="phase-tag">70–80 rpm</span></div>
+          <div class="phase-tip">Mantenha FC entre 65–75% da máx. Respira com ritmo constante.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">03</div>
+        <div class="phase-info">
+          <div class="phase-name">Resfriamento</div>
+          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">carga mínima</span><span class="phase-tag">60 rpm</span></div>
+          <div class="phase-tip">Reduz carga gradualmente. Não pare de pedalar de uma vez.</div>
+        </div>
+      </div>
+      <div class="cardio-timer-bar">
+        <button class="cardio-timer-btn" onclick="startCardioTimer('bike', 2100)">▶ 35 min</button>
+        <div class="cardio-timer-display" id="ctimer-bike">--:--</div>
+        <button class="cardio-timer-btn" onclick="resetCardioTimer('bike')">✕</button>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveWorkout('Cardio Bike')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — Cardio Bike</button>
+  </div>
+
+  <!-- HIIT -->
+  <div class="cardio-content hidden" id="cardio-hiit">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--orange)">HIIT · 20–25 min</div>
+        <div class="card-title">Intervalado de Alta Intensidade</div>
+        <div class="card-note">Máximo 2x por semana. Não fazer no dia de treino de pernas pesado.</div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">01</div>
+        <div class="phase-info">
+          <div class="phase-name">Aquecimento ativo</div>
+          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">intensidade baixa</span></div>
+          <div class="phase-tip">Polichinelo leve, marcha, circulos de ombro.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">02</div>
+        <div class="phase-info">
+          <div class="phase-name">Bloco HIIT (repetir 8x)</div>
+          <div class="phase-tags"><span class="phase-tag">20s esforço máx</span><span class="phase-tag">10s descanso</span><span class="phase-tag">8 rodadas</span></div>
+          <div class="phase-tip">Protocolo Tabata. Opções: step rápido, bike em sprint, remada no remo.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">03</div>
+        <div class="phase-info">
+          <div class="phase-name">Recuperação ativa</div>
+          <div class="phase-tags"><span class="phase-tag">5–7 min</span><span class="phase-tag">caminhada lenta</span></div>
+          <div class="phase-tip">FC precisa voltar para menos de 100 bpm antes de parar.</div>
+        </div>
+      </div>
+      <div class="cardio-timer-bar">
+        <button class="cardio-timer-btn" onclick="startCardioTimer('hiit', 1200)">▶ 20 min</button>
+        <div class="cardio-timer-display" id="ctimer-hiit">--:--</div>
+        <button class="cardio-timer-btn" onclick="resetCardioTimer('hiit')">✕</button>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveWorkout('HIIT')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — HIIT</button>
+  </div>
+
+  <!-- Corda -->
+  <div class="cardio-content hidden" id="cardio-pulo">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-label" style="color:var(--orange)">Corda · 15–20 min</div>
+        <div class="card-title">Pular Corda Intervalado</div>
+        <div class="card-note">Alto impacto — use tênis de absorção. Evite em dias com dor nas pernas.</div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">01</div>
+        <div class="phase-info">
+          <div class="phase-name">Aquecimento</div>
+          <div class="phase-tags"><span class="phase-tag">3 min</span><span class="phase-tag">ritmo leve</span></div>
+          <div class="phase-tip">Pule no lugar sem corda ou com ritmo bem lento para acostumar.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">02</div>
+        <div class="phase-info">
+          <div class="phase-name">Série principal (repetir 5x)</div>
+          <div class="phase-tags"><span class="phase-tag">1 min pulando</span><span class="phase-tag">30s caminhando</span><span class="phase-tag">5 rodadas</span></div>
+          <div class="phase-tip">Mantenha ritmo constante. Não tente velocidade na primeira semana.</div>
+        </div>
+      </div>
+      <div class="cardio-phase">
+        <div class="phase-num">03</div>
+        <div class="phase-info">
+          <div class="phase-name">Resfriamento</div>
+          <div class="phase-tags"><span class="phase-tag">2 min</span><span class="phase-tag">alongamento de panturrilha</span></div>
+          <div class="phase-tip">Alongue bem a panturrilha logo após — previne cãibras.</div>
+        </div>
+      </div>
+      <div class="cardio-timer-bar">
+        <button class="cardio-timer-btn" onclick="startCardioTimer('pulo', 1200)">▶ 20 min</button>
+        <div class="cardio-timer-display" id="ctimer-pulo">--:--</div>
+        <button class="cardio-timer-btn" onclick="resetCardioTimer('pulo')">✕</button>
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveWorkout('Corda')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — Corda</button>
+  </div>
+
 </div>
 
 <!-- ═══════════════ DIETA ═══════════════ -->
 <div class="screen" id="screen-dieta">
-
-  <!-- Macro summary -->
   <div class="macro-summary" id="macro-box">
     <div class="macro-summary-title">Total do dia selecionado</div>
     <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--muted)">Calorias</span><span id="m-kcal" style="color:var(--gold)">-- / 1980</span></div>
+      <div class="macro-row-top"><span style="color:var(--text2)">Calorias</span><span id="m-kcal" style="color:var(--gold)">-- / 1980</span></div>
       <div class="macro-track"><div class="macro-fill" id="mf-kcal" style="background:var(--gold);width:0%"></div></div>
     </div>
     <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--muted)">Proteína</span><span id="m-prot" style="color:var(--green)">-- / 120g</span></div>
+      <div class="macro-row-top"><span style="color:var(--text2)">Proteína</span><span id="m-prot" style="color:var(--green)">-- / 120g</span></div>
       <div class="macro-track"><div class="macro-fill" id="mf-prot" style="background:var(--green);width:0%"></div></div>
     </div>
     <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--muted)">Carboidratos</span><span id="m-carb" style="color:var(--cyan)">-- / 200g</span></div>
+      <div class="macro-row-top"><span style="color:var(--text2)">Carboidratos</span><span id="m-carb" style="color:var(--cyan)">-- / 200g</span></div>
       <div class="macro-track"><div class="macro-fill" id="mf-carb" style="background:var(--cyan);width:0%"></div></div>
     </div>
     <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--muted)">Gordura</span><span id="m-fat" style="color:var(--red)">-- / 60g</span></div>
+      <div class="macro-row-top"><span style="color:var(--text2)">Gordura</span><span id="m-fat" style="color:var(--red)">-- / 60g</span></div>
       <div class="macro-track"><div class="macro-fill" id="mf-fat" style="background:var(--red);width:0%"></div></div>
     </div>
   </div>
 
-  <!-- CAFÉ DA MANHÃ -->
   <div class="section-label">☀️ Café da Manhã</div>
   <div class="meal-selector" id="sel-cafe">
-    <button class="meal-opt-btn active" style="--mc:var(--gold)" onclick="selectMeal('cafe',0,this)">Treino manhã</button>
-    <button class="meal-opt-btn" onclick="selectMeal('cafe',1,this)">Pós-treino / Musculação</button>
-    <button class="meal-opt-btn" onclick="selectMeal('cafe',2,this)">Pilates / Cardio / Descanso</button>
+    <button class="meal-opt-btn active" onclick="selectMeal('cafe',0,this)">Treino manhã</button>
+    <button class="meal-opt-btn" onclick="selectMeal('cafe',1,this)">Pós-treino</button>
+    <button class="meal-opt-btn" onclick="selectMeal('cafe',2,this)">Pilates / Descanso</button>
   </div>
-  <div class="card" id="meal-cafe"><!-- filled by JS --></div>
+  <div class="card" id="meal-cafe"></div>
 
-  <!-- ALMOÇO -->
   <div class="section-label">🍽️ Almoço</div>
   <div class="meal-selector">
     <button class="meal-opt-btn active" onclick="selectMeal('almoco',0,this)">Musculação / Cardio</button>
@@ -744,7 +1422,6 @@
   </div>
   <div class="card" id="meal-almoco"></div>
 
-  <!-- LANCHE -->
   <div class="section-label">🫐 Lanche da Tarde</div>
   <div class="meal-selector">
     <button class="meal-opt-btn active" onclick="selectMeal('lanche',0,this)">Pré-treino noturno</button>
@@ -753,7 +1430,6 @@
   </div>
   <div class="card" id="meal-lanche"></div>
 
-  <!-- JANTAR -->
   <div class="section-label">🌙 Jantar</div>
   <div class="meal-selector">
     <button class="meal-opt-btn active" onclick="selectMeal('janta',0,this)">Rápido</button>
@@ -763,7 +1439,6 @@
     <button class="meal-opt-btn" onclick="selectMeal('janta',4,this)">Sem fome</button>
   </div>
   <div class="card" id="meal-janta"></div>
-
 </div>
 
 <!-- ═══════════════ BELISCOS ═══════════════ -->
@@ -774,13 +1449,9 @@
       <div class="card-note" style="margin-top:0">Belisque depois do almoço ou da janta. Escolha um por dia — incluso nos macros quando selecionado.</div>
     </div>
   </div>
-
   <div id="belisco-list"></div>
-
   <div class="card" style="margin-top:4px">
-    <div class="card-header">
-      <div class="card-label">Quando beliscar</div>
-    </div>
+    <div class="card-header"><div class="card-label">Quando beliscar</div></div>
     <div class="tip-block">
       🍽️ Depois do almoço — mata a vontade de doce pós-refeição<br><br>
       🌙 Depois da janta — melhor que beliscar à noite sem controle<br><br>
@@ -799,7 +1470,6 @@
     </div>
   </div>
   <div class="card" id="peso-list"></div>
-
   <div class="card" style="margin-top:12px">
     <div class="card-header"><div class="card-label">Resumo rápido</div></div>
     <div class="tip-block">
@@ -810,197 +1480,262 @@
   </div>
 </div>
 
+<!-- ═══════════════ CARGAS ═══════════════ -->
+<div class="screen" id="screen-cargas">
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <div class="card-label" style="color:var(--green)">📈 Evolução de Cargas</div>
+      <div class="card-note" style="margin-top:4px">As cargas são registradas ao salvar cada treino. Veja a evolução de volume total e exercício por exercício.</div>
+    </div>
+  </div>
+
+  <div class="carga-day-tabs">
+    <button class="carga-day-tab active" onclick="selectCargaDay('A', this)">🍑 A</button>
+    <button class="carga-day-tab" onclick="selectCargaDay('B', this)">🏗️ B</button>
+    <button class="carga-day-tab" onclick="selectCargaDay('C', this)">🦵 C</button>
+    <button class="carga-day-tab" onclick="selectCargaDay('D', this)">💪 D</button>
+  </div>
+
+  <div id="carga-vol-box"></div>
+  <div class="ex-tab-row" id="carga-tabs-row"></div>
+  <div id="carga-chart-area"></div>
+
+</div>
+
+<!-- ═══════════════ DIAS ═══════════════ -->
+<div class="screen" id="screen-dias">
+
+  <div class="streak-box" id="streak-box">
+    <div class="streak-stat">
+      <span class="streak-val" id="streak-count">0</span>
+      <div class="streak-label">🔥 Sequência</div>
+    </div>
+    <div class="streak-stat">
+      <span class="streak-val" id="total-treinos">0</span>
+      <div class="streak-label">Total Treinos</div>
+    </div>
+    <div class="streak-stat">
+      <span class="streak-val" id="mes-treinos">0</span>
+      <div class="streak-label">Este Mês</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px;margin-bottom:12px">
+    <div class="calendar-header">
+      <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+      <div class="cal-month" id="cal-month-title">Abr 2025</div>
+      <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <div class="cal-wd">D</div><div class="cal-wd">S</div><div class="cal-wd">T</div>
+      <div class="cal-wd">Q</div><div class="cal-wd">Q</div><div class="cal-wd">S</div>
+      <div class="cal-wd">S</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-label">Treinos Recentes</div>
+    </div>
+    <div style="padding:12px" id="recent-list">
+      <div style="font-size:12px;color:var(--muted);text-align:center;padding:16px 0">Nenhum treino salvo ainda</div>
+    </div>
+  </div>
+
+</div>
+
 <script>
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 // DATA
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 const MEALS = {
   cafe: [
-    {
-      name: "Super Café com Leite", tag: "Treino manhã (jejum)",
-      tip: "Tome 15–20 min antes de treinar. Após o treino, faça o café pós-treino em até 60–90 min.",
+    { name: "Super Café com Leite", tag: "Treino manhã (jejum)",
+      tip: "Tome 15–20 min antes de treinar.",
       items: [
-        { name: "Super Café (1 scoop)", qty: "30g pó seco — pesar antes de misturar", kcal:120, p:10, c:12, g:3 },
+        { name: "Super Café (1 scoop)", qty: "30g pó seco", kcal:120, p:10, c:12, g:3 },
         { name: "Leite desnatado", qty: "200ml", kcal:65, p:6, c:9, g:0.3 },
       ]
     },
-    {
-      name: "Ovos + Carboidrato", tag: "Pós-treino / Musculação",
-      tip: "Ovo conta por unidade. Bolacha use 2 unidades como referência.",
+    { name: "Ovos + Carboidrato", tag: "Pós-treino / Musculação",
+      tip: "Ovo conta por unidade.",
       items: [
-        { name: "Ovos mexidos", qty: "3 unidades (não precisa pesar)", kcal:210, p:18, c:1, g:15 },
-        { name: "Requeijão light", qty: "20g = 1 colher de sopa cheia", kcal:35, p:3, c:1, g:2 },
-        { name: "Bolacha de arroz Natural Life grande", qty: "2 unidades (~18g cada = 36g total)", kcal:140, p:2, c:30, g:1 },
-        { name: "Café + leite desnatado", qty: "café à vontade + 100ml leite", kcal:35, p:3, c:5, g:0 },
+        { name: "Ovos mexidos", qty: "3 unidades", kcal:210, p:18, c:1, g:15 },
+        { name: "Requeijão light", qty: "20g", kcal:35, p:3, c:1, g:2 },
+        { name: "Bolacha de arroz grande", qty: "2 unidades (~36g)", kcal:140, p:2, c:30, g:1 },
+        { name: "Café + leite desnatado", qty: "100ml leite", kcal:35, p:3, c:5, g:0 },
       ]
     },
-    {
-      name: "Ovos simples", tag: "Pilates / Cardio / Descanso",
+    { name: "Ovos simples", tag: "Pilates / Cardio / Descanso",
       tip: "Sem carboidrato sólido aqui — você vai repor no almoço.",
       items: [
-        { name: "Ovos mexidos", qty: "2 unidades (não precisa pesar)", kcal:140, p:12, c:1, g:10 },
-        { name: "Requeijão light", qty: "20g = 1 colher de sopa cheia", kcal:35, p:3, c:1, g:2 },
-        { name: "Café + leite desnatado", qty: "café à vontade + 100ml leite", kcal:35, p:3, c:5, g:0 },
+        { name: "Ovos mexidos", qty: "2 unidades", kcal:140, p:12, c:1, g:10 },
+        { name: "Requeijão light", qty: "20g", kcal:35, p:3, c:1, g:2 },
+        { name: "Café + leite desnatado", qty: "100ml leite", kcal:35, p:3, c:5, g:0 },
       ]
     }
   ],
   almoco: [
-    {
-      name: "Frango + Arroz + Feijão", tag: "Musculação / Cardio",
+    { name: "Frango + Arroz + Feijão", tag: "Musculação / Cardio",
       tip: "Arroz e macarrão → pese CRU. Feijão e batata doce → pese COZIDO.",
       items: [
-        { name: "Peito de frango grelhado", qty: "150g CRU (rende ~110g cozido)", kcal:165, p:35, c:0, g:2 },
-        { name: "Arroz branco", qty: "60g CRU (rende ~180g cozido) — SEMPRE pese cru", kcal:210, p:4, c:46, g:0.5 },
-        { name: "Feijão cozido", qty: "80g COZIDO = 1 concha média", kcal:75, p:5, c:14, g:0.5 },
+        { name: "Peito de frango grelhado", qty: "150g CRU", kcal:165, p:35, c:0, g:2 },
+        { name: "Arroz branco", qty: "60g CRU", kcal:210, p:4, c:46, g:0.5 },
+        { name: "Feijão cozido", qty: "80g COZIDO", kcal:75, p:5, c:14, g:0.5 },
         { name: "Salada folhas + tomate", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
-        { name: "Azeite de oliva", qty: "5ml = 1 colher de chá", kcal:44, p:0, c:0, g:5 },
+        { name: "Azeite de oliva", qty: "5ml", kcal:44, p:0, c:0, g:5 },
       ]
     },
-    {
-      name: "Frango + Legumes (menos carbo)", tag: "Pilates / Descanso",
-      tip: "Requeijão light (20g) pode entrar no frango sem problema.",
+    { name: "Frango + Legumes", tag: "Pilates / Descanso",
+      tip: "Requeijão light (20g) pode entrar no frango.",
       items: [
-        { name: "Peito de frango grelhado", qty: "150g CRU (rende ~110g cozido)", kcal:165, p:35, c:0, g:2 },
-        { name: "Arroz integral", qty: "40g CRU (rende ~120g cozido)", kcal:140, p:3, c:29, g:1 },
+        { name: "Peito de frango grelhado", qty: "150g CRU", kcal:165, p:35, c:0, g:2 },
+        { name: "Arroz integral", qty: "40g CRU", kcal:140, p:3, c:29, g:1 },
         { name: "Abobrinha + cenoura refogada", qty: "150g COZIDO", kcal:50, p:2, c:8, g:1 },
-        { name: "Azeite de oliva", qty: "5ml = 1 colher de chá", kcal:44, p:0, c:0, g:5 },
+        { name: "Azeite de oliva", qty: "5ml", kcal:44, p:0, c:0, g:5 },
       ]
     }
   ],
   lanche: [
-    {
-      name: "Panqueca proteica", tag: "Pré-treino noturno (musculação)",
-      tip: "Essa refeição já é o pré-treino — não precisa de nada mais antes da academia.",
+    { name: "Panqueca proteica", tag: "Pré-treino noturno",
+      tip: "Essa refeição já é o pré-treino.",
       items: [
-        { name: "Banana madura", qty: "1 unidade média (~85g sem casca)", kcal:77, p:1, c:20, g:0.3 },
+        { name: "Banana madura", qty: "1 média (~85g)", kcal:77, p:1, c:20, g:0.3 },
         { name: "Ovos", qty: "2 unidades", kcal:140, p:12, c:1, g:10 },
-        { name: "Farelo de aveia", qty: "20g CRU = 2 col de sopa — pese seco", kcal:68, p:3, c:12, g:1 },
-        { name: "Whey protein", qty: "1 scoop = ~30g pó seco", kcal:120, p:24, c:3, g:2 },
+        { name: "Farelo de aveia", qty: "20g CRU", kcal:68, p:3, c:12, g:1 },
+        { name: "Whey protein", qty: "1 scoop (~30g)", kcal:120, p:24, c:3, g:2 },
       ]
     },
-    {
-      name: "Iogurte + Fruta", tag: "Pilates / Descanso / Dia normal",
+    { name: "Iogurte + Fruta", tag: "Pilates / Descanso",
       tip: "Se proteína baixa: misture 1 scoop de whey no iogurte.",
       items: [
-        { name: "Iogurte desnatado zero", qty: "170g (peso na embalagem)", kcal:60, p:10, c:6, g:0 },
-        { name: "Fruta (maçã, pera ou laranja)", qty: "1 unidade média (~150g com casca)", kcal:80, p:0.5, c:20, g:0.2 },
+        { name: "Iogurte desnatado zero", qty: "170g", kcal:60, p:10, c:6, g:0 },
+        { name: "Fruta (maçã, pera ou laranja)", qty: "1 unidade média", kcal:80, p:0.5, c:20, g:0.2 },
       ]
     },
-    {
-      name: "Shake de Whey", tag: "Cardio (pré ou pós)",
-      tip: "Batido com leite desnatado fica cremoso. Com banana vira pré-cardio completo.",
+    { name: "Shake de Whey", tag: "Cardio (pré ou pós)",
+      tip: "Batido com leite fica cremoso.",
       items: [
-        { name: "Whey protein", qty: "1 scoop = ~30g pó seco", kcal:120, p:24, c:3, g:2 },
+        { name: "Whey protein", qty: "1 scoop (~30g)", kcal:120, p:24, c:3, g:2 },
         { name: "Leite desnatado", qty: "200ml", kcal:65, p:6, c:9, g:0.3 },
-        { name: "Banana (opcional)", qty: "1/2 unidade (~50g sem casca)", kcal:45, p:0.5, c:11, g:0.1 },
+        { name: "Banana (opcional)", qty: "1/2 unidade", kcal:45, p:0.5, c:11, g:0.1 },
       ]
     }
   ],
   janta: [
-    {
-      name: "Omelete proteica", tag: "Qualquer dia — rápido",
-      tip: "Outros recheios: atum escorrido, frango desfiado, ricota.",
+    { name: "Omelete proteica", tag: "Qualquer dia — rápido",
+      tip: "Outros recheios: atum, frango desfiado, ricota.",
       items: [
         { name: "Ovos", qty: "3 unidades", kcal:210, p:18, c:1, g:15 },
-        { name: "Queijo minas ou cottage", qty: "30g — cottage: 2 col de sopa", kcal:60, p:6, c:1, g:3 },
-        { name: "Recheio: tomate + espinafre", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
-        { name: "Bolacha de arroz (opcional)", qty: "1 unidade grande (~18g)", kcal:70, p:1, c:15, g:0.5 },
+        { name: "Queijo minas ou cottage", qty: "30g", kcal:60, p:6, c:1, g:3 },
+        { name: "Tomate + espinafre", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
+        { name: "Bolacha de arroz (opcional)", qty: "1 unidade grande", kcal:70, p:1, c:15, g:0.5 },
       ]
     },
-    {
-      name: "Atum + Batata doce", tag: "Musculação / Cardio — proteico",
-      tip: "Batch: cozinhe 600g batata doce no domingo. Pese sempre cozida.",
+    { name: "Atum + Batata doce", tag: "Musculação / Cardio",
+      tip: "Batch: cozinhe 600g batata doce no domingo.",
       items: [
-        { name: "Atum em água (lata)", qty: "170g ESCORRIDO — pese depois de escorrer", kcal:150, p:34, c:0, g:1 },
-        { name: "Batata doce cozida", qty: "150g COZIDA sem casca", kcal:129, p:2, c:30, g:0.1 },
-        { name: "Azeite + limão", qty: "5ml azeite = 1 colher de chá", kcal:44, p:0, c:0, g:5 },
+        { name: "Atum em água (lata)", qty: "170g ESCORRIDO", kcal:150, p:34, c:0, g:1 },
+        { name: "Batata doce cozida", qty: "150g COZIDA", kcal:129, p:2, c:30, g:0.1 },
+        { name: "Azeite + limão", qty: "5ml azeite", kcal:44, p:0, c:0, g:5 },
         { name: "Salada folhas", qty: "à vontade", kcal:10, p:0.5, c:1, g:0 },
       ]
     },
-    {
-      name: "Frango desfiado + Legumes", tag: "Home office — sem tempo",
-      tip: "Batch: 400g frango desfiado em potinhos de 120g. Dura 4–5 dias.",
+    { name: "Frango desfiado + Legumes", tag: "Sem tempo",
+      tip: "Batch: 400g frango desfiado em potinhos. Dura 4–5 dias.",
       items: [
-        { name: "Frango desfiado (já cozido)", qty: "120g COZIDO DESFIADO", kcal:140, p:28, c:0, g:2 },
+        { name: "Frango desfiado", qty: "120g COZIDO", kcal:140, p:28, c:0, g:2 },
         { name: "Legumes refogados", qty: "150g COZIDO", kcal:50, p:2, c:8, g:1 },
-        { name: "Arroz integral", qty: "40g CRU (rende ~120g cozido)", kcal:140, p:3, c:29, g:1 },
+        { name: "Arroz integral", qty: "40g CRU", kcal:140, p:3, c:29, g:1 },
       ]
     },
-    {
-      name: "Macarrão com frango", tag: "Véspera de musculação 🍝",
-      tip: "80g cru → ~200g cozido. SEMPRE pese cru. Molho: verifique sem açúcar adicionado.",
+    { name: "Macarrão com frango", tag: "Véspera de musculação 🍝",
+      tip: "80g cru → ~200g cozido. SEMPRE pese cru.",
       items: [
-        { name: "Macarrão (espaguete ou penne)", qty: "80g CRU (rende ~200g cozido)", kcal:280, p:10, c:58, g:1 },
-        { name: "Frango desfiado (já cozido)", qty: "100g COZIDO DESFIADO", kcal:116, p:23, c:0, g:1.5 },
-        { name: "Molho de tomate (sem açúcar)", qty: "80g = 3 col de sopa cheias", kcal:30, p:1, c:6, g:0.5 },
-        { name: "Queijo parmesão ralado", qty: "10g = 1 col de sopa rasa", kcal:40, p:3.5, c:0.3, g:2.8 },
+        { name: "Macarrão (espaguete)", qty: "80g CRU", kcal:280, p:10, c:58, g:1 },
+        { name: "Frango desfiado", qty: "100g COZIDO", kcal:116, p:23, c:0, g:1.5 },
+        { name: "Molho de tomate (sem açúcar)", qty: "80g", kcal:30, p:1, c:6, g:0.5 },
+        { name: "Queijo parmesão ralado", qty: "10g", kcal:40, p:3.5, c:0.3, g:2.8 },
       ]
     },
-    {
-      name: "Iogurte grego + Whey", tag: "Sem fome / dia leve",
-      tip: "Misture o whey no iogurte com garfo. Cacau em pó (5g) dá sabor de chocolate.",
+    { name: "Iogurte grego + Whey", tag: "Sem fome / dia leve",
+      tip: "Misture o whey no iogurte com garfo.",
       items: [
-        { name: "Iogurte grego integral", qty: "200g — pese o pote", kcal:120, p:12, c:6, g:5 },
-        { name: "Whey protein", qty: "1 scoop = ~30g pó seco", kcal:120, p:24, c:3, g:2 },
-        { name: "Granola sem açúcar (opcional)", qty: "20g = 2 col de sopa — pese seco", kcal:80, p:2, c:14, g:2 },
+        { name: "Iogurte grego integral", qty: "200g", kcal:120, p:12, c:6, g:5 },
+        { name: "Whey protein", qty: "1 scoop (~30g)", kcal:120, p:24, c:3, g:2 },
+        { name: "Granola sem açúcar", qty: "20g (opcional)", kcal:80, p:2, c:14, g:2 },
       ]
     }
   ]
 };
 
 const BELISCOS = [
-  { emoji:"🍫", name:"Chocolate meio amargo 70%", qty:"20g = 2 quadradinhos", kcal:114, p:2, c:8, g:8, tip:"O mais equilibrado: gordura boa, antioxidantes, menos açúcar que ao leite." },
-  { emoji:"🥛", name:"Leite condensado", qty:"20g = 1 colher de sopa", kcal:65, p:1.5, c:12, g:1.5, tip:"Ótimo puro, com fruta ou como cobertura leve no iogurte." },
-  { emoji:"🍮", name:"Doce de leite", qty:"20g = 1 colher de sopa", kcal:60, p:1.5, c:11, g:1.5, tip:"Sabor mais intenso que leite condensado com menos açúcar." },
-  { emoji:"🍬", name:"Suspiro", qty:"3 unidades médias (~15g)", kcal:55, p:0.5, c:13, g:0, tip:"O mais leve em gordura. Boa opção quando quer algo crocante e doce." },
+  { emoji:"🍫", name:"Chocolate meio amargo 70%", qty:"20g = 2 quadradinhos", kcal:114, p:2, c:8, g:8, tip:"O mais equilibrado: gordura boa, antioxidantes, menos açúcar." },
+  { emoji:"🥛", name:"Leite condensado", qty:"20g = 1 colher de sopa", kcal:65, p:1.5, c:12, g:1.5, tip:"Ótimo puro, com fruta ou como cobertura no iogurte." },
+  { emoji:"🍮", name:"Doce de leite", qty:"20g = 1 colher de sopa", kcal:60, p:1.5, c:11, g:1.5, tip:"Sabor mais intenso com menos açúcar que leite condensado." },
+  { emoji:"🍬", name:"Suspiro", qty:"3 unidades médias (~15g)", kcal:55, p:0.5, c:13, g:0, tip:"O mais leve em gordura. Opção crocante e doce." },
 ];
 
 const PESOS = [
-  { emoji:"🍚", item:"Arroz (branco ou integral)", regra:"CRU — pese antes de cozinhar", cor:"#86efac", detalhe:"60g cru → ~180g cozido (branco)  |  40g cru → ~120g cozido (integral)" },
-  { emoji:"🍝", item:"Macarrão", regra:"CRU — pese antes de cozinhar", cor:"#86efac", detalhe:"80g cru → ~200g cozido (absorve muita água)" },
-  { emoji:"🥣", item:"Aveia / Farelo / Whey (pó)", regra:"SECO — pese antes de misturar", cor:"#86efac", detalhe:"1 scoop whey ≈ 30g  |  2 col sopa farelo ≈ 20g" },
-  { emoji:"🍗", item:"Frango (peito)", regra:"CRU ou COZIDO — veja referência", cor:"#fbbf24", detalhe:"150g CRU → ~110g cozido grelhado  |  120g COZIDO desfiado ≈ 160g cru" },
-  { emoji:"🫘", item:"Feijão", regra:"COZIDO — pese depois de cozido", cor:"#67e8f9", detalhe:"1 concha média ≈ 80g cozido" },
-  { emoji:"🍠", item:"Batata doce", regra:"COZIDA sem casca", cor:"#67e8f9", detalhe:"200g crua → ~150g cozida" },
-  { emoji:"🐟", item:"Atum em lata", regra:"ESCORRIDO — pese após escorrer a água", cor:"#67e8f9", detalhe:"1 lata (170g líquido) → ~140–150g escorrido" },
-  { emoji:"🥦", item:"Legumes refogados / cozidos", regra:"COZIDO — pese depois de pronto", cor:"#67e8f9", detalhe:"Perdem volume no calor" },
-  { emoji:"🥚", item:"Ovos", regra:"Unidades — não precisa pesar", cor:"#fbbf24", detalhe:"1 ovo médio ≈ 50g sem casca" },
-  { emoji:"🍌", item:"Frutas inteiras", regra:"Unidades — não precisa pesar", cor:"#fbbf24", detalhe:"Banana média ≈ 85g sem casca  |  maçã média ≈ 130g" },
-  { emoji:"🧴", item:"Iogurte (pote)", regra:"Peso já na embalagem", cor:"#fbbf24", detalhe:"Potinho padrão ≈ 170g  |  pote grego ≈ 200g" },
-  { emoji:"🧀", item:"Requeijão / Queijo / Cottage", regra:"Pese no estado em que vai consumir", cor:"#fbbf24", detalhe:"Requeijão: 1 col sopa cheia ≈ 20g  |  Cottage: 2 col sopa ≈ 30g" },
+  { emoji:"🍚", item:"Arroz (branco ou integral)", regra:"CRU — pese antes de cozinhar", cor:"#6de8a0", detalhe:"60g cru → ~180g cozido (branco)  |  40g cru → ~120g cozido (integral)" },
+  { emoji:"🍝", item:"Macarrão", regra:"CRU — pese antes de cozinhar", cor:"#6de8a0", detalhe:"80g cru → ~200g cozido (absorve muita água)" },
+  { emoji:"🥣", item:"Aveia / Farelo / Whey (pó)", regra:"SECO — pese antes de misturar", cor:"#6de8a0", detalhe:"1 scoop whey ≈ 30g  |  2 col sopa farelo ≈ 20g" },
+  { emoji:"🍗", item:"Frango (peito)", regra:"CRU ou COZIDO — veja referência", cor:"#f5c542", detalhe:"150g CRU → ~110g cozido  |  120g COZIDO desfiado ≈ 160g cru" },
+  { emoji:"🫘", item:"Feijão", regra:"COZIDO — pese depois de cozido", cor:"#5fd4f4", detalhe:"1 concha média ≈ 80g cozido" },
+  { emoji:"🍠", item:"Batata doce", regra:"COZIDA sem casca", cor:"#5fd4f4", detalhe:"200g crua → ~150g cozida" },
+  { emoji:"🐟", item:"Atum em lata", regra:"ESCORRIDO — pese após escorrer", cor:"#5fd4f4", detalhe:"1 lata (170g líquido) → ~140–150g escorrido" },
+  { emoji:"🥦", item:"Legumes cozidos", regra:"COZIDO — pese depois de pronto", cor:"#5fd4f4", detalhe:"Perdem volume no calor" },
+  { emoji:"🥚", item:"Ovos", regra:"Unidades — não precisa pesar", cor:"#f5c542", detalhe:"1 ovo médio ≈ 50g sem casca" },
+  { emoji:"🍌", item:"Frutas inteiras", regra:"Unidades — não precisa pesar", cor:"#f5c542", detalhe:"Banana média ≈ 85g sem casca  |  maçã média ≈ 130g" },
+  { emoji:"🧴", item:"Iogurte (pote)", regra:"Peso já na embalagem", cor:"#f5c542", detalhe:"Potinho padrão ≈ 170g  |  pote grego ≈ 200g" },
+  { emoji:"🧀", item:"Requeijão / Queijo / Cottage", regra:"Pese no estado de consumo", cor:"#f5c542", detalhe:"Requeijão: 1 col sopa ≈ 20g  |  Cottage: 2 col sopa ≈ 30g" },
 ];
 
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 // STATE
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 let selectedMeals = { cafe:0, almoco:0, lanche:0, janta:0 };
 let selectedBelisco = null;
-let timerInterval = null;
-let timerSeconds = 0;
-let timerRunning = false;
+let timerIntervals = {};
+let timerSeconds = {};
+let cardioTimerIntervals = {};
+let cardioTimerSeconds = {};
 let currentDay = 'A';
 let checkCounts = { A:0, B:0, C:0, D:0 };
 const TOTAL_EX = { A:6, B:6, C:6, D:6 };
 
-// ══════════════════════════════════
+// Cargas storage (in-memory)
+let cargasData = {}; // { exercicio: [{date, val}], vol_A: [{date, val}], ... }
+let selectedCargaEx = null;
+
+// Dias / Calendar
+let workoutLog = []; // [{date: 'YYYY-MM-DD', type: 'A'}]
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+// ══════════════════════════════════════════
 // SCREENS
-// ══════════════════════════════════
-function showScreen(id) {
+// ══════════════════════════════════════════
+function showScreen(id, btn) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + id).classList.add('active');
-  event.currentTarget.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'cargas') { selectedCargaDay = selectedCargaDay || 'A'; renderCargaCharts(); }
+  if (id === 'dias') renderCalendar();
 }
 
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 // TREINO
-// ══════════════════════════════════
-function showDay(day) {
+// ══════════════════════════════════════════
+function showDay(day, btn) {
   currentDay = day;
   document.querySelectorAll('.day-content').forEach(d => d.classList.add('hidden'));
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('day-' + day).classList.remove('hidden');
-  event.currentTarget.classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
 function toggleCheck(el) {
@@ -1022,54 +1757,158 @@ function updateProgress(day) {
   if (fillEl) fillEl.style.width = pct + '%';
 }
 
-// Timer
-let timerDisplays = [];
-function startTimer(secs) {
-  secs = secs || 90;
-  clearInterval(timerInterval);
-  timerSeconds = secs;
-  timerRunning = true;
-  updateTimerDisplay();
-  timerInterval = setInterval(() => {
-    timerSeconds--;
-    updateTimerDisplay();
-    if (timerSeconds <= 0) {
-      clearInterval(timerInterval);
-      timerRunning = false;
-      document.querySelectorAll('.timer-display').forEach(d => d.textContent = '✓ Pronto!');
+// Timer per day
+function startTimer(day) {
+  const secs = 90;
+  clearInterval(timerIntervals[day]);
+  timerSeconds[day] = secs;
+  updateTimerDisplay(day);
+  timerIntervals[day] = setInterval(() => {
+    timerSeconds[day]--;
+    updateTimerDisplay(day);
+    if (timerSeconds[day] <= 0) {
+      clearInterval(timerIntervals[day]);
+      const el = document.getElementById('timer-display-' + day);
+      if (el) el.textContent = '✓ Pronto!';
     }
   }, 1000);
 }
 
-function resetTimer() {
-  clearInterval(timerInterval);
-  timerRunning = false;
-  timerSeconds = 0;
-  document.querySelectorAll('.timer-display').forEach(d => d.textContent = '--:--');
+function resetTimer(day) {
+  clearInterval(timerIntervals[day]);
+  timerSeconds[day] = 0;
+  const el = document.getElementById('timer-display-' + day);
+  if (el) el.textContent = '--:--';
 }
 
-function updateTimerDisplay() {
-  const m = Math.floor(timerSeconds / 60);
-  const s = timerSeconds % 60;
-  const str = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-  document.querySelectorAll('.timer-display').forEach(d => d.textContent = str);
+function updateTimerDisplay(day) {
+  const s = timerSeconds[day] || 0;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  const str = String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+  const el = document.getElementById('timer-display-' + day);
+  if (el) el.textContent = str;
 }
 
-// ══════════════════════════════════
+// ══════════════════════════════════════════
+// CARDIO TIMER
+// ══════════════════════════════════════════
+function showCardio(type, btn) {
+  document.querySelectorAll('.cardio-content').forEach(d => d.classList.add('hidden'));
+  document.querySelectorAll('.cardio-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('cardio-' + type).classList.remove('hidden');
+  if (btn) btn.classList.add('active');
+}
+
+function startCardioTimer(type, secs) {
+  clearInterval(cardioTimerIntervals[type]);
+  cardioTimerSeconds[type] = secs;
+  updateCardioTimerDisplay(type);
+  cardioTimerIntervals[type] = setInterval(() => {
+    cardioTimerSeconds[type]--;
+    updateCardioTimerDisplay(type);
+    if (cardioTimerSeconds[type] <= 0) {
+      clearInterval(cardioTimerIntervals[type]);
+      const el = document.getElementById('ctimer-' + type);
+      if (el) el.textContent = '✓ Feito!';
+    }
+  }, 1000);
+}
+
+function resetCardioTimer(type) {
+  clearInterval(cardioTimerIntervals[type]);
+  cardioTimerSeconds[type] = 0;
+  const el = document.getElementById('ctimer-' + type);
+  if (el) el.textContent = '--:--';
+}
+
+function updateCardioTimerDisplay(type) {
+  const s = cardioTimerSeconds[type] || 0;
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  const str = String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+  const el = document.getElementById('ctimer-' + type);
+  if (el) el.textContent = str;
+}
+
+// ══════════════════════════════════════════
+// SAVE WORKOUT
+// ══════════════════════════════════════════
+function saveWorkout(type) {
+  const today = getTodayStr();
+  // Avoid duplicate for same day + same type
+  const exists = workoutLog.find(w => w.date === today && w.type === type);
+  if (!exists) {
+    workoutLog.push({ date: today, type });
+  }
+
+  // Capture kg from exercise inputs (only for strength treinos A/B/C/D)
+  if (['A','B','C','D'].includes(type)) {
+    const dayEl = document.getElementById('day-' + type);
+    if (dayEl) {
+      const rows = dayEl.querySelectorAll('.exercise-row[data-ex]');
+      let dayTotalVol = 0;
+      rows.forEach(row => {
+        const exName = row.dataset.ex;
+        const series = parseInt(row.dataset.series) || 1;
+        const input = row.querySelector('.ex-kg-input');
+        const kg = input ? parseFloat(input.value) : NaN;
+        if (!isNaN(kg) && kg > 0) {
+          const vol = kg * series;
+          dayTotalVol += vol;
+          // Save per-exercise carga history
+          if (!cargasData[exName]) cargasData[exName] = [];
+          const existing = cargasData[exName].find(e => e.date === today);
+          if (existing) existing.val = kg;
+          else cargasData[exName].push({ date: today, val: kg });
+          cargasData[exName].sort((a,b) => a.date.localeCompare(b.date));
+        }
+      });
+      // Save total volume for the day+type
+      const key = 'vol_' + type;
+      if (!cargasData[key]) cargasData[key] = [];
+      const existVol = cargasData[key].find(e => e.date === today);
+      if (existVol) existVol.val = dayTotalVol;
+      else if (dayTotalVol > 0) cargasData[key].push({ date: today, val: dayTotalVol });
+      cargasData[key].sort((a,b) => a.date.localeCompare(b.date));
+    }
+  }
+
+  renderCalendar();
+  renderRecentList();
+  updateStreakStats();
+
+  // Visual feedback
+  const btns = document.querySelectorAll('.save-btn');
+  btns.forEach(b => {
+    if (b.onclick && b.onclick.toString().includes(`'${type}'`)) {
+      const orig = b.textContent;
+      b.textContent = '✅ Treino salvo!';
+      setTimeout(() => b.textContent = orig, 2000);
+    }
+  });
+}
+
+function getTodayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+// ══════════════════════════════════════════
 // DIETA
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 function renderMeal(key) {
   const opts = MEALS[key];
   const idx = selectedMeals[key];
   const opt = opts[idx];
   const el = document.getElementById('meal-' + key);
-  const colors = { kcal:'#fbbf24', p:'#86efac', c:'#67e8f9', g:'#fca5a5' };
-  const mealColors = { cafe:'#fbbf24', almoco:'#86efac', lanche:'#c084fc', janta:'#67e8f9' };
+  const colors = { kcal:'#f5c542', p:'#6de8a0', c:'#5fd4f4', g:'#ff7b7b' };
+  const mealColors = { cafe:'#f5c542', almoco:'#6de8a0', lanche:'#b57bff', janta:'#5fd4f4' };
   const mc = mealColors[key];
 
-  let html = `<div style="border-left:3px solid ${mc};padding:14px 16px;border-bottom:1px solid var(--border)">
-    <div style="font-size:13px;color:var(--text);margin-bottom:4px">${opt.name}</div>
-    <div style="font-size:11px;color:var(--muted)">${opt.tag}</div>
+  let html = `<div style="border-left:3px solid ${mc};padding:12px 16px;border-bottom:1px solid var(--border)">
+    <div style="font-size:13px;color:var(--text);margin-bottom:3px;font-weight:600">${opt.name}</div>
+    <div style="font-size:11px;color:var(--text2)">${opt.tag}</div>
   </div>`;
 
   opt.items.forEach(item => {
@@ -1094,7 +1933,6 @@ function renderMeal(key) {
   </div>`;
 
   if (opt.tip) html += `<div class="tip-block">💡 ${opt.tip}</div>`;
-
   el.innerHTML = html;
   updateMacroSummary();
 }
@@ -1102,11 +1940,17 @@ function renderMeal(key) {
 function selectMeal(key, idx, btn) {
   selectedMeals[key] = idx;
   const parent = btn.parentElement;
-  parent.querySelectorAll('.meal-opt-btn').forEach(b => b.classList.remove('active'));
+  parent.querySelectorAll('.meal-opt-btn').forEach(b => {
+    b.classList.remove('active');
+    b.style.background = '';
+    b.style.borderColor = '';
+    b.style.color = '';
+  });
   btn.classList.add('active');
-  const mc = { cafe:'#fbbf24', almoco:'#86efac', lanche:'#c084fc', janta:'#67e8f9' }[key];
+  const mc = { cafe:'#f5c542', almoco:'#6de8a0', lanche:'#b57bff', janta:'#5fd4f4' }[key];
   btn.style.background = mc;
   btn.style.borderColor = mc;
+  btn.style.color = '#0c0c10';
   renderMeal(key);
 }
 
@@ -1115,19 +1959,17 @@ function updateMacroSummary() {
   const total = { kcal:0, p:0, c:0, g:0 };
   Object.keys(MEALS).forEach(key => {
     const opt = MEALS[key][selectedMeals[key]];
-    opt.items.forEach(item => {
-      total.kcal += item.kcal; total.p += item.p; total.c += item.c; total.g += item.g;
-    });
+    opt.items.forEach(item => { total.kcal += item.kcal; total.p += item.p; total.c += item.c; total.g += item.g; });
   });
   if (selectedBelisco !== null) {
     const b = BELISCOS[selectedBelisco];
     total.kcal += b.kcal; total.p += b.p; total.c += b.c; total.g += b.g;
   }
   const pairs = [
-    ['kcal', 'm-kcal', 'mf-kcal', Math.round(total.kcal), goals.kcal, 'kcal'],
-    ['p', 'm-prot', 'mf-prot', Math.round(total.p), goals.p, 'g'],
-    ['c', 'm-carb', 'mf-carb', Math.round(total.c), goals.c, 'g'],
-    ['g', 'm-fat', 'mf-fat', Math.round(total.g), goals.g, 'g'],
+    ['kcal','m-kcal','mf-kcal', Math.round(total.kcal), goals.kcal, 'kcal'],
+    ['p','m-prot','mf-prot', Math.round(total.p), goals.p, 'g'],
+    ['c','m-carb','mf-carb', Math.round(total.c), goals.c, 'g'],
+    ['g','m-fat','mf-fat', Math.round(total.g), goals.g, 'g'],
   ];
   pairs.forEach(([,txtId, fillId, val, goal, unit]) => {
     const pct = Math.min(100, Math.round((val/goal)*100));
@@ -1136,12 +1978,12 @@ function updateMacroSummary() {
   });
 }
 
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 // BELISCOS
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 function renderBeliscos() {
   const el = document.getElementById('belisco-list');
-  const colors = { kcal:'#fbbf24', p:'#86efac', c:'#67e8f9', g:'#fca5a5' };
+  const colors = { kcal:'#f5c542', p:'#6de8a0', c:'#5fd4f4', g:'#ff7b7b' };
   el.innerHTML = BELISCOS.map((b,i) => `
     <div class="belisco-card ${selectedBelisco===i?'sel':''}" onclick="toggleBelisco(${i})">
       <div class="belisco-top">
@@ -1150,11 +1992,11 @@ function renderBeliscos() {
           <div class="belisco-qty">${b.qty}</div>
           <div class="belisco-tip">${b.tip}</div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0">
-          <span style="font-size:10px;color:${colors.kcal};background:${colors.kcal}18;padding:2px 6px;border-radius:4px">kcal: ${b.kcal}</span>
-          <span style="font-size:10px;color:${colors.p};background:${colors.p}18;padding:2px 6px;border-radius:4px">P: ${b.p}g</span>
-          <span style="font-size:10px;color:${colors.c};background:${colors.c}18;padding:2px 6px;border-radius:4px">C: ${b.c}g</span>
-          <span style="font-size:10px;color:${colors.g};background:${colors.g}18;padding:2px 6px;border-radius:4px">G: ${b.g}g</span>
+        <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0">
+          <span style="font-size:10px;color:${colors.kcal};background:${colors.kcal}18;padding:2px 6px;border-radius:4px;font-weight:600">kcal: ${b.kcal}</span>
+          <span style="font-size:10px;color:${colors.p};background:${colors.p}18;padding:2px 6px;border-radius:4px;font-weight:600">P: ${b.p}g</span>
+          <span style="font-size:10px;color:${colors.c};background:${colors.c}18;padding:2px 6px;border-radius:4px;font-weight:600">C: ${b.c}g</span>
+          <span style="font-size:10px;color:${colors.g};background:${colors.g}18;padding:2px 6px;border-radius:4px;font-weight:600">G: ${b.g}g</span>
         </div>
       </div>
       ${selectedBelisco===i ? '<div class="belisco-badge">✓ Incluído nos macros do dia</div>' : ''}
@@ -1168,9 +2010,9 @@ function toggleBelisco(i) {
   updateMacroSummary();
 }
 
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 // PESOS
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 function renderPesos() {
   const el = document.getElementById('peso-list');
   el.innerHTML = PESOS.map(p => `
@@ -1185,53 +2027,387 @@ function renderPesos() {
   `).join('');
 }
 
-// ══════════════════════════════════
-// MEAL OPTION BUTTON STYLING
-// ══════════════════════════════════
-function styleActiveBtn(btn, color) {
-  btn.style.background = color;
-  btn.style.borderColor = color;
-  btn.style.color = '#0a0a0f';
+// ══════════════════════════════════════════
+// CARGAS
+// ══════════════════════════════════════════
+let selectedCargaDay = 'A';
+
+function updateVolLabel(input) {
+  const row = input.closest('.exercise-row');
+  const series = parseInt(row.dataset.series) || 1;
+  const kg = parseFloat(input.value);
+  const volEl = input.parentElement.querySelector('.ex-kg-vol');
+  if (!isNaN(kg) && kg > 0) {
+    const vol = (kg * series).toFixed(1).replace(/\.0$/, '');
+    volEl.textContent = vol + ' kg';
+    volEl.classList.add('visible');
+  } else {
+    volEl.textContent = '';
+    volEl.classList.remove('visible');
+  }
 }
 
-function initMealButtons() {
-  const colors = { cafe:'#fbbf24', almoco:'#86efac', lanche:'#c084fc', janta:'#67e8f9' };
-  ['cafe','almoco','lanche','janta'].forEach(key => {
-    const btns = document.querySelectorAll(`#sel-${key} .meal-opt-btn, .meal-selector`);
-  });
-  // Style first active buttons
-  document.querySelectorAll('.meal-opt-btn.active').forEach((btn, i) => {
-    const keys = ['cafe','almoco','lanche','janta'];
-    const sectionColors = ['#fbbf24','#86efac','#c084fc','#67e8f9'];
-    // find parent section
-    const section = btn.closest('.screen') ? btn.parentElement : null;
-  });
+function selectCargaDay(day, btn) {
+  selectedCargaDay = day;
+  document.querySelectorAll('.carga-day-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  selectedCargaEx = null;
+  renderCargaCharts();
 }
 
-// ══════════════════════════════════
+function deleteCarga(ex, idx) {
+  if (cargasData[ex]) {
+    cargasData[ex].splice(idx, 1);
+    if (cargasData[ex].length === 0) delete cargasData[ex];
+    if (selectedCargaEx === ex && !cargasData[ex]) {
+      selectedCargaEx = null;
+    }
+  }
+  renderCargaCharts();
+}
+
+function selectCargaEx(ex) {
+  selectedCargaEx = ex;
+  renderCargaCharts();
+}
+
+// Exercises per treino day (must match data-ex values in HTML)
+const DAY_EXERCISES = {
+  A: ['Hip Thrust (barra)', 'Leg Press 45°', 'Stiff', 'Cadeira Flexora', 'Glúteo na polia', 'Abdução de quadril'],
+  B: ['Puxada frontal', 'Remada curvada', 'Remada unilateral', 'Puxada polia supinada', 'Rosca direta', 'Rosca martelo'],
+  C: ['Agachamento livre', 'Leg Press 45° quad', 'Cadeira Extensora', 'Agachamento sumô', 'Panturrilha sentada', 'Panturrilha em pé'],
+  D: ['Desenvolvimento ombros', 'Elevação lateral', 'Crucifixo inverso', 'Supino inclinado', 'Tríceps pulley', 'Mergulho no banco'],
+};
+
+const DAY_COLORS = { A: '#b57bff', B: '#5fd4f4', C: '#6de8a0', D: '#ff7b7b' };
+
+function renderCargaCharts() {
+  const day = selectedCargaDay;
+  const color = DAY_COLORS[day];
+  const colorDim = color + '22';
+  const exercises = DAY_EXERCISES[day];
+  const volKey = 'vol_' + day;
+  const volData = cargasData[volKey] || [];
+  const volBox = document.getElementById('carga-vol-box');
+  const tabsRow = document.getElementById('carga-tabs-row');
+  const chartArea = document.getElementById('carga-chart-area');
+
+  // Volume summary box
+  if (volData.length === 0) {
+    volBox.innerHTML = `<div class="chart-empty" style="margin-bottom:12px">Salve um Treino ${day} com cargas preenchidas para ver o volume total 🏋️</div>`;
+  } else {
+    const last = volData[volData.length - 1];
+    const prev = volData.length > 1 ? volData[volData.length - 2] : null;
+    const diff = prev ? last.val - prev.val : null;
+    let diffHtml = '';
+    if (diff !== null) {
+      const dc = diff > 0 ? '#6de8a0' : diff < 0 ? '#ff7b7b' : '#4e4e63';
+      const sign = diff > 0 ? '+' : '';
+      diffHtml = `<span class="carga-vol-diff" style="color:${dc}">${sign}${Math.round(diff)} kg vs anterior</span>`;
+    }
+    volBox.innerHTML = `
+      <div class="carga-vol-summary">
+        <div class="carga-vol-icon">🏋️</div>
+        <div class="carga-vol-info">
+          <div class="carga-vol-title">Volume total — Treino ${day} (último)</div>
+          <div><span class="carga-vol-val" style="color:${color}">${Math.round(last.val)} kg</span>${diffHtml}</div>
+        </div>
+      </div>
+      ${renderMiniVolumeChart(volData, color)}
+    `;
+  }
+
+  // Exercise tabs — only exercises with data for this day
+  const exWithData = exercises.filter(ex => cargasData[ex] && cargasData[ex].length > 0);
+  if (exWithData.length === 0) {
+    tabsRow.innerHTML = '';
+    chartArea.innerHTML = '<div class="chart-empty">Nenhuma carga de exercício registrada ainda para o Treino ' + day + '.<br>Preencha os kg nos exercícios e salve o treino.</div>';
+    return;
+  }
+
+  if (!selectedCargaEx || !cargasData[selectedCargaEx] || !exercises.includes(selectedCargaEx)) {
+    selectedCargaEx = exWithData[0];
+  }
+
+  tabsRow.innerHTML = exWithData.map(ex => `
+    <button class="ex-tab-btn ${selectedCargaEx===ex?'active':''}" onclick="selectCargaEx('${ex.replace(/'/g,"\\'")}')">
+      ${ex.length > 16 ? ex.substring(0,14)+'…' : ex}
+    </button>
+  `).join('');
+
+  // Per-exercise chart
+  const data = cargasData[selectedCargaEx];
+  const maxVal = Math.max(...data.map(d => d.val));
+  const minVal = Math.min(...data.map(d => d.val));
+  const range = maxVal - minVal || 1;
+
+  let chartHTML = `
+    <div class="chart-container">
+      <div class="chart-title-row">
+        <div class="chart-title">${selectedCargaEx}</div>
+        <div class="chart-subtitle">${data.length} registro${data.length>1?'s':''}</div>
+      </div>
+  `;
+
+  if (data.length < 2) {
+    chartHTML += `<div class="chart-empty">Registre pelo menos 2 treinos para ver o gráfico 📊</div>`;
+  } else {
+    const W = 300, H = 100, padL = 32, padR = 10, padT = 10, padB = 20;
+    const innerW = W - padL - padR;
+    const innerH = H - padT - padB;
+
+    const points = data.map((d, i) => {
+      const x = padL + (i / (data.length - 1)) * innerW;
+      const y = padT + innerH - ((d.val - minVal) / range) * innerH;
+      return { x, y, val: d.val, date: d.date };
+    });
+
+    const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
+    const areaPoints = `${points[0].x},${padT + innerH} ` + polyline + ` ${points[points.length-1].x},${padT + innerH}`;
+    const ySteps = [minVal, (minVal + maxVal) / 2, maxVal].map(v => Math.round(v * 2) / 2);
+    const gc = color.replace('#', '');
+
+    chartHTML += `
+      <div class="chart-area">
+        <svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="lineGrad${day}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${color}" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="${padL}" y1="${padT}" x2="${W-padR}" y2="${padT}" stroke="#22222e" stroke-width="0.5"/>
+          <line x1="${padL}" y1="${padT + innerH/2}" x2="${W-padR}" y2="${padT + innerH/2}" stroke="#22222e" stroke-width="0.5" stroke-dasharray="2,3"/>
+          <line x1="${padL}" y1="${padT + innerH}" x2="${W-padR}" y2="${padT + innerH}" stroke="#22222e" stroke-width="0.5"/>
+          <text x="${padL-3}" y="${padT+4}" fill="#4e4e63" font-size="7" text-anchor="end" font-family="Plus Jakarta Sans">${ySteps[2]}kg</text>
+          <text x="${padL-3}" y="${padT+innerH/2+4}" fill="#4e4e63" font-size="7" text-anchor="end" font-family="Plus Jakarta Sans">${Math.round(ySteps[1]*2)/2}kg</text>
+          <text x="${padL-3}" y="${padT+innerH+4}" fill="#4e4e63" font-size="7" text-anchor="end" font-family="Plus Jakarta Sans">${ySteps[0]}kg</text>
+          <polygon points="${areaPoints}" fill="url(#lineGrad${day})"/>
+          <polyline points="${polyline}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="${color}" stroke="#131318" stroke-width="1"/>`).join('')}
+        </svg>
+      </div>
+    `;
+  }
+
+  // History list
+  chartHTML += `<div style="margin-top:12px">`;
+  chartHTML += `<div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Histórico</div>`;
+  [...data].reverse().forEach((d, ri) => {
+    const i = data.length - 1 - ri;
+    const dateStr = formatDate(d.date);
+    const prev = data[i - 1];
+    const diff = prev ? d.val - prev.val : null;
+    let diffHtml = '';
+    if (diff !== null) {
+      const dc = diff > 0 ? '#6de8a0' : diff < 0 ? '#ff7b7b' : '#4e4e63';
+      const sign = diff > 0 ? '+' : '';
+      diffHtml = `<span style="font-size:10px;color:${dc};font-weight:700;margin-left:6px">${sign}${diff}kg</span>`;
+    }
+    chartHTML += `
+      <div class="carga-history-row">
+        <div class="carga-history-date">${dateStr}</div>
+        <div style="display:flex;align-items:center">
+          <div class="carga-history-val" style="color:${color}">${d.val}kg</div>
+          ${diffHtml}
+        </div>
+        <button class="carga-del-btn" onclick="deleteCarga('${selectedCargaEx.replace(/'/g,"\\'")}', ${i})">✕</button>
+      </div>
+    `;
+  });
+  chartHTML += '</div></div>';
+
+  chartArea.innerHTML = chartHTML;
+}
+
+function renderMiniVolumeChart(data, color) {
+  if (data.length < 2) return '';
+  const W = 300, H = 60, padL = 32, padR = 10, padT = 8, padB = 16;
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+  const maxVal = Math.max(...data.map(d => d.val));
+  const minVal = Math.min(...data.map(d => d.val));
+  const range = maxVal - minVal || 1;
+
+  const points = data.map((d, i) => {
+    const x = padL + (i / (data.length - 1)) * innerW;
+    const y = padT + innerH - ((d.val - minVal) / range) * innerH;
+    return { x, y, val: d.val };
+  });
+  const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
+  const areaPoints = `${points[0].x},${padT + innerH} ` + polyline + ` ${points[points.length-1].x},${padT + innerH}`;
+
+  return `
+    <div class="chart-container" style="margin-bottom:12px">
+      <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Volume total por treino</div>
+      <div style="width:100%;height:${H}px;position:relative">
+        <svg style="width:100%;height:100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="volGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="${color}" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="${padL}" y1="${padT+innerH}" x2="${W-padR}" y2="${padT+innerH}" stroke="#22222e" stroke-width="0.5"/>
+          <text x="${padL-3}" y="${padT+4}" fill="#4e4e63" font-size="6" text-anchor="end" font-family="Plus Jakarta Sans">${Math.round(maxVal)}kg</text>
+          <text x="${padL-3}" y="${padT+innerH+4}" fill="#4e4e63" font-size="6" text-anchor="end" font-family="Plus Jakarta Sans">${Math.round(minVal)}kg</text>
+          <polygon points="${areaPoints}" fill="url(#volGrad)"/>
+          <polyline points="${polyline}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="${color}" stroke="#131318" stroke-width="1"/>`).join('')}
+        </svg>
+      </div>
+    </div>
+  `;
+}
+
+function formatDate(str) {
+  const [y, m, d] = str.split('-');
+  const months = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  return `${d} ${months[parseInt(m)-1]} ${y}`;
+}
+
+// ══════════════════════════════════════════
+// CALENDÁRIO / DIAS
+// ══════════════════════════════════════════
+function renderCalendar() {
+  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('cal-month-title').textContent = months[calMonth] + ' ' + calYear;
+
+  const today = new Date();
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+  let html = '';
+  // Empty cells
+  for (let i = 0; i < firstDay; i++) {
+    html += '<div class="cal-day empty"></div>';
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === d;
+    const workouts = workoutLog.filter(w => w.date === dateStr);
+    const isDone = workouts.length > 0;
+    const typeLabel = isDone ? workouts.map(w => w.type).join(',') : '';
+
+    html += `<div class="cal-day ${isToday?'today':''} ${isDone?'done':''}" onclick="toggleDayWorkout('${dateStr}')">
+      ${d}
+      ${isDone ? `<div class="cal-day-type">${typeLabel}</div>` : ''}
+    </div>`;
+  }
+
+  document.getElementById('cal-grid').innerHTML = html;
+  renderRecentList();
+  updateStreakStats();
+}
+
+function toggleDayWorkout(dateStr) {
+  // If day has workout, remove it. Otherwise add as 'Manual'
+  const idx = workoutLog.findIndex(w => w.date === dateStr);
+  if (idx !== -1) {
+    workoutLog.splice(idx, 1);
+  } else {
+    workoutLog.push({ date: dateStr, type: '✓' });
+  }
+  renderCalendar();
+}
+
+function prevMonth() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function nextMonth() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderRecentList() {
+  const el = document.getElementById('recent-list');
+  if (workoutLog.length === 0) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center;padding:16px 0">Nenhum treino salvo ainda</div>';
+    return;
+  }
+  const sorted = [...workoutLog].sort((a,b) => b.date.localeCompare(a.date)).slice(0,10);
+  const typeColors = {
+    'A': '#b57bff', 'B': '#5fd4f4', 'C': '#6de8a0', 'D': '#ff7b7b',
+    'Cardio Esteira': '#ff9d5c', 'Cardio Bike': '#ff9d5c',
+    'HIIT': '#ff9d5c', 'Corda': '#ff9d5c', '✓': '#f5c542'
+  };
+  el.innerHTML = sorted.map((w, i) => {
+    const color = typeColors[w.type] || '#a09d96';
+    const origIdx = workoutLog.findIndex(x => x.date === w.date && x.type === w.type);
+    return `
+      <div class="recent-list-item">
+        <div class="recent-date">${formatDate(w.date)}</div>
+        <span class="recent-type" style="background:${color}22;color:${color}">${w.type}</span>
+        <button class="recent-del" onclick="removeWorkoutLog(${origIdx})">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function removeWorkoutLog(idx) {
+  workoutLog.splice(idx, 1);
+  renderCalendar();
+}
+
+function updateStreakStats() {
+  const today = getTodayStr();
+  const dates = [...new Set(workoutLog.map(w => w.date))].sort();
+
+  // Total
+  document.getElementById('total-treinos').textContent = workoutLog.length;
+
+  // This month
+  const thisMonthPrefix = new Date().toISOString().slice(0,7);
+  const mesCount = workoutLog.filter(w => w.date.startsWith(thisMonthPrefix)).length;
+  document.getElementById('mes-treinos').textContent = mesCount;
+
+  // Streak (consecutive days up to today)
+  let streak = 0;
+  let checkDate = new Date();
+  while (true) {
+    const ds = checkDate.getFullYear() + '-' + String(checkDate.getMonth()+1).padStart(2,'0') + '-' + String(checkDate.getDate()).padStart(2,'0');
+    if (dates.includes(ds)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else break;
+  }
+  document.getElementById('streak-count').textContent = streak;
+}
+
+// ══════════════════════════════════════════
 // INIT
-// ══════════════════════════════════
+// ══════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   ['cafe','almoco','lanche','janta'].forEach(k => renderMeal(k));
   renderBeliscos();
   renderPesos();
+  selectedCargaDay = 'A';
+  renderCargaCharts();
+  renderCalendar();
 
-  // Style initial active meal buttons
-  const mealColors = { 0:'#fbbf24', 1:'#86efac', 2:'#c084fc', 3:'#67e8f9' };
+  // Style first active meal buttons
+  const mealColors = { 0:'#f5c542', 1:'#6de8a0', 2:'#b57bff', 3:'#5fd4f4' };
   document.querySelectorAll('.meal-selector').forEach((sel, i) => {
     const firstBtn = sel.querySelector('.meal-opt-btn.active');
     if (firstBtn) {
       firstBtn.style.background = mealColors[i];
       firstBtn.style.borderColor = mealColors[i];
-      firstBtn.style.color = '#0a0a0f';
+      firstBtn.style.color = '#0c0c10';
     }
   });
+
+  // Set calendar to current month
+  calYear = new Date().getFullYear();
+  calMonth = new Date().getMonth();
+  renderCalendar();
 });
 
-// Prevent double-tap zoom on iOS
-document.addEventListener('touchend', e => {
-  e.preventDefault();
-}, { passive: false });
+// Prevent double-tap zoom iOS
+document.addEventListener('touchend', e => { e.preventDefault(); }, { passive: false });
 </script>
 </body>
 </html>
