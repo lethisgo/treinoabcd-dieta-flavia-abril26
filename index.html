@@ -5,2547 +5,1079 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Treino & Dieta">
-<title>Treino & Dieta</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="apple-mobile-web-app-title" content="Treino & Ciclo">
+<title>Treino & Ciclo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  :root {
-    --bg: #0c0c10;
-    --surface: #131318;
-    --surface2: #1a1a22;
-    --border: #242430;
-    --border2: #2e2e3c;
-    --text: #ede9e0;
-    --text2: #a09d96;
-    --muted: #4e4e63;
-    --gold: #f5c542;
-    --gold-dim: rgba(245,197,66,0.12);
-    --green: #6de8a0;
-    --green-dim: rgba(109,232,160,0.1);
-    --cyan: #5fd4f4;
-    --cyan-dim: rgba(95,212,244,0.1);
-    --purple: #b57bff;
-    --purple-dim: rgba(181,123,255,0.1);
-    --red: #ff7b7b;
-    --red-dim: rgba(255,123,123,0.1);
-    --orange: #ff9d5c;
-    --orange-dim: rgba(255,157,92,0.1);
-    --pink: #f472b6;
-    --pink-dim: rgba(244,114,182,0.1);
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+:root{
+  --bg:#0c0c10;--surface:#13131a;--surface2:#1a1a24;--border:#24242f;
+  --text:#eeeae0;--muted:#5a5a70;--subtle:#888898;
+  --gold:#f0b429;--green:#6ee7a0;--cyan:#5cd8f0;--purple:#b97ff8;
+  --red:#f87171;--orange:#fb923c;--pink:#f472b6;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
+  min-height:100vh;overscroll-behavior:none;}
+h1,h2,h3{font-family:'Instrument Serif',serif;font-weight:400;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* ── TOP NAV ── */
+.top-nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(12,12,16,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.top-nav-title{
+  font-family:'Instrument Serif',serif;font-size:17px;
+  text-align:center;padding:12px 16px 0;color:var(--text);letter-spacing:-0.2px;
+}
+.top-tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:0 4px;}
+.top-tabs::-webkit-scrollbar{display:none;}
+.top-tab{
+  flex-shrink:0;padding:10px 14px;background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;
+  white-space:nowrap;transition:all 0.2s;letter-spacing:0.2px;
+}
+.top-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    min-height: 100vh;
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 20px);
-    overscroll-behavior: none;
-    font-size: 14px;
-    line-height: 1.5;
-  }
+/* ── SCREENS ── */
+.screen{display:none;padding:12px 16px 40px;}
+.screen.active{display:block;}
+.page-sub{font-size:12px;color:var(--muted);margin-bottom:12px;}
 
-  /* ── NAV ── */
-  .nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(12,12,16,0.94);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--border);
-    padding: 12px 14px 10px;
-    padding-top: calc(12px + env(safe-area-inset-top, 0px));
-  }
-  .nav-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 17px; font-weight: 700;
-    color: var(--text); text-align: center;
-    margin-bottom: 10px;
-    letter-spacing: -0.3px;
-  }
-  .nav-title span { color: var(--gold); }
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:12px;}
+.card-header{padding:13px 16px;border-bottom:1px solid var(--border);}
+.card-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.card-title{font-size:18px;margin-bottom:2px;}
+.card-note{font-size:12px;color:var(--subtle);line-height:1.5;margin-top:3px;}
 
-  .nav-tabs {
-    display: flex; gap: 5px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 2px;
-  }
-  .nav-tabs::-webkit-scrollbar { display: none; }
-  .nav-tab {
-    flex-shrink: 0;
-    padding: 11px 15px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    letter-spacing: 0.2px;
-    min-height: 44px;
-    display: flex; align-items: center;
-  }
-  .nav-tab.active {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: #0c0c10;
-  }
+/* ── DAY SELECTOR ── */
+.day-selector{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;margin-bottom:10px;}
+.day-selector::-webkit-scrollbar{display:none;}
+.day-btn{flex-shrink:0;padding:8px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.day-btn.active{border-color:var(--purple);background:rgba(185,127,248,0.1);color:var(--purple);}
 
-  /* ── SCREENS ── */
-  .screen { display: none; padding: 14px; }
-  .screen.active { display: block; }
+/* ── EXERCISES ── */
+.ex-row{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;}
+.ex-row:last-child{border-bottom:none;}
+.ex-num{font-size:11px;color:var(--muted);width:20px;flex-shrink:0;padding-top:2px;}
+.ex-body{flex:1;}
+.ex-name{font-size:13px;font-weight:500;margin-bottom:4px;}
+.ex-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;}
+.ex-tag{font-size:10px;padding:2px 7px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--subtle);}
+.ex-tip{font-size:11px;color:var(--muted);line-height:1.4;padding:5px 9px;background:var(--bg);border-radius:7px;border-left:2px solid var(--purple);margin-top:3px;}
+.ex-load{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;}
+.load-input{width:52px;padding:6px 4px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;text-align:center;font-weight:500;-webkit-appearance:none;}
+.load-input:focus{outline:none;border-color:var(--purple);}
+.load-label{font-size:9px;color:var(--muted);letter-spacing:1px;}
+.ex-check{width:26px;height:26px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;
+  transition:all 0.15s;background:var(--surface2);color:transparent;}
+.ex-check.done{background:var(--purple);border-color:var(--purple);color:#fff;}
 
-  /* ── CARDS ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 12px;
-  }
-  .card-header {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .card-label {
-    font-size: 10px; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--muted);
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px; font-weight: 600;
-    color: var(--text);
-  }
-  .card-note {
-    font-size: 12px; color: var(--text2);
-    line-height: 1.5; margin-top: 5px;
-  }
+/* ── PROGRESS & TIMER ── */
+.prog-wrap{padding:10px 16px;}
+.prog-top{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px;}
+.prog-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:2px;transition:width 0.4s ease;}
+.timer-section{padding:12px 16px;border-top:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:10px;}
+.timer-display{font-size:28px;color:var(--gold);font-variant-numeric:tabular-nums;flex:1;text-align:center;font-weight:300;letter-spacing:2px;}
+.timer-btns{display:flex;flex-direction:column;gap:4px;}
+.t-btn{padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--subtle);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;white-space:nowrap;}
+.t-btn.primary{border-color:var(--gold);color:var(--gold);}
+.t-btn.danger{border-color:var(--red);color:var(--red);}
 
-  /* ── TREINO ── */
-  .day-selector {
-    display: flex; gap: 7px; margin-bottom: 14px;
-  }
-  .day-btn {
-    flex: 1; padding: 16px 4px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--muted);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 14px; font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s; text-align: center;
-    min-height: 62px;
-  }
-  .day-btn .day-icon { font-size: 15px; display: block; margin-bottom: 4px; }
-  .day-btn.active {
-    border-color: var(--purple);
-    background: var(--purple-dim);
-    color: var(--purple);
-  }
+/* ── BUTTONS ── */
+.save-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--purple),#8b5cf6);border:none;border-radius:12px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:6px;transition:opacity 0.2s;}
+.save-btn:active{opacity:0.8;}
+.outline-btn{width:100%;padding:11px;background:var(--surface);border:1px solid var(--border);border-radius:12px;color:var(--subtle);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:6px;}
+.ghost-btn{padding:7px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--subtle);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;}
 
-  .exercise-row {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-start; gap: 10px;
-  }
-  .exercise-row:last-child { border-bottom: none; }
-  .ex-num {
-    font-size: 10px; color: var(--purple);
-    width: 20px; flex-shrink: 0; padding-top: 2px;
-    font-weight: 700;
-  }
-  .ex-info { flex: 1; }
-  .ex-name { font-size: 13px; color: var(--text); margin-bottom: 5px; font-weight: 500; }
-  .ex-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
-  .ex-tag {
-    font-size: 10px; padding: 3px 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 5px; color: var(--text2);
-    font-weight: 500;
-  }
-  .ex-check {
-    width: 32px; height: 32px;
-    border: 1.5px solid var(--border2);
-    border-radius: 8px; cursor: pointer;
-    flex-shrink: 0; display: flex;
-    align-items: center; justify-content: center;
-    font-size: 14px; transition: all 0.15s;
-    background: var(--surface2);
-    min-width: 32px;
-  }
-  .ex-check.done {
-    background: var(--purple);
-    border-color: var(--purple); color: #fff;
-  }
-  .ex-tip {
-    font-size: 11px; color: var(--text2);
-    line-height: 1.4; margin-top: 5px;
-    padding: 7px 10px;
-    background: var(--bg);
-    border-radius: 6px;
-    border-left: 2px solid var(--purple);
-  }
+/* ── DATE SELECTOR FOR PAST ENTRY ── */
+.date-row{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.date-row label{font-size:11px;color:var(--muted);flex-shrink:0;}
+.date-picker{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:6px 10px;}
+.date-picker:focus{outline:none;border-color:var(--gold);}
 
-  /* ── SERIES TRACKER ── */
-  .series-tracker {
-    margin-top: 10px;
-    display: flex; flex-direction: column; gap: 6px;
-  }
-  .serie-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 12px;
-    background: var(--bg);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    transition: all 0.15s;
-    min-height: 50px;
-  }
-  .serie-row.done-serie {
-    background: var(--surface2);
-    border-color: var(--border2);
-    opacity: 0.5;
-  }
-  .serie-label {
-    font-size: 11px; color: var(--muted); font-weight: 700;
-    width: 46px; flex-shrink: 0;
-    letter-spacing: 0.3px;
-  }
-  .serie-kg-input {
-    width: 64px; flex-shrink: 0;
-    padding: 7px 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 7px;
-    color: var(--green);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px; font-weight: 700;
-    text-align: center;
-    -webkit-appearance: none;
-    appearance: none;
-    min-height: 36px;
-  }
-  .serie-kg-input:focus { outline: none; border-color: var(--green); }
-  .serie-kg-input::placeholder { color: var(--muted); font-weight: 400; font-size: 11px; }
-  .serie-kg-unit { font-size: 10px; color: var(--muted); font-weight: 600; flex-shrink: 0; }
-  .serie-reps {
-    font-size: 11px; color: var(--text2);
-    flex: 1; text-align: center;
-  }
-  .serie-cb {
-    width: 38px; height: 38px; flex-shrink: 0;
-    border: 1.5px solid var(--border2);
-    border-radius: 9px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; transition: all 0.15s;
-    background: var(--surface2);
-    min-width: 38px;
-  }
-  .serie-cb.checked { background: var(--purple); border-color: var(--purple); color: #fff; }
-  .serie-cb.checked-B { background: var(--cyan); border-color: var(--cyan); color: #fff; }
-  .serie-cb.checked-C { background: var(--green); border-color: var(--green); color: #0c0c10; }
-  .serie-cb.checked-D { background: var(--red); border-color: var(--red); color: #fff; }
+/* ── PHASE BANNER ── */
+.phase-banner{border-radius:12px;padding:11px 14px;margin-bottom:10px;border:1px solid;}
+.phase-tag{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500;margin-right:5px;margin-top:4px;display:inline-block;}
 
-  /* Rest timer inline */
-  .rest-timer-inline {
-    display: none;
-    padding: 12px 16px;
-    background: var(--gold-dim);
-    border-top: 1px solid var(--gold);
-    align-items: center; gap: 10px;
-  }
-  .rest-timer-inline.visible { display: flex; }
-  .rest-timer-count {
-    font-family: 'Syne', sans-serif;
-    font-size: 32px; font-weight: 700;
-    color: var(--gold); flex: 1; text-align: center;
-    font-variant-numeric: tabular-nums;
-  }
-  .rest-timer-label {
-    font-size: 11px; color: var(--gold); font-weight: 600; text-align: center;
-  }
-  .rest-skip-btn {
-    padding: 10px 14px;
-    border: 1px solid var(--gold);
-    border-radius: 9px; background: transparent; color: var(--gold);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px; font-weight: 700;
-    cursor: pointer; flex-shrink: 0;
-    min-height: 42px;
-  }
+/* ── DIET ── */
+.meal-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;}
+.meal-opts{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
+.meal-opt-btn{padding:5px 11px;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all 0.18s;}
+.food-row{padding:9px 16px;border-bottom:1px solid var(--border);}
+.food-row:last-child{border-bottom:none;}
+.food-name{font-size:13px;font-weight:500;margin-bottom:2px;}
+.food-qty{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:4px;}
+.food-macros{display:flex;flex-wrap:wrap;gap:4px;}
+.food-macro{font-size:10px;padding:2px 6px;border-radius:4px;}
+.meal-total{padding:9px 16px;display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;background:var(--surface2);border-top:1px solid var(--border);}
+.meal-total span{font-size:11px;}
+.tip-block{padding:9px 13px;background:var(--bg);font-size:11px;color:var(--muted);line-height:1.5;border-top:1px solid var(--border);}
+.macro-box{padding:14px 16px;}
+.macro-row{margin-bottom:9px;}
+.macro-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;}
+.macro-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.macro-fill{height:100%;border-radius:2px;transition:width 0.4s ease;}
+.belisco-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px 14px;margin-bottom:9px;cursor:pointer;transition:all 0.2s;}
+.belisco-card.sel{border-color:var(--purple);background:rgba(185,127,248,0.06);}
+.belisco-badge{margin-top:7px;padding:4px 9px;background:rgba(185,127,248,0.12);border-radius:6px;font-size:10px;color:var(--purple);text-align:center;}
 
-  /* Progress */
-  .progress-wrap { padding: 12px 16px; }
-  .progress-label {
-    display: flex; justify-content: space-between;
-    font-size: 11px; color: var(--muted); margin-bottom: 6px;
-    font-weight: 600;
-  }
-  .progress-track {
-    height: 5px; background: var(--border);
-    border-radius: 3px; overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; background: var(--purple);
-    border-radius: 3px; transition: width 0.4s ease;
-  }
+/* ── CHARTS ── */
+.chart-ex-btn{padding:5px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;cursor:pointer;transition:all 0.18s;}
+.chart-ex-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(240,180,41,0.1);}
+.chart-wrap{padding:12px;}
+.chart-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:13px;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;}
+.stat-box{background:var(--surface2);border-radius:10px;padding:11px;text-align:center;}
+.stat-val{font-size:20px;font-weight:600;margin-bottom:2px;}
+.stat-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
 
-  /* Save btn */
-  .save-btn {
-    width: 100%; padding: 15px;
-    background: var(--gold-dim);
-    border: 1px solid var(--gold);
-    border-radius: var(--radius);
-    color: var(--gold);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 14px; font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 4px;
-    letter-spacing: 0.3px;
-    min-height: 52px;
-  }
-  .save-btn:active { background: var(--gold); color: #0c0c10; }
+/* ── CALENDAR ── */
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);}
+.cal-month{font-size:17px;}
+.cal-nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;padding:6px 10px 2px;}
+.cal-day-name{font-size:10px;color:var(--muted);padding:3px 0;}
+.cal-cells{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:4px 10px 10px;}
+.cal-cell{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--muted);cursor:pointer;position:relative;transition:all 0.15s;flex-direction:column;gap:1px;}
+.cal-cell.today{color:var(--text);font-weight:600;}
+.cal-cell.today::after{content:'';position:absolute;bottom:2px;width:3px;height:3px;border-radius:50%;background:var(--gold);}
+.cal-cell.musculacao{background:rgba(185,127,248,0.18);color:var(--purple);}
+.cal-cell.cardio{background:rgba(251,146,60,0.18);color:var(--orange);}
+.cal-cell.pilates{background:rgba(240,180,41,0.18);color:var(--gold);}
+.cal-cell.descanso{background:var(--surface2);color:var(--muted);}
+.cal-cell.menstruation{background:rgba(248,113,113,0.2);color:var(--red);}
+.cal-cell.empty{cursor:default;}
+.cal-cell-sub{font-size:8px;opacity:0.8;line-height:1;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:7px;padding:8px 14px 12px;border-top:1px solid var(--border);}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--subtle);}
+.legend-dot{width:7px;height:7px;border-radius:2px;}
+.history-item{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.history-item:last-child{border-bottom:none;}
+.history-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0;}
+.history-date{font-size:11px;color:var(--muted);flex-shrink:0;}
+.history-type{font-size:13px;font-weight:500;}
+.history-detail{font-size:11px;color:var(--muted);}
+.del-btn{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px;flex-shrink:0;}
+.del-btn:active{color:var(--red);}
 
-  /* ── DIETA ── */
-  .meal-selector {
-    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;
-  }
-  .meal-opt-btn {
-    padding: 11px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm); color: var(--muted);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px; font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s;
-    min-height: 44px;
-  }
-  .food-row {
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .food-row:last-child { border-bottom: none; }
-  .food-name { font-size: 13px; color: var(--text); margin-bottom: 3px; font-weight: 500; }
-  .food-qty { font-size: 11px; color: var(--text2); line-height: 1.4; margin-bottom: 5px; }
-  .food-macros { display: flex; flex-wrap: wrap; gap: 4px; }
-  .food-macro { font-size: 10px; padding: 3px 7px; border-radius: 4px; font-weight: 600; }
-  .meal-total {
-    padding: 10px 16px;
-    display: flex; justify-content: flex-end; gap: 8px;
-    flex-wrap: wrap;
-    border-top: 1px solid var(--border);
-    background: var(--surface2);
-  }
-  .meal-total span { font-size: 11px; }
+/* ── CYCLE ── */
+.cycle-dot-row{display:flex;flex-wrap:wrap;gap:3px;padding:12px 16px;border-bottom:1px solid var(--border);}
+.cdot{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;cursor:pointer;transition:all 0.15s;border:1px solid transparent;}
+.cdot.menstruation{background:rgba(248,113,113,0.3);color:var(--red);border-color:var(--red);}
+.cdot.selected{box-shadow:0 0 0 2px var(--text);}
+.block-info-row{padding:11px 16px;border-bottom:1px solid var(--border);}
+.block-info-row:last-child{border-bottom:none;}
 
-  /* Macro summary */
-  .macro-summary {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px; margin-bottom: 12px;
-  }
-  .macro-summary-title {
-    font-size: 10px; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--muted);
-    margin-bottom: 12px; font-weight: 600;
-  }
-  .macro-row { margin-bottom: 10px; }
-  .macro-row-top {
-    display: flex; justify-content: space-between;
-    font-size: 11px; margin-bottom: 4px; font-weight: 600;
-  }
-  .macro-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .macro-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:flex;align-items:flex-end;justify-content:center;}
+.modal-overlay.hidden{display:none;}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:22px 18px;width:100%;max-width:500px;padding-bottom:calc(22px + env(safe-area-inset-bottom,0px));max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:20px;margin-bottom:3px;}
+.modal-sub{font-size:12px;color:var(--muted);margin-bottom:18px;}
+.field-group{margin-bottom:12px;}
+.field-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.field-input{width:100%;padding:11px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;}
+.field-input:focus{outline:none;border-color:var(--gold);}
 
-  /* Beliscos (inside dieta tab) */
-  .belisco-section {
-    margin-top: 8px;
-  }
-  .belisco-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px; margin-bottom: 10px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .belisco-card.sel { border-color: var(--purple); background: var(--purple-dim); }
-  .belisco-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-  .belisco-name { font-size: 14px; color: var(--text); margin-bottom: 3px; font-weight: 600; }
-  .belisco-qty { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
-  .belisco-tip { font-size: 11px; color: var(--text2); line-height: 1.4; }
-  .belisco-badge {
-    margin-top: 8px; padding: 6px 10px;
-    background: var(--purple-dim);
-    border-radius: 6px; font-size: 10px;
-    color: var(--purple); text-align: center; font-weight: 700;
-  }
+/* ── RETROACTIVE PANEL ── */
+.retro-section{background:var(--surface2);border:1px dashed var(--border);border-radius:12px;padding:14px;margin-bottom:12px;}
+.retro-title{font-size:12px;color:var(--muted);margin-bottom:10px;letter-spacing:0.5px;}
 
-  /* Section label */
-  .section-label {
-    font-size: 10px; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--muted);
-    margin: 16px 0 8px; font-weight: 700;
-  }
-
-  /* Tip block */
-  .tip-block {
-    padding: 10px 14px;
-    background: var(--bg);
-    font-size: 11px; color: var(--text2);
-    line-height: 1.5; border-top: 1px solid var(--border);
-  }
-
-  /* Hidden */
-  .hidden { display: none !important; }
-
-  /* ── CARDIO ── */
-  .cardio-selector {
-    display: flex; gap: 7px; margin-bottom: 14px;
-  }
-  .cardio-btn {
-    flex: 1;
-    padding: 13px 4px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--muted);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px; font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s; text-align: center;
-    min-height: 58px;
-  }
-  .cardio-btn .c-icon { font-size: 17px; display: block; margin-bottom: 4px; }
-  .cardio-btn.active {
-    border-color: var(--orange);
-    background: var(--orange-dim);
-    color: var(--orange);
-  }
-
-  .cardio-phase {
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-start; gap: 10px;
-  }
-  .cardio-phase:last-child { border-bottom: none; }
-  .phase-num {
-    font-size: 10px; color: var(--orange);
-    width: 22px; flex-shrink: 0; padding-top: 2px; font-weight: 700;
-  }
-  .phase-info { flex: 1; }
-  .phase-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .phase-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
-  .phase-tag {
-    font-size: 10px; padding: 3px 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 5px; color: var(--text2); font-weight: 500;
-  }
-  .phase-tip { font-size: 11px; color: var(--text2); line-height: 1.4; }
-
-  /* ── EVOLUÇÃO DE CARGAS ── */
-  .chart-container {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-  .chart-title-row {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 12px;
-  }
-  .chart-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px; font-weight: 700; color: var(--text);
-  }
-  .chart-subtitle { font-size: 10px; color: var(--muted); font-weight: 600; }
-  .chart-area {
-    width: 100%; height: 120px;
-    position: relative;
-  }
-  .chart-svg { width: 100%; height: 100%; }
-  .chart-empty {
-    display: flex; align-items: center; justify-content: center;
-    height: 80px;
-    font-size: 11px; color: var(--muted);
-    border: 1px dashed var(--border2);
-    border-radius: 8px;
-    font-weight: 500;
-    text-align: center;
-    padding: 12px;
-    line-height: 1.5;
-  }
-  .ex-tab-row {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
-  }
-  .ex-tab-btn {
-    padding: 8px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    color: var(--muted);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 11px; font-weight: 600;
-    cursor: pointer; transition: all 0.15s;
-    white-space: nowrap;
-    min-height: 36px;
-  }
-  .ex-tab-btn.active {
-    background: var(--green-dim);
-    border-color: var(--green);
-    color: var(--green);
-  }
-  .carga-history-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 12px;
-    background: var(--surface2);
-    border-radius: 8px; margin-bottom: 5px;
-  }
-  .carga-history-date { font-size: 11px; color: var(--text2); font-weight: 500; }
-  .carga-history-val { font-size: 13px; color: var(--green); font-weight: 700; font-family: 'Syne', sans-serif; }
-  .carga-del-btn {
-    font-size: 13px; color: var(--muted);
-    background: none; border: none; cursor: pointer; padding: 4px 8px;
-    min-width: 32px; min-height: 32px;
-  }
-
-  .carga-day-tabs {
-    display: flex; gap: 6px; margin-bottom: 14px;
-  }
-  .carga-day-tab {
-    flex: 1; padding: 11px 4px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s; text-align: center;
-    min-height: 46px;
-  }
-  .carga-day-tab.active {
-    background: var(--green-dim);
-    border-color: var(--green);
-    color: var(--green);
-  }
-  .carga-vol-summary {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    display: flex; gap: 10px; align-items: center;
-  }
-  .carga-vol-icon { font-size: 22px; flex-shrink: 0; }
-  .carga-vol-info { flex: 1; }
-  .carga-vol-title {
-    font-size: 10px; color: var(--muted); font-weight: 700;
-    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px;
-  }
-  .carga-vol-val {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px; font-weight: 700; color: var(--green);
-  }
-  .carga-vol-diff {
-    font-size: 11px; font-weight: 700; margin-left: 6px;
-  }
-
-  /* ── CALENDÁRIO ── */
-  .calendar-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px;
-  }
-  .cal-nav-btn {
-    width: 40px; height: 40px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; color: var(--text2); transition: all 0.2s;
-    min-width: 40px;
-  }
-  .cal-nav-btn:active { background: var(--surface2); }
-  .cal-month {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px; font-weight: 700; color: var(--text);
-  }
-  .cal-weekdays {
-    display: grid; grid-template-columns: repeat(7, 1fr);
-    gap: 3px; margin-bottom: 5px;
-  }
-  .cal-wd {
-    text-align: center;
-    font-size: 10px; font-weight: 700;
-    color: var(--muted); padding: 4px 0;
-    letter-spacing: 0.5px;
-  }
-  .cal-grid {
-    display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
-  }
-  .cal-day {
-    aspect-ratio: 1;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    border-radius: 9px;
-    font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: all 0.15s;
-    position: relative;
-    color: var(--text2);
-    background: var(--surface2);
-    border: 1px solid transparent;
-  }
-  .cal-day.empty { background: transparent; cursor: default; }
-  .cal-day.today {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
-  .cal-day.workout-done {
-    background: var(--green-dim);
-    border-color: var(--green);
-    color: var(--green);
-  }
-  .cal-day.menstrual {
-    background: var(--pink-dim);
-    border-color: var(--pink);
-    color: var(--pink);
-  }
-  .cal-day.menstrual.workout-done {
-    background: linear-gradient(135deg, var(--pink-dim) 50%, var(--green-dim) 50%);
-    border-color: var(--pink);
-  }
-  .cal-day-type {
-    font-size: 7px;
-    margin-top: 1px;
-    opacity: 0.8;
-  }
-  .streak-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    display: flex; gap: 10px;
-  }
-  .streak-stat {
-    flex: 1; text-align: center;
-    padding: 12px 6px;
-    background: var(--surface2);
-    border-radius: 10px;
-  }
-  .streak-val {
-    font-family: 'Syne', sans-serif;
-    font-size: 24px; font-weight: 700;
-    color: var(--gold); display: block;
-  }
-  .streak-label {
-    font-size: 9px; color: var(--muted);
-    font-weight: 700; letter-spacing: 0.5px;
-    text-transform: uppercase; margin-top: 2px;
-  }
-  .recent-list-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 12px;
-    background: var(--surface2);
-    border-radius: 8px; margin-bottom: 5px;
-  }
-  .recent-date { font-size: 12px; color: var(--text); font-weight: 500; }
-  .recent-type {
-    font-size: 11px; padding: 3px 8px;
-    border-radius: 5px; font-weight: 700;
-  }
-  .recent-del {
-    font-size: 13px; color: var(--muted);
-    background: none; border: none; cursor: pointer;
-    padding: 4px 8px; min-width: 32px; min-height: 32px;
-  }
-
-  /* ── CICLO ── */
-  .ciclo-phase-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-  }
-  .ciclo-phase-header {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 8px;
-  }
-  .ciclo-phase-icon { font-size: 24px; flex-shrink: 0; }
-  .ciclo-phase-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px; font-weight: 700; color: var(--text);
-  }
-  .ciclo-phase-days {
-    font-size: 10px; color: var(--muted); font-weight: 600;
-    margin-left: auto;
-    letter-spacing: 0.5px;
-  }
-  .ciclo-phase-active {
-    border-width: 1.5px;
-  }
-  .ciclo-tip-row {
-    display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
-  }
-  .ciclo-tip-tag {
-    font-size: 10px; padding: 4px 9px;
-    border-radius: 5px; font-weight: 600;
-  }
-  .ciclo-menstrual-btn {
-    width: 100%; padding: 16px;
-    background: var(--pink-dim);
-    border: 1px solid var(--pink);
-    border-radius: var(--radius);
-    color: var(--pink);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 14px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    margin-bottom: 12px;
-    letter-spacing: 0.3px;
-    min-height: 54px;
-  }
-  .ciclo-menstrual-btn:active { background: var(--pink); color: #fff; }
-  .ciclo-menstrual-btn.marked {
-    background: var(--pink);
-    color: #fff;
-  }
-  .ciclo-info-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 12px;
-  }
-  .ciclo-day-badge {
-    display: inline-block;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 12px; font-weight: 700;
-    margin-bottom: 10px;
-  }
-  .ciclo-cycle-bar {
-    display: flex; gap: 3px; margin: 12px 0; height: 8px;
-    border-radius: 4px; overflow: hidden;
-  }
-  .ciclo-bar-seg {
-    flex: 1; transition: opacity 0.3s;
-  }
-  .ciclo-bar-seg.active { opacity: 1; }
-  .ciclo-bar-seg.inactive { opacity: 0.25; }
+.hidden{display:none!important;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--green);color:#0c0c10;padding:9px 18px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all 0.3s;z-index:999;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 
-<div class="nav">
-  <div class="nav-title">🏋️ <span>Treino</span> & Dieta</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showScreen('treino', this)">💪 Treino</button>
-    <button class="nav-tab" onclick="showScreen('cardio', this)">🏃 Cardio</button>
-    <button class="nav-tab" onclick="showScreen('dieta', this)">🥗 Dieta</button>
-    <button class="nav-tab" onclick="showScreen('cargas', this)">📈 Cargas</button>
-    <button class="nav-tab" onclick="showScreen('dias', this)">📅 Dias</button>
-    <button class="nav-tab" onclick="showScreen('ciclo', this)">🌸 Ciclo</button>
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="top-nav-title">Treino & Ciclo</div>
+  <div class="top-tabs">
+    <button class="top-tab active" onclick="showScreen('treino',this)">🏋️ Treino</button>
+    <button class="top-tab" onclick="showScreen('cardio',this)">🚴 Cardio</button>
+    <button class="top-tab" onclick="showScreen('dieta',this)">🥗 Dieta</button>
+    <button class="top-tab" onclick="showScreen('ciclo',this)">🌸 Ciclo</button>
+    <button class="top-tab" onclick="showScreen('evolucao',this)">📈 Força</button>
+    <button class="top-tab" onclick="showScreen('calendario',this)">📅 Dias</button>
   </div>
 </div>
 
-<!-- ═══════════════ TREINO ═══════════════ -->
+<!-- ═══ TREINO ═══ -->
 <div class="screen active" id="screen-treino">
-
+  <div id="phase-banner-treino"></div>
+  <div id="block-badge-treino" style="margin-bottom:8px"></div>
   <div class="day-selector">
-    <button class="day-btn active" onclick="showDay('A', this)"><span class="day-icon">🍑</span>A</button>
-    <button class="day-btn" onclick="showDay('B', this)"><span class="day-icon">🏗️</span>B</button>
-    <button class="day-btn" onclick="showDay('C', this)"><span class="day-icon">🦵</span>C</button>
-    <button class="day-btn" onclick="showDay('D', this)"><span class="day-icon">💪</span>D</button>
+    <button class="day-btn active" onclick="showDay('A',this)">🍑 A</button>
+    <button class="day-btn" onclick="showDay('B',this)">🏗️ B</button>
+    <button class="day-btn" onclick="showDay('C',this)">🦵 C</button>
+    <button class="day-btn" onclick="showDay('D',this)">💪 D</button>
   </div>
 
-  <!-- Treino A -->
-  <div class="day-content" id="day-A">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--purple)">Treino A · ~60 min</div>
-        <div class="card-title">Glúteos + Posterior de Coxa</div>
-        <div class="card-note">Foco glúteo. Todos os exercícios bilaterais ou com apoio — adaptado para pé chato.</div>
-      </div>
-      <div id="exs-A">
-        <div class="exercise-row" data-ex="Hip Thrust (barra)" data-series="4" data-reps="11">
-          <div class="ex-num">01</div>
-          <div class="ex-info">
-            <div class="ex-name">Hip Thrust (barra)</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">descanso 90s</span></div>
-            <div class="ex-tip">Empurre o quadril alto e segure 1s no topo. Ativação máxima de glúteo.</div>
-            <div class="series-tracker" id="st-A-0"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Leg Press 45°" data-series="4" data-reps="11">
-          <div class="ex-num">02</div>
-          <div class="ex-info">
-            <div class="ex-name">Leg Press 45° (pés altos e afastados)</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">Pés altos recrutam mais glúteo e posterior.</div>
-            <div class="series-tracker" id="st-A-1"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Stiff" data-series="3" data-reps="11">
-          <div class="ex-num">03</div>
-          <div class="ex-info">
-            <div class="ex-name">Stiff com barra ou halteres</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">Sinta o alongamento do posterior. Não arredonde a lombar.</div>
-            <div class="series-tracker" id="st-A-2"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Cadeira Flexora" data-series="3" data-reps="13">
-          <div class="ex-num">04</div>
-          <div class="ex-info">
-            <div class="ex-name">Cadeira Flexora</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Isolar o bíceps femoral — controle na descida.</div>
-            <div class="series-tracker" id="st-A-3"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Glúteo na polia" data-series="3" data-reps="15">
-          <div class="ex-num">05</div>
-          <div class="ex-info">
-            <div class="ex-name">Glúteo na polia (cabo baixo, alça no pé)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 cada lado</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Apoie em algo firme — seguro para pé chato.</div>
-            <div class="series-tracker" id="st-A-4"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Abdução de quadril" data-series="3" data-reps="17">
-          <div class="ex-num">06</div>
-          <div class="ex-info">
-            <div class="ex-name">Abdução de quadril na máquina</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15–20 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Essencial para lipedema: ativa face lateral do glúteo médio.</div>
-            <div class="series-tracker" id="st-A-5"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Progresso</span><span id="prog-A">0/6</span></div>
-        <div class="progress-track"><div class="progress-fill" id="fill-A" style="width:0%"></div></div>
-      </div>
-      <div class="rest-timer-inline" id="rest-timer-A">
-        <div style="flex:1;text-align:center">
-          <div class="rest-timer-label">⏸ Descanso</div>
-          <div class="rest-timer-count" id="rest-count-A">1:30</div>
-        </div>
-        <button class="rest-skip-btn" onclick="skipRestTimer('A')">Pular ✕</button>
-      </div>
+  <!-- Retroactive date selector -->
+  <div class="retro-section">
+    <div class="retro-title">📅 Salvando para qual data?</div>
+    <div class="field-group" style="margin-bottom:0">
+      <input type="date" class="field-input" id="treino-date" style="font-size:14px">
     </div>
-    <div class="card">
-      <div class="card-header"><div class="card-label">Bônus — se sobrar tempo</div></div>
-      <div class="exercise-row">
-        <div class="ex-num">+</div>
-        <div class="ex-info"><div class="ex-name">Abdominal infra (elevação de pernas deitada)</div>
-        <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 reps</span></div></div>
-        <div class="ex-check" onclick="toggleCheck(this)"></div>
-      </div>
-      <div class="exercise-row">
-        <div class="ex-num">+</div>
-        <div class="ex-info"><div class="ex-name">Prancha frontal</div>
-        <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">30–40s</span></div></div>
-        <div class="ex-check" onclick="toggleCheck(this)"></div>
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveWorkout('A')">✓ Salvar Treino A — Glúteos</button>
   </div>
 
-  <!-- Treino B -->
-  <div class="day-content hidden" id="day-B">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--cyan)">Treino B · ~60 min</div>
-        <div class="card-title">Costas + Bíceps + Postura</div>
-        <div class="card-note">Costas largas e postura correta compensam o dia inteiro sentada.</div>
-      </div>
-      <div id="exs-B">
-        <div class="exercise-row" data-ex="Puxada frontal" data-series="4" data-reps="11">
-          <div class="ex-num" style="color:var(--cyan)">01</div>
-          <div class="ex-info">
-            <div class="ex-name">Puxada frontal (pegada pronada)</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">Pense em "puxar os cotovelos para o chão", não nas mãos.</div>
-            <div class="series-tracker" id="st-B-0"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Remada curvada" data-series="4" data-reps="11">
-          <div class="ex-num" style="color:var(--cyan)">02</div>
-          <div class="ex-info">
-            <div class="ex-name">Remada curvada com barra</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">Retração escapular antes de puxar — ótimo para postura.</div>
-            <div class="series-tracker" id="st-B-1"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Remada unilateral" data-series="3" data-reps="11">
-          <div class="ex-num" style="color:var(--cyan)">03</div>
-          <div class="ex-info">
-            <div class="ex-name">Remada unilateral c/ haltere (joelho no banco)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Apoio no banco = seguro para pé chato.</div>
-            <div class="series-tracker" id="st-B-2"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Puxada polia supinada" data-series="3" data-reps="12">
-          <div class="ex-num" style="color:var(--cyan)">04</div>
-          <div class="ex-info">
-            <div class="ex-name">Puxada na polia (pegada supinada/neutra)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Varia o ângulo da puxada anterior.</div>
-            <div class="series-tracker" id="st-B-3"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Rosca direta" data-series="3" data-reps="11">
-          <div class="ex-num" style="color:var(--cyan)">05</div>
-          <div class="ex-info">
-            <div class="ex-name">Rosca direta com barra</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Cotovelos fixos ao lado do corpo.</div>
-            <div class="series-tracker" id="st-B-4"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Rosca martelo" data-series="3" data-reps="11">
-          <div class="ex-num" style="color:var(--cyan)">06</div>
-          <div class="ex-info">
-            <div class="ex-name">Rosca martelo com halteres</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Trabalha braquial e braquiorradial também.</div>
-            <div class="series-tracker" id="st-B-5"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Progresso</span><span id="prog-B">0/6</span></div>
-        <div class="progress-track"><div class="progress-fill" id="fill-B" style="width:0%; background:var(--cyan)"></div></div>
-      </div>
-      <div class="rest-timer-inline" id="rest-timer-B">
-        <div style="flex:1;text-align:center">
-          <div class="rest-timer-label">⏸ Descanso</div>
-          <div class="rest-timer-count" id="rest-count-B">1:30</div>
-        </div>
-        <button class="rest-skip-btn" style="border-color:var(--cyan);color:var(--cyan)" onclick="skipRestTimer('B')">Pular ✕</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-label">Bônus</div></div>
-      <div class="exercise-row">
-        <div class="ex-num">+</div>
-        <div class="ex-info"><div class="ex-name">Face pull na polia</div>
-        <div class="ex-tags"><span class="ex-tag">3×15</span></div>
-        <div class="ex-tip">Excelente para postura e manguito rotador.</div></div>
-        <div class="ex-check" onclick="toggleCheck(this)"></div>
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveWorkout('B')" style="border-color:var(--cyan);color:var(--cyan);background:rgba(95,212,244,0.08)">✓ Salvar Treino B — Costas</button>
-  </div>
-
-  <!-- Treino C -->
-  <div class="day-content hidden" id="day-C">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--green)">Treino C · ~60 min</div>
-        <div class="card-title">Quadríceps + Panturrilha</div>
-        <div class="card-note">Sem exercícios com equilíbrio unilateral sem apoio. Cargas moderadas-altas.</div>
-      </div>
-      <div id="exs-C">
-        <div class="exercise-row" data-ex="Agachamento livre" data-series="4" data-reps="9">
-          <div class="ex-num" style="color:var(--green)">01</div>
-          <div class="ex-info">
-            <div class="ex-name">Agachamento livre (barra)</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">8–10 reps</span><span class="ex-tag">90s</span></div>
-            <div class="ex-tip">Calço sob o calcanhar se precisar de conforto.</div>
-            <div class="series-tracker" id="st-C-0"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Leg Press 45° quad" data-series="4" data-reps="11">
-          <div class="ex-num" style="color:var(--green)">02</div>
-          <div class="ex-info">
-            <div class="ex-name">Leg Press 45° (pés baixos e próximos)</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">Pés baixos = mais quadríceps.</div>
-            <div class="series-tracker" id="st-C-1"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Cadeira Extensora" data-series="3" data-reps="13">
-          <div class="ex-num" style="color:var(--green)">03</div>
-          <div class="ex-info">
-            <div class="ex-name">Cadeira Extensora</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Isolamento do quad — útil para pé chato.</div>
-            <div class="series-tracker" id="st-C-2"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Agachamento sumô" data-series="3" data-reps="12">
-          <div class="ex-num" style="color:var(--green)">04</div>
-          <div class="ex-info">
-            <div class="ex-name">Agachamento sumô com haltere (goblet)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Posição ampla ativa mais adutor e glúteo médio.</div>
-            <div class="series-tracker" id="st-C-3"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Panturrilha sentada" data-series="4" data-reps="17">
-          <div class="ex-num" style="color:var(--green)">05</div>
-          <div class="ex-info">
-            <div class="ex-name">Panturrilha na máquina sentada</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">15–20 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Sentada isola o sóleo.</div>
-            <div class="series-tracker" id="st-C-4"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Panturrilha em pé" data-series="3" data-reps="15">
-          <div class="ex-num" style="color:var(--green)">06</div>
-          <div class="ex-info">
-            <div class="ex-name">Panturrilha em pé na plataforma (bilateral)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Bilateral = sem risco de equilíbrio.</div>
-            <div class="series-tracker" id="st-C-5"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Progresso</span><span id="prog-C">0/6</span></div>
-        <div class="progress-track"><div class="progress-fill" id="fill-C" style="width:0%; background:var(--green)"></div></div>
-      </div>
-      <div class="rest-timer-inline" id="rest-timer-C">
-        <div style="flex:1;text-align:center">
-          <div class="rest-timer-label">⏸ Descanso</div>
-          <div class="rest-timer-count" id="rest-count-C">1:30</div>
-        </div>
-        <button class="rest-skip-btn" style="border-color:var(--green);color:var(--green)" onclick="skipRestTimer('C')">Pular ✕</button>
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveWorkout('C')" style="border-color:var(--green);color:var(--green);background:rgba(109,232,160,0.08)">✓ Salvar Treino C — Quadríceps</button>
-  </div>
-
-  <!-- Treino D -->
-  <div class="day-content hidden" id="day-D">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--red)">Treino D · ~60 min</div>
-        <div class="card-title">Ombros + Tríceps + Peito</div>
-        <div class="card-note">Parte superior completa. Ombros desenvolvidos criam proporção com o quadril.</div>
-      </div>
-      <div id="exs-D">
-        <div class="exercise-row" data-ex="Desenvolvimento ombros" data-series="4" data-reps="11">
-          <div class="ex-num" style="color:var(--red)">01</div>
-          <div class="ex-info">
-            <div class="ex-name">Desenvolvimento com halteres (sentada)</div>
-            <div class="ex-tags"><span class="ex-tag">4 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">Sentada = mais estabilidade, menos compensação lombar.</div>
-            <div class="series-tracker" id="st-D-0"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Elevação lateral" data-series="3" data-reps="13">
-          <div class="ex-num" style="color:var(--red)">02</div>
-          <div class="ex-info">
-            <div class="ex-name">Elevação lateral com halteres</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Cotovelo ligeiramente flexionado, suba até a linha do ombro.</div>
-            <div class="series-tracker" id="st-D-1"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Crucifixo inverso" data-series="3" data-reps="13">
-          <div class="ex-num" style="color:var(--red)">03</div>
-          <div class="ex-info">
-            <div class="ex-name">Crucifixo inverso (polia ou máquina voador inverso)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Deltóide posterior — fundamental para postura.</div>
-            <div class="series-tracker" id="st-D-2"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Supino inclinado" data-series="3" data-reps="11">
-          <div class="ex-num" style="color:var(--red)">04</div>
-          <div class="ex-info">
-            <div class="ex-name">Supino inclinado 30° com halteres</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">10–12 reps</span><span class="ex-tag">75s</span></div>
-            <div class="ex-tip">30° foca no peitoral superior com menos interferência do ombro.</div>
-            <div class="series-tracker" id="st-D-3"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Tríceps pulley" data-series="3" data-reps="13">
-          <div class="ex-num" style="color:var(--red)">05</div>
-          <div class="ex-info">
-            <div class="ex-name">Tríceps pulley (corda)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Abra a corda no final para ativar a cabeça lateral.</div>
-            <div class="series-tracker" id="st-D-4"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-        <div class="exercise-row" data-ex="Mergulho no banco" data-series="3" data-reps="13">
-          <div class="ex-num" style="color:var(--red)">06</div>
-          <div class="ex-info">
-            <div class="ex-name">Mergulho no banco (bench dip)</div>
-            <div class="ex-tags"><span class="ex-tag">3 séries</span><span class="ex-tag">12–15 reps</span><span class="ex-tag">60s</span></div>
-            <div class="ex-tip">Apoio nas mãos — sem exigência de equilíbrio.</div>
-            <div class="series-tracker" id="st-D-5"></div>
-          </div>
-          <div class="ex-check" onclick="toggleCheck(this)"></div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-label"><span>Progresso</span><span id="prog-D">0/6</span></div>
-        <div class="progress-track"><div class="progress-fill" id="fill-D" style="width:0%; background:var(--red)"></div></div>
-      </div>
-      <div class="rest-timer-inline" id="rest-timer-D">
-        <div style="flex:1;text-align:center">
-          <div class="rest-timer-label">⏸ Descanso</div>
-          <div class="rest-timer-count" id="rest-count-D">1:30</div>
-        </div>
-        <button class="rest-skip-btn" style="border-color:var(--red);color:var(--red)" onclick="skipRestTimer('D')">Pular ✕</button>
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveWorkout('D')" style="border-color:var(--red);color:var(--red);background:rgba(255,123,123,0.08)">✓ Salvar Treino D — Ombros</button>
-  </div>
+  <div id="pane-A" class="day-pane"></div>
+  <div id="pane-B" class="day-pane hidden"></div>
+  <div id="pane-C" class="day-pane hidden"></div>
+  <div id="pane-D" class="day-pane hidden"></div>
 </div>
 
-<!-- ═══════════════ CARDIO ═══════════════ -->
+<!-- ═══ CARDIO ═══ -->
 <div class="screen" id="screen-cardio">
-  <div class="cardio-selector">
-    <button class="cardio-btn active" onclick="showCardio('esteira', this)"><span class="c-icon">🏃</span>Esteira</button>
-    <button class="cardio-btn" onclick="showCardio('bike', this)"><span class="c-icon">🚴</span>Bike</button>
-    <button class="cardio-btn" onclick="showCardio('hiit', this)"><span class="c-icon">⚡</span>HIIT</button>
+  <div class="retro-section">
+    <div class="retro-title">📅 Salvando para qual data?</div>
+    <input type="date" class="field-input" id="cardio-date">
   </div>
-
-  <!-- Esteira -->
-  <div class="cardio-content" id="cardio-esteira">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--orange)">Esteira · 30–40 min</div>
-        <div class="card-title">Caminhada em Inclinação</div>
-        <div class="card-note">Método 12-3-30: excelente para lipedema. Baixo impacto, alto gasto calórico.</div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">01</div>
-        <div class="phase-info">
-          <div class="phase-name">Aquecimento</div>
-          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">inclinação 0</span><span class="phase-tag">vel. 4–5 km/h</span></div>
-          <div class="phase-tip">Acelera o metabolismo sem sobrecarregar as articulações.</div>
-        </div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">02</div>
-        <div class="phase-info">
-          <div class="phase-name">Zona de Queima</div>
-          <div class="phase-tags"><span class="phase-tag">20–30 min</span><span class="phase-tag">inclinação 12</span><span class="phase-tag">vel. 3 km/h</span></div>
-          <div class="phase-tip">FC alvo: 65–75% da máxima. Fala mas fica ofegante levemente.</div>
-        </div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">03</div>
-        <div class="phase-info">
-          <div class="phase-name">Desaceleração</div>
-          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">inclinação 0</span><span class="phase-tag">vel. 3–4 km/h</span></div>
-          <div class="phase-tip">Não pare bruscamente — deixe a FC baixar gradualmente.</div>
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-header"><div class="card-label" style="color:var(--orange)">Protocolo · ~45 min</div><h2 class="card-title">Zona 2</h2></div>
+    <div style="padding:9px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px">
+      <div style="width:65px;font-size:11px;color:var(--orange);flex-shrink:0;padding-top:1px">5 min</div>
+      <div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Aquecimento</div><div style="font-size:11px;color:var(--muted)">Caminhada leve ou bike resistência mínima</div></div>
     </div>
-    <button class="save-btn" onclick="saveWorkout('Cardio Esteira')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — Cardio Esteira</button>
-  </div>
-
-  <!-- Bike -->
-  <div class="cardio-content hidden" id="cardio-bike">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--orange)">Bike · 30–45 min</div>
-        <div class="card-title">Ciclismo Indoor / Ergométrica</div>
-        <div class="card-note">Zero impacto nas articulações. Ótimo para recuperação ativa entre treinos de força.</div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">01</div>
-        <div class="phase-info">
-          <div class="phase-name">Aquecimento</div>
-          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">carga leve</span><span class="phase-tag">80–90 rpm</span></div>
-          <div class="phase-tip">Pedalada leve e cadência alta — ativa a circulação sem forçar.</div>
-        </div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">02</div>
-        <div class="phase-info">
-          <div class="phase-name">Ritmo Contínuo</div>
-          <div class="phase-tags"><span class="phase-tag">25–35 min</span><span class="phase-tag">carga moderada</span><span class="phase-tag">70–80 rpm</span></div>
-          <div class="phase-tip">Mantenha FC entre 65–75% da máx. Respira com ritmo constante.</div>
-        </div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">03</div>
-        <div class="phase-info">
-          <div class="phase-name">Resfriamento</div>
-          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">carga mínima</span><span class="phase-tag">60 rpm</span></div>
-          <div class="phase-tip">Reduz carga gradualmente. Não pare de pedalar de uma vez.</div>
-        </div>
-      </div>
+    <div style="padding:9px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px">
+      <div style="width:65px;font-size:11px;color:var(--orange);flex-shrink:0;padding-top:1px">30–35 min</div>
+      <div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Zona 2</div><div style="font-size:11px;color:var(--muted)">Intensidade que permite conversar · bike, elíptico ou caminhada inclinada</div></div>
     </div>
-    <button class="save-btn" onclick="saveWorkout('Cardio Bike')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — Cardio Bike</button>
-  </div>
-
-  <!-- HIIT -->
-  <div class="cardio-content hidden" id="cardio-hiit">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-label" style="color:var(--orange)">HIIT · 20–25 min</div>
-        <div class="card-title">Intervalado de Alta Intensidade</div>
-        <div class="card-note">Máximo 2x por semana. Não fazer no dia de treino de pernas pesado.</div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">01</div>
-        <div class="phase-info">
-          <div class="phase-name">Aquecimento ativo</div>
-          <div class="phase-tags"><span class="phase-tag">5 min</span><span class="phase-tag">intensidade baixa</span></div>
-          <div class="phase-tip">Polichinelo leve, marcha, círculos de ombro.</div>
-        </div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">02</div>
-        <div class="phase-info">
-          <div class="phase-name">Bloco HIIT (repetir 8x)</div>
-          <div class="phase-tags"><span class="phase-tag">20s esforço máx</span><span class="phase-tag">10s descanso</span><span class="phase-tag">8 rodadas</span></div>
-          <div class="phase-tip">Protocolo Tabata. Opções: step rápido, bike em sprint, remada no remo.</div>
-        </div>
-      </div>
-      <div class="cardio-phase">
-        <div class="phase-num">03</div>
-        <div class="phase-info">
-          <div class="phase-name">Recuperação ativa</div>
-          <div class="phase-tags"><span class="phase-tag">5–7 min</span><span class="phase-tag">caminhada lenta</span></div>
-          <div class="phase-tip">FC precisa voltar para menos de 100 bpm antes de parar.</div>
-        </div>
-      </div>
+    <div style="padding:9px 16px;border-bottom:1px solid var(--border);display:flex;gap:10px">
+      <div style="width:65px;font-size:11px;color:var(--orange);flex-shrink:0;padding-top:1px">5 min</div>
+      <div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Desaceleração</div><div style="font-size:11px;color:var(--muted)">Reduzir intensidade gradualmente</div></div>
     </div>
-    <button class="save-btn" onclick="saveWorkout('HIIT')" style="border-color:var(--orange);color:var(--orange);background:var(--orange-dim)">✓ Salvar — HIIT</button>
+    <div style="padding:9px 16px;display:flex;gap:10px">
+      <div style="width:65px;font-size:11px;color:var(--orange);flex-shrink:0;padding-top:1px">5–10 min</div>
+      <div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Alongamento</div><div style="font-size:11px;color:var(--muted)">Panturrilha, posterior de coxa, quadril</div></div>
+    </div>
+    <div class="timer-section">
+      <div class="timer-btns">
+        <button class="t-btn primary" onclick="startTimer(1800,'cardio')">30 min</button>
+        <button class="t-btn primary" onclick="startTimer(2700,'cardio')">45 min</button>
+      </div>
+      <div class="timer-display" id="tdisp-cardio">--:--</div>
+      <button class="t-btn danger" onclick="resetTimer('cardio')">✕</button>
+    </div>
   </div>
+  <div class="card">
+    <div class="card-header"><div class="card-label" style="color:var(--orange)">Melhores opções</div></div>
+    <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="font-size:20px;flex-shrink:0">🚴</span><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Bike ergométrica</div><div style="font-size:11px;color:var(--subtle)">Zero impacto. Ótimo para circulação e lipedema.</div></div></div>
+    <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="font-size:20px;flex-shrink:0">🌊</span><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Elíptico</div><div style="font-size:11px;color:var(--subtle)">Baixo impacto. Movimento guiado — seguro para pé chato.</div></div></div>
+    <div style="padding:11px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="font-size:20px;flex-shrink:0">🚶</span><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Caminhada inclinada</div><div style="font-size:11px;color:var(--subtle)">8–12% inclinação, 5–6 km/h. Ativa glúteos.</div></div></div>
+    <div style="padding:11px 16px;display:flex;gap:12px"><span style="font-size:20px;flex-shrink:0">🏊</span><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Natação / Hidroginástica</div><div style="font-size:11px;color:var(--subtle)">Excelente para drenagem linfática e lipedema.</div></div></div>
+  </div>
+  <button class="save-btn" style="background:linear-gradient(135deg,var(--orange),#ea580c)" onclick="saveCardio()">💾 Salvar Cardio</button>
 </div>
 
-<!-- ═══════════════ DIETA ═══════════════ -->
+<!-- ═══ DIETA ═══ -->
 <div class="screen" id="screen-dieta">
-  <div class="macro-summary" id="macro-box">
-    <div class="macro-summary-title">Total do dia selecionado</div>
-    <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--text2)">Calorias</span><span id="m-kcal" style="color:var(--gold)">-- / 1980</span></div>
-      <div class="macro-track"><div class="macro-fill" id="mf-kcal" style="background:var(--gold);width:0%"></div></div>
-    </div>
-    <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--text2)">Proteína</span><span id="m-prot" style="color:var(--green)">-- / 120g</span></div>
-      <div class="macro-track"><div class="macro-fill" id="mf-prot" style="background:var(--green);width:0%"></div></div>
-    </div>
-    <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--text2)">Carboidratos</span><span id="m-carb" style="color:var(--cyan)">-- / 200g</span></div>
-      <div class="macro-track"><div class="macro-fill" id="mf-carb" style="background:var(--cyan);width:0%"></div></div>
-    </div>
-    <div class="macro-row">
-      <div class="macro-row-top"><span style="color:var(--text2)">Gordura</span><span id="m-fat" style="color:var(--red)">-- / 60g</span></div>
-      <div class="macro-track"><div class="macro-fill" id="mf-fat" style="background:var(--red);width:0%"></div></div>
+  <div id="diet-phase-tip"></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="macro-box">
+      <div class="card-label" style="margin-bottom:10px">Total do dia</div>
+      <div class="macro-row"><div class="macro-top"><span style="color:var(--muted)">Calorias</span><span id="m-kcal" style="color:var(--gold)">-- / 1980 kcal</span></div><div class="macro-track"><div class="macro-fill" id="mf-kcal" style="background:var(--gold);width:0%"></div></div></div>
+      <div class="macro-row"><div class="macro-top"><span style="color:var(--muted)">Proteína</span><span id="m-prot" style="color:var(--green)">-- / 120g</span></div><div class="macro-track"><div class="macro-fill" id="mf-prot" style="background:var(--green);width:0%"></div></div></div>
+      <div class="macro-row"><div class="macro-top"><span style="color:var(--muted)">Carboidratos</span><span id="m-carb" style="color:var(--cyan)">-- / 200g</span></div><div class="macro-track"><div class="macro-fill" id="mf-carb" style="background:var(--cyan);width:0%"></div></div></div>
+      <div class="macro-row" style="margin-bottom:0"><div class="macro-top"><span style="color:var(--muted)">Gordura</span><span id="m-fat" style="color:var(--red)">-- / 60g</span></div><div class="macro-track"><div class="macro-fill" id="mf-fat" style="background:var(--red);width:0%"></div></div></div>
     </div>
   </div>
-
-  <div class="section-label">☀️ Café da Manhã</div>
-  <div class="meal-selector" id="sel-cafe">
-    <button class="meal-opt-btn active" onclick="selectMeal('cafe',0,this)">Treino manhã</button>
-    <button class="meal-opt-btn" onclick="selectMeal('cafe',1,this)">Pós-treino</button>
-    <button class="meal-opt-btn" onclick="selectMeal('cafe',2,this)">Pilates / Descanso</button>
-  </div>
-  <div class="card" id="meal-cafe"></div>
-
-  <div class="section-label">🍽️ Almoço</div>
-  <div class="meal-selector">
-    <button class="meal-opt-btn active" onclick="selectMeal('almoco',0,this)">Musculação / Cardio</button>
-    <button class="meal-opt-btn" onclick="selectMeal('almoco',1,this)">Pilates / Descanso</button>
-  </div>
-  <div class="card" id="meal-almoco"></div>
-
-  <div class="section-label">🫐 Lanche da Tarde</div>
-  <div class="meal-selector">
-    <button class="meal-opt-btn active" onclick="selectMeal('lanche',0,this)">Pré-treino noturno</button>
-    <button class="meal-opt-btn" onclick="selectMeal('lanche',1,this)">Pilates / Descanso</button>
-    <button class="meal-opt-btn" onclick="selectMeal('lanche',2,this)">Cardio</button>
-  </div>
-  <div class="card" id="meal-lanche"></div>
-
-  <div class="section-label">🌙 Jantar</div>
-  <div class="meal-selector">
-    <button class="meal-opt-btn active" onclick="selectMeal('janta',0,this)">Rápido</button>
-    <button class="meal-opt-btn" onclick="selectMeal('janta',1,this)">Musculação / Cardio</button>
-    <button class="meal-opt-btn" onclick="selectMeal('janta',2,this)">Sem tempo</button>
-    <button class="meal-opt-btn" onclick="selectMeal('janta',3,this)">Véspera 🍝</button>
-    <button class="meal-opt-btn" onclick="selectMeal('janta',4,this)">Sem fome</button>
-  </div>
-  <div class="card" id="meal-janta"></div>
-
-  <!-- PETISCOS (ao final da dieta) -->
-  <div class="section-label">🍫 Petiscos & Docinhos</div>
-  <div class="card" style="margin-bottom:8px">
-    <div class="tip-block" style="border-top:none;padding:12px 14px;font-size:11px;color:var(--text2)">
-      Escolha um por dia — já incluído nos macros quando selecionado. Melhor depois do almoço ou jantar.
-    </div>
-  </div>
-  <div id="belisco-list" class="belisco-section"></div>
+  <div id="meals-container"></div>
+  <div class="meal-label" style="margin-top:6px">🍫 Beliscos</div>
+  <div id="belisco-list"></div>
 </div>
 
-<!-- ═══════════════ CARGAS ═══════════════ -->
-<div class="screen" id="screen-cargas">
-  <div class="card" style="margin-bottom:12px">
-    <div class="card-header">
-      <div class="card-label" style="color:var(--green)">📈 Evolução de Cargas</div>
-      <div class="card-note" style="margin-top:4px">Volume = kg × séries × reps. As cargas são registradas ao salvar o treino (use o kg da série).</div>
+<!-- ═══ CICLO ═══ -->
+<div class="screen" id="screen-ciclo">
+  <div id="cycle-phase-display"></div>
+  <div class="card">
+    <div class="card-header"><div class="card-label" style="color:var(--pink)">Configuração</div><h2 class="card-title">Seu ciclo</h2></div>
+    <div style="padding:14px 16px">
+      <div class="field-group"><div class="field-label">Primeiro dia da última menstruação</div><input type="date" class="field-input" id="cycle-start-input"></div>
+      <div class="field-group"><div class="field-label">Duração média do ciclo (dias)</div><input type="number" class="field-input" id="cycle-length-input" value="28" min="21" max="35"></div>
+      <button class="save-btn" style="margin-top:2px" onclick="saveCycleConfig()">Salvar configuração do ciclo</button>
     </div>
   </div>
-
-  <div class="carga-day-tabs">
-    <button class="carga-day-tab active" onclick="selectCargaDay('A', this)">🍑 A</button>
-    <button class="carga-day-tab" onclick="selectCargaDay('B', this)">🏗️ B</button>
-    <button class="carga-day-tab" onclick="selectCargaDay('C', this)">🦵 C</button>
-    <button class="carga-day-tab" onclick="selectCargaDay('D', this)">💪 D</button>
+  <div class="card">
+    <div class="card-header"><div class="card-label" style="color:var(--gold)">Periodização</div><h2 class="card-title">Bloco atual</h2></div>
+    <div style="padding:14px 16px">
+      <div class="field-group"><div class="field-label">Início deste ciclo de treino</div><input type="date" class="field-input" id="block-start-input"></div>
+      <div class="field-group"><div class="field-label">Bloco</div>
+        <select class="field-input" id="block-select">
+          <option value="1">Bloco 1 — Volume (4×12–15 · 60s descanso)</option>
+          <option value="2">Bloco 2 — Intensidade (4×8–10 · 90s descanso)</option>
+          <option value="3">Bloco 3 — Força/Pico (5×5–6 · 2–3 min descanso)</option>
+          <option value="deload">Deload (50% volume · recuperação)</option>
+        </select>
+      </div>
+      <button class="save-btn" style="margin-top:2px;background:linear-gradient(135deg,var(--gold),#d97706);color:#0c0c10" onclick="saveBlockConfig()">Salvar bloco</button>
+    </div>
   </div>
-
-  <div id="carga-vol-box"></div>
-  <div class="ex-tab-row" id="carga-tabs-row"></div>
-  <div id="carga-chart-area"></div>
+  <div class="card">
+    <div class="card-header"><div class="card-label" style="color:var(--pink)">Marcar dias de menstruação</div><div class="card-note">Toque nos dias para marcar. Use para registrar ciclos passados também.</div></div>
+    <div class="cycle-dot-row" id="cycle-dot-row"></div>
+    <div class="cal-legend" style="border-top:none;padding-top:8px">
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(248,113,113,0.4)"></div>Menstr. (1–5)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(110,231,160,0.4)"></div>Folicular (6–13)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(240,180,41,0.4)"></div>Ovulação (14–16)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(185,127,248,0.4)"></div>Lútea (17–28)</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-label">Guia dos blocos × ciclo</div></div>
+    <div class="block-info-row"><div style="font-size:13px;font-weight:500;color:var(--green)">Bloco 1 — Volume</div><div style="font-size:11px;color:var(--muted);margin-top:2px">4×12–15 · 60s · Melhor na fase lútea inicial (dias 17–21)</div></div>
+    <div class="block-info-row"><div style="font-size:13px;font-weight:500;color:var(--gold)">Bloco 2 — Intensidade</div><div style="font-size:11px;color:var(--muted);margin-top:2px">4×8–10 · 90s · Melhor na fase folicular (dias 6–13)</div></div>
+    <div class="block-info-row"><div style="font-size:13px;font-weight:500;color:var(--red)">Bloco 3 — Força/Pico</div><div style="font-size:11px;color:var(--muted);margin-top:2px">5×5–6 · 2–3 min · Melhor na ovulação (dias 14–16)</div></div>
+    <div class="block-info-row"><div style="font-size:13px;font-weight:500;color:var(--muted)">Deload</div><div style="font-size:11px;color:var(--muted);margin-top:2px">50% volume · mesma carga · Melhor na menstruação (dias 1–5)</div></div>
+  </div>
 </div>
 
-<!-- ═══════════════ DIAS ═══════════════ -->
-<div class="screen" id="screen-dias">
-  <div class="streak-box" id="streak-box">
-    <div class="streak-stat">
-      <span class="streak-val" id="streak-count">0</span>
-      <div class="streak-label">🔥 Sequência</div>
+<!-- ═══ EVOLUÇÃO ═══ -->
+<div class="screen" id="screen-evolucao">
+  <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+    <button class="chart-ex-btn active" onclick="filterChartDay('A',this)">Treino A</button>
+    <button class="chart-ex-btn" onclick="filterChartDay('B',this)">Treino B</button>
+    <button class="chart-ex-btn" onclick="filterChartDay('C',this)">Treino C</button>
+    <button class="chart-ex-btn" onclick="filterChartDay('D',this)">Treino D</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-label">Exercício</div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;padding:10px 14px" id="ex-selector"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-label">Progressão de carga</div><h2 class="card-title" id="chart-title">—</h2></div>
+    <div class="chart-wrap">
+      <div class="chart-empty" id="chart-empty">Selecione um exercício acima</div>
+      <canvas id="loadChart" style="display:none"></canvas>
     </div>
-    <div class="streak-stat">
-      <span class="streak-val" id="total-treinos">0</span>
-      <div class="streak-label">Total Treinos</div>
+    <div class="stats-grid" id="stats-grid" style="display:none">
+      <div class="stat-box"><div class="stat-val" id="stat-max" style="color:var(--gold)">—</div><div class="stat-label">Máx (kg)</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-first" style="color:var(--muted)">—</div><div class="stat-label">Inicial (kg)</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-gain" style="color:var(--green)">—</div><div class="stat-label">Ganho (kg)</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-sessions" style="color:var(--purple)">—</div><div class="stat-label">Sessões</div></div>
     </div>
-    <div class="streak-stat">
-      <span class="streak-val" id="mes-treinos">0</span>
-      <div class="streak-label">Este Mês</div>
+  </div>
+</div>
+
+<!-- ═══ CALENDÁRIO ═══ -->
+<div class="screen" id="screen-calendario">
+
+  <!-- Retroactive add panel -->
+  <div class="retro-section">
+    <div class="retro-title">➕ Adicionar treino retroativo</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+      <input type="date" class="field-input" id="retro-date" style="flex:1;min-width:130px;font-size:13px;padding:8px 10px">
+      <select class="field-input" id="retro-type" style="flex:1;min-width:130px;font-size:13px;padding:8px 10px">
+        <option value="musculacao-A">Musculação — Treino A</option>
+        <option value="musculacao-B">Musculação — Treino B</option>
+        <option value="musculacao-C">Musculação — Treino C</option>
+        <option value="musculacao-D">Musculação — Treino D</option>
+        <option value="cardio">Cardio</option>
+        <option value="pilates">Pilates</option>
+        <option value="descanso">Descanso</option>
+        <option value="menstruation">Menstruação</option>
+      </select>
+    </div>
+    <div id="retro-pilates-fields" class="hidden" style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:100px">
+        <div class="field-label">Duração (min)</div>
+        <input type="number" class="field-input" id="retro-pilates-dur" value="50" style="font-size:13px;padding:8px 10px">
+      </div>
+      <div style="flex:1;min-width:100px">
+        <div class="field-label">Calorias (kcal)</div>
+        <input type="number" class="field-input" id="retro-pilates-kcal" value="180" style="font-size:13px;padding:8px 10px">
+      </div>
+    </div>
+    <button class="save-btn" style="margin-top:0;font-size:13px;padding:10px" onclick="addRetroEntry()">Adicionar ao histórico</button>
+  </div>
+
+  <div class="card" style="margin-bottom:10px">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+      <h2 class="cal-month" id="cal-month-title">—</h2>
+      <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-days-header">
+      <div class="cal-day-name">Dom</div><div class="cal-day-name">Seg</div><div class="cal-day-name">Ter</div>
+      <div class="cal-day-name">Qua</div><div class="cal-day-name">Qui</div><div class="cal-day-name">Sex</div><div class="cal-day-name">Sáb</div>
+    </div>
+    <div class="cal-cells" id="cal-cells"></div>
+    <div class="cal-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(185,127,248,0.4)"></div>Musculação</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(251,146,60,0.4)"></div>Cardio</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(240,180,41,0.4)"></div>Pilates</div>
+      <div class="legend-item"><div class="legend-dot" style="background:rgba(248,113,113,0.3)"></div>Menstr.</div>
     </div>
   </div>
 
-  <div class="card" style="padding:14px;margin-bottom:12px">
-    <div class="calendar-header">
-      <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
-      <div class="cal-month" id="cal-month-title">Abr 2025</div>
-      <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+  <div class="card" style="margin-bottom:10px">
+    <div class="card-header"><div class="card-label">Este mês</div></div>
+    <div class="stats-grid" style="border:none">
+      <div class="stat-box"><div class="stat-val" id="cal-total" style="color:var(--gold)">0</div><div class="stat-label">Treinos</div></div>
+      <div class="stat-box"><div class="stat-val" id="cal-musc" style="color:var(--purple)">0</div><div class="stat-label">Musculação</div></div>
+      <div class="stat-box"><div class="stat-val" id="cal-cardio" style="color:var(--orange)">0</div><div class="stat-label">Cardio</div></div>
+      <div class="stat-box"><div class="stat-val" id="cal-pilates" style="color:var(--gold)">0</div><div class="stat-label">Pilates</div></div>
     </div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap">
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:3px;background:var(--green-dim);border:1px solid var(--green);display:inline-block"></span>Treino</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:3px;background:var(--pink-dim);border:1px solid var(--pink);display:inline-block"></span>Menstruação</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:3px;border:1px solid var(--gold);display:inline-block"></span>Hoje</span>
-    </div>
-    <div class="cal-weekdays">
-      <div class="cal-wd">D</div><div class="cal-wd">S</div><div class="cal-wd">T</div>
-      <div class="cal-wd">Q</div><div class="cal-wd">Q</div><div class="cal-wd">S</div>
-      <div class="cal-wd">S</div>
-    </div>
-    <div class="cal-grid" id="cal-grid"></div>
   </div>
 
   <div class="card">
-    <div class="card-header">
-      <div class="card-label">Treinos Recentes</div>
-    </div>
-    <div style="padding:12px" id="recent-list">
-      <div style="font-size:12px;color:var(--muted);text-align:center;padding:16px 0">Nenhum treino salvo ainda</div>
-    </div>
+    <div class="card-header"><div class="card-label">Histórico completo</div><div class="card-note">Toque no ✕ para excluir uma entrada</div></div>
+    <div id="history-list"><div class="chart-empty">Nenhum registro ainda</div></div>
   </div>
 </div>
 
-<!-- ═══════════════ CICLO ═══════════════ -->
-<div class="screen" id="screen-ciclo">
-
-  <!-- Mark period button -->
-  <button class="ciclo-menstrual-btn" id="ciclo-mark-btn" onclick="toggleMenstrualToday()">
-    🩸 Marcar hoje como 1º dia da menstruação
-  </button>
-
-  <!-- Current cycle info box -->
-  <div class="ciclo-info-box" id="ciclo-info-box">
-    <div style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0">
-      Marque o 1º dia da menstruação para ver as fases do seu ciclo e as dicas de treino personalizadas.
+<!-- Pilates modal -->
+<div class="modal-overlay hidden" id="pilates-modal">
+  <div class="modal-sheet">
+    <h2 class="modal-title">Registrar Pilates</h2>
+    <p class="modal-sub">Adicione os dados da sessão</p>
+    <div class="field-group"><div class="field-label">Data</div><input type="date" class="field-input" id="pilates-date"></div>
+    <div class="field-group"><div class="field-label">Duração (minutos)</div><input type="number" class="field-input" id="pilates-duration" value="50" min="10" max="120"></div>
+    <div class="field-group"><div class="field-label">Calorias estimadas (kcal)</div><input type="number" class="field-input" id="pilates-kcal" value="180" min="50" max="600"></div>
+    <div class="field-group"><div class="field-label">Tipo</div>
+      <select class="field-input" id="pilates-type">
+        <option value="pilates">Pilates solo (tapete)</option>
+        <option value="pilates">Pilates aparelho</option>
+        <option value="pilates">Pilates reformer</option>
+      </select>
     </div>
-  </div>
-
-  <!-- Cycle phases legend -->
-  <div id="ciclo-phases-list"></div>
-
-  <!-- Menstrual history -->
-  <div class="card" style="margin-top:4px">
-    <div class="card-header">
-      <div class="card-label" style="color:var(--pink)">🗓 Histórico do Ciclo</div>
-    </div>
-    <div style="padding:12px" id="ciclo-history-list">
-      <div style="font-size:12px;color:var(--muted);text-align:center;padding:12px 0">Nenhum ciclo registrado</div>
-    </div>
+    <button class="save-btn" style="background:linear-gradient(135deg,var(--gold),#d97706);color:#0c0c10" onclick="savePilates()">Salvar Pilates</button>
+    <button class="outline-btn" onclick="closePilatesModal()">Cancelar</button>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
+// ════════════════════════════════════════════
 // DATA
-// ══════════════════════════════════════════
-const MEALS = {
-  cafe: [
-    { name: "Super Café com Leite", tag: "Treino manhã (jejum)",
-      tip: "Tome 15–20 min antes de treinar.",
-      items: [
-        { name: "Super Café (1 scoop)", qty: "30g pó seco", kcal:120, p:10, c:12, g:3 },
-        { name: "Leite desnatado", qty: "200ml", kcal:65, p:6, c:9, g:0.3 },
-      ]
-    },
-    { name: "Ovos + Carboidrato", tag: "Pós-treino / Musculação",
-      tip: "Ovo conta por unidade.",
-      items: [
-        { name: "Ovos mexidos", qty: "3 unidades", kcal:210, p:18, c:1, g:15 },
-        { name: "Requeijão light", qty: "20g", kcal:35, p:3, c:1, g:2 },
-        { name: "Bolacha de arroz grande", qty: "2 unidades (~36g)", kcal:140, p:2, c:30, g:1 },
-        { name: "Café + leite desnatado", qty: "100ml leite", kcal:35, p:3, c:5, g:0 },
-      ]
-    },
-    { name: "Ovos simples", tag: "Pilates / Cardio / Descanso",
-      tip: "Sem carboidrato sólido aqui — você vai repor no almoço.",
-      items: [
-        { name: "Ovos mexidos", qty: "2 unidades", kcal:140, p:12, c:1, g:10 },
-        { name: "Requeijão light", qty: "20g", kcal:35, p:3, c:1, g:2 },
-        { name: "Café + leite desnatado", qty: "100ml leite", kcal:35, p:3, c:5, g:0 },
-      ]
-    }
+// ════════════════════════════════════════════
+const EXERCISES = {
+  A:[
+    {id:'a1',name:'Hip Thrust (barra)',sets:'4',reps:'10–12',rest:'90s',tip:'Empurre o quadril alto e segure 1s no topo.'},
+    {id:'a2',name:'Leg Press 45° (pés altos e afastados)',sets:'4',reps:'10–12',rest:'75s',tip:'Pés altos = mais glúteo e posterior.'},
+    {id:'a3',name:'Stiff com barra ou halteres',sets:'3',reps:'10–12',rest:'75s',tip:'Sinta o alongamento do posterior. Não arredonde a lombar.'},
+    {id:'a4',name:'Cadeira Flexora',sets:'3',reps:'12–15',rest:'60s',tip:'Controle na descida — isola o bíceps femoral.'},
+    {id:'a5',name:'Glúteo na polia (cabo baixo)',sets:'3',reps:'15 cada',rest:'60s',tip:'Apoie em algo firme — seguro para pé chato.'},
+    {id:'a6',name:'Abdução de quadril na máquina',sets:'3',reps:'15–20',rest:'60s',tip:'Essencial para lipedema — ativa glúteo médio lateral.'},
   ],
-  almoco: [
-    { name: "Frango + Arroz + Feijão", tag: "Musculação / Cardio",
-      tip: "Arroz e macarrão → pese CRU. Feijão e batata doce → pese COZIDO.",
-      items: [
-        { name: "Peito de frango grelhado", qty: "150g CRU", kcal:165, p:35, c:0, g:2 },
-        { name: "Arroz branco", qty: "60g CRU", kcal:210, p:4, c:46, g:0.5 },
-        { name: "Feijão cozido", qty: "80g COZIDO", kcal:75, p:5, c:14, g:0.5 },
-        { name: "Salada folhas + tomate", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
-        { name: "Azeite de oliva", qty: "5ml", kcal:44, p:0, c:0, g:5 },
-      ]
-    },
-    { name: "Frango + Legumes", tag: "Pilates / Descanso",
-      tip: "Requeijão light (20g) pode entrar no frango.",
-      items: [
-        { name: "Peito de frango grelhado", qty: "150g CRU", kcal:165, p:35, c:0, g:2 },
-        { name: "Arroz integral", qty: "40g CRU", kcal:140, p:3, c:29, g:1 },
-        { name: "Abobrinha + cenoura refogada", qty: "150g COZIDO", kcal:50, p:2, c:8, g:1 },
-        { name: "Azeite de oliva", qty: "5ml", kcal:44, p:0, c:0, g:5 },
-      ]
-    }
+  B:[
+    {id:'b1',name:'Puxada frontal (pegada pronada)',sets:'4',reps:'10–12',rest:'75s',tip:'Pense em puxar os cotovelos para o chão.'},
+    {id:'b2',name:'Remada curvada com barra',sets:'4',reps:'10–12',rest:'75s',tip:'Retração escapular antes de puxar — ótimo para postura.'},
+    {id:'b3',name:'Remada unilateral c/ haltere',sets:'3',reps:'10–12',rest:'60s',tip:'Joelho no banco — apoio seguro para pé chato.'},
+    {id:'b4',name:'Puxada na polia (supinada/neutra)',sets:'3',reps:'12',rest:'60s',tip:'Varia o ângulo da puxada frontal.'},
+    {id:'b5',name:'Rosca direta com barra',sets:'3',reps:'10–12',rest:'60s',tip:'Cotovelos fixos ao lado do corpo.'},
+    {id:'b6',name:'Rosca martelo com halteres',sets:'3',reps:'10–12',rest:'60s',tip:'Trabalha braquial e braquiorradial também.'},
   ],
-  lanche: [
-    { name: "Panqueca proteica", tag: "Pré-treino noturno",
-      tip: "Essa refeição já é o pré-treino.",
-      items: [
-        { name: "Banana madura", qty: "1 média (~85g)", kcal:77, p:1, c:20, g:0.3 },
-        { name: "Ovos", qty: "2 unidades", kcal:140, p:12, c:1, g:10 },
-        { name: "Farelo de aveia", qty: "20g CRU", kcal:68, p:3, c:12, g:1 },
-        { name: "Whey protein", qty: "1 scoop (~30g)", kcal:120, p:24, c:3, g:2 },
-      ]
-    },
-    { name: "Iogurte + Fruta", tag: "Pilates / Descanso",
-      tip: "Se proteína baixa: misture 1 scoop de whey no iogurte.",
-      items: [
-        { name: "Iogurte desnatado zero", qty: "170g", kcal:60, p:10, c:6, g:0 },
-        { name: "Fruta (maçã, pera ou laranja)", qty: "1 unidade média", kcal:80, p:0.5, c:20, g:0.2 },
-      ]
-    },
-    { name: "Shake de Whey", tag: "Cardio (pré ou pós)",
-      tip: "Batido com leite fica cremoso.",
-      items: [
-        { name: "Whey protein", qty: "1 scoop (~30g)", kcal:120, p:24, c:3, g:2 },
-        { name: "Leite desnatado", qty: "200ml", kcal:65, p:6, c:9, g:0.3 },
-        { name: "Banana (opcional)", qty: "1/2 unidade", kcal:45, p:0.5, c:11, g:0.1 },
-      ]
-    }
+  C:[
+    {id:'c1',name:'Agachamento livre (barra)',sets:'4',reps:'8–10',rest:'90s',tip:'Calço sob o calcanhar se precisar de conforto.'},
+    {id:'c2',name:'Leg Press 45° (pés baixos e próximos)',sets:'4',reps:'10–12',rest:'75s',tip:'Pés baixos = mais quadríceps.'},
+    {id:'c3',name:'Cadeira Extensora',sets:'3',reps:'12–15',rest:'60s',tip:'Isolamento do quad — útil para pé chato.'},
+    {id:'c4',name:'Agachamento sumô com haltere (goblet)',sets:'3',reps:'12',rest:'60s',tip:'Posição ampla ativa mais adutor e glúteo médio.'},
+    {id:'c5',name:'Panturrilha na máquina sentada',sets:'4',reps:'15–20',rest:'60s',tip:'Sentada isola o sóleo.'},
+    {id:'c6',name:'Panturrilha em pé na plataforma (bilateral)',sets:'3',reps:'15',rest:'60s',tip:'Bilateral = sem risco de equilíbrio.'},
   ],
-  janta: [
-    { name: "Omelete proteica", tag: "Qualquer dia — rápido",
-      tip: "Outros recheios: atum, frango desfiado, ricota.",
-      items: [
-        { name: "Ovos", qty: "3 unidades", kcal:210, p:18, c:1, g:15 },
-        { name: "Queijo minas ou cottage", qty: "30g", kcal:60, p:6, c:1, g:3 },
-        { name: "Tomate + espinafre", qty: "à vontade", kcal:20, p:1, c:3, g:0 },
-        { name: "Bolacha de arroz (opcional)", qty: "1 unidade grande", kcal:70, p:1, c:15, g:0.5 },
-      ]
-    },
-    { name: "Atum + Batata doce", tag: "Musculação / Cardio",
-      tip: "Batch: cozinhe 600g batata doce no domingo.",
-      items: [
-        { name: "Atum em água (lata)", qty: "170g ESCORRIDO", kcal:150, p:34, c:0, g:1 },
-        { name: "Batata doce cozida", qty: "150g COZIDA", kcal:129, p:2, c:30, g:0.1 },
-        { name: "Azeite + limão", qty: "5ml azeite", kcal:44, p:0, c:0, g:5 },
-        { name: "Salada folhas", qty: "à vontade", kcal:10, p:0.5, c:1, g:0 },
-      ]
-    },
-    { name: "Frango desfiado + Legumes", tag: "Sem tempo",
-      tip: "Batch: 400g frango desfiado em potinhos. Dura 4–5 dias.",
-      items: [
-        { name: "Frango desfiado", qty: "120g COZIDO", kcal:140, p:28, c:0, g:2 },
-        { name: "Legumes refogados", qty: "150g COZIDO", kcal:50, p:2, c:8, g:1 },
-        { name: "Arroz integral", qty: "40g CRU", kcal:140, p:3, c:29, g:1 },
-      ]
-    },
-    { name: "Macarrão com frango", tag: "Véspera de musculação 🍝",
-      tip: "80g cru → ~200g cozido. SEMPRE pese cru.",
-      items: [
-        { name: "Macarrão (espaguete)", qty: "80g CRU", kcal:280, p:10, c:58, g:1 },
-        { name: "Frango desfiado", qty: "100g COZIDO", kcal:116, p:23, c:0, g:1.5 },
-        { name: "Molho de tomate (sem açúcar)", qty: "80g", kcal:30, p:1, c:6, g:0.5 },
-        { name: "Queijo parmesão ralado", qty: "10g", kcal:40, p:3.5, c:0.3, g:2.8 },
-      ]
-    },
-    { name: "Iogurte grego + Whey", tag: "Sem fome / dia leve",
-      tip: "Misture o whey no iogurte com garfo.",
-      items: [
-        { name: "Iogurte grego integral", qty: "200g", kcal:120, p:12, c:6, g:5 },
-        { name: "Whey protein", qty: "1 scoop (~30g)", kcal:120, p:24, c:3, g:2 },
-        { name: "Granola sem açúcar", qty: "20g (opcional)", kcal:80, p:2, c:14, g:2 },
-      ]
-    }
+  D:[
+    {id:'d1',name:'Desenvolvimento com halteres (sentada)',sets:'4',reps:'10–12',rest:'75s',tip:'Sentada = mais estabilidade, menos compensação lombar.'},
+    {id:'d2',name:'Elevação lateral com halteres',sets:'3',reps:'12–15',rest:'60s',tip:'Cotovelo levemente flexionado, suba até a linha do ombro.'},
+    {id:'d3',name:'Crucifixo inverso / voador inverso',sets:'3',reps:'12–15',rest:'60s',tip:'Deltóide posterior — fundamental para postura.'},
+    {id:'d4',name:'Supino inclinado 30° com halteres',sets:'3',reps:'10–12',rest:'75s',tip:'30° = peitoral superior com menos interferência do ombro.'},
+    {id:'d5',name:'Tríceps pulley (corda)',sets:'3',reps:'12–15',rest:'60s',tip:'Abra a corda no final para ativar a cabeça lateral.'},
+    {id:'d6',name:'Mergulho no banco (bench dip)',sets:'3',reps:'12–15',rest:'60s',tip:'Apoio nas mãos — sem exigência de equilíbrio.'},
   ]
 };
 
-const BELISCOS = [
-  { emoji:"🍫", name:"Chocolate meio amargo 70%", qty:"20g = 2 quadradinhos", kcal:114, p:2, c:8, g:8, tip:"O mais equilibrado: gordura boa, antioxidantes, menos açúcar." },
-  { emoji:"🥛", name:"Leite condensado", qty:"20g = 1 colher de sopa", kcal:65, p:1.5, c:12, g:1.5, tip:"Ótimo puro, com fruta ou como cobertura no iogurte." },
-  { emoji:"🍮", name:"Doce de leite", qty:"20g = 1 colher de sopa", kcal:60, p:1.5, c:11, g:1.5, tip:"Sabor mais intenso com menos açúcar que leite condensado." },
-  { emoji:"🍬", name:"Suspiro", qty:"3 unidades médias (~15g)", kcal:55, p:0.5, c:13, g:0, tip:"O mais leve em gordura. Opção crocante e doce." },
+const PHASE_INFO = {
+  menstruacao:{name:'Menstruação',emoji:'🔴',color:'#f87171',bg:'rgba(248,113,113,0.07)',border:'rgba(248,113,113,0.25)',
+    days:'Dias 1–5',train:'Deload natural. Reduza volume. Mantenha carga mas diminua séries. Hip thrust leve e abdução são ótimos.',
+    diet:'Mais ferro (carnes, feijão, espinafre) e magnésio (chocolate amargo, aveia). Carboidrato confortável. Hidratação extra.',
+    block:'Deload — independente do bloco. Respeite essa semana.',intensity:'Baixa',
+    dietNote:'↑ Ferro · ↑ Magnésio · Carbo liberado · Hidrate bem'},
+  folicular:{name:'Folicular',emoji:'🌱',color:'#6ee7a0',bg:'rgba(110,231,160,0.07)',border:'rgba(110,231,160,0.25)',
+    days:'Dias 6–13',train:'Sua melhor fase. Estrogênio subindo = mais força, recuperação mais rápida. Ideal para aumentar cargas e iniciar novos blocos.',
+    diet:'Proteína alta. Carbo pré-treino para performance. Janela boa para déficit leve se quiser.',
+    block:'Bloco 2 (Intensidade) ou início de bloco novo. Hora de bater recordes.',intensity:'Alta',
+    dietNote:'↑ Proteína · Carbo pré-treino · Déficit leve possível'},
+  ovulacao:{name:'Ovulação',emoji:'✨',color:'#f0b429',bg:'rgba(240,180,41,0.07)',border:'rgba(240,180,41,0.25)',
+    days:'Dias 14–16',train:'Pico de força e performance. Estrogênio + testosterona no máximo. Treinos mais pesados do ciclo aqui.',
+    diet:'Proteína alta. Carbo estratégico pré-treino pesado. Anti-inflamatórios naturais (azeite, cúrcuma).',
+    block:'Bloco 3 (Força/Pico). Registre seus recordes de carga.',intensity:'Máxima',
+    dietNote:'↑ Proteína · Carbo pré-treino · Anti-inflamatórios'},
+  lutea:{name:'Lútea',emoji:'🌙',color:'#b97ff8',bg:'rgba(185,127,248,0.07)',border:'rgba(185,127,248,0.25)',
+    days:'Dias 17–28',train:'Dias 17–21: ainda boa. Dias 22–28 (pré-TPM): reduza intensidade. Corpo pede mais descanso, retenção piora lipedema. Não force recordes.',
+    diet:'Corpo pede mais carboidrato — atenda. Mais magnésio e potássio. Reduza sódio (agrava retenção e lipedema). Chocolate amargo tem base científica (magnésio) nessa fase.',
+    block:'Bloco 1 (Volume) na primeira metade. Deload progressivo na segunda.',intensity:'Moderada → Baixa',
+    dietNote:'↑ Carbo · ↓ Sódio · ↑ Magnésio · Chocolate amargo liberado'},
+};
+
+const MEALS_DATA = {
+  cafe:{label:'☀️ Café da Manhã',color:'#f0b429',options:[
+    {tag:'Treino manhã (jejum)',name:'Super Café com Leite',tip:'Tome 15–20 min antes. Refeição sólida em até 60–90 min após treinar.',items:[{name:'Super Café (1 scoop)',qty:'30g pó seco',kcal:120,p:10,c:12,g:3},{name:'Leite desnatado',qty:'200ml',kcal:65,p:6,c:9,g:0.3}]},
+    {tag:'Pós-treino / Musculação',name:'Ovos + Carboidrato',tip:'Prioritária após treino matinal — não pule.',items:[{name:'Ovos mexidos',qty:'3 unidades',kcal:210,p:18,c:1,g:15},{name:'Requeijão light',qty:'20g = 1 col de sopa cheia',kcal:35,p:3,c:1,g:2},{name:'Bolacha de arroz Natural Life grande',qty:'2 unidades (~36g total)',kcal:140,p:2,c:30,g:1},{name:'Café + leite desnatado',qty:'à vontade + 100ml leite',kcal:35,p:3,c:5,g:0}]},
+    {tag:'Pilates / Cardio / Descanso',name:'Ovos simples',tip:'Sem carbo aqui — você vai repor no almoço.',items:[{name:'Ovos mexidos',qty:'2 unidades',kcal:140,p:12,c:1,g:10},{name:'Requeijão light',qty:'20g = 1 col de sopa cheia',kcal:35,p:3,c:1,g:2},{name:'Café + leite desnatado',qty:'à vontade + 100ml leite',kcal:35,p:3,c:5,g:0}]},
+  ]},
+  almoco:{label:'🍽️ Almoço',color:'#6ee7a0',options:[
+    {tag:'Musculação / Cardio',name:'Frango + Arroz + Feijão',tip:'Arroz → pese CRU. Feijão → pese COZIDO.',items:[{name:'Peito de frango grelhado',qty:'150g CRU (rende ~110g cozido)',kcal:165,p:35,c:0,g:2},{name:'Arroz branco',qty:'60g CRU (rende ~180g cozido)',kcal:210,p:4,c:46,g:0.5},{name:'Feijão cozido',qty:'80g COZIDO = 1 concha média',kcal:75,p:5,c:14,g:0.5},{name:'Salada folhas + tomate',qty:'à vontade',kcal:20,p:1,c:3,g:0},{name:'Azeite de oliva',qty:'5ml = 1 col de chá',kcal:44,p:0,c:0,g:5}]},
+    {tag:'Pilates / Descanso',name:'Frango + Legumes (menos carbo)',tip:'Requeijão light (20g) pode entrar no frango.',items:[{name:'Peito de frango grelhado',qty:'150g CRU (rende ~110g cozido)',kcal:165,p:35,c:0,g:2},{name:'Arroz integral',qty:'40g CRU (rende ~120g cozido)',kcal:140,p:3,c:29,g:1},{name:'Abobrinha + cenoura refogada',qty:'150g COZIDO',kcal:50,p:2,c:8,g:1},{name:'Azeite de oliva',qty:'5ml = 1 col de chá',kcal:44,p:0,c:0,g:5}]},
+  ]},
+  lanche:{label:'🫐 Lanche da Tarde',color:'#b97ff8',options:[
+    {tag:'Pré-treino noturno',name:'Panqueca proteica',tip:'Esta refeição é o pré-treino — não precisa de mais nada antes.',items:[{name:'Banana madura',qty:'1 unidade média (~85g sem casca)',kcal:77,p:1,c:20,g:0.3},{name:'Ovos',qty:'2 unidades',kcal:140,p:12,c:1,g:10},{name:'Farelo de aveia',qty:'20g CRU = 2 col de sopa',kcal:68,p:3,c:12,g:1},{name:'Whey protein',qty:'1 scoop = ~30g pó seco',kcal:120,p:24,c:3,g:2}]},
+    {tag:'Pilates / Descanso',name:'Iogurte + Fruta',tip:'Proteína baixa? Misture 1 scoop de whey no iogurte.',items:[{name:'Iogurte desnatado zero',qty:'170g (peso na embalagem)',kcal:60,p:10,c:6,g:0},{name:'Fruta (maçã, pera ou laranja)',qty:'1 unidade média',kcal:80,p:0.5,c:20,g:0.2}]},
+    {tag:'Cardio',name:'Shake de Whey',tip:'Com banana vira pré-cardio completo.',items:[{name:'Whey protein',qty:'1 scoop = ~30g pó seco',kcal:120,p:24,c:3,g:2},{name:'Leite desnatado',qty:'200ml',kcal:65,p:6,c:9,g:0.3},{name:'Banana (opcional)',qty:'1/2 unidade (~50g sem casca)',kcal:45,p:0.5,c:11,g:0.1}]},
+  ]},
+  janta:{label:'🌙 Jantar',color:'#5cd8f0',options:[
+    {tag:'Rápido',name:'Omelete proteica',tip:'Outros recheios: atum, frango desfiado, ricota.',items:[{name:'Ovos',qty:'3 unidades',kcal:210,p:18,c:1,g:15},{name:'Queijo minas ou cottage',qty:'30g',kcal:60,p:6,c:1,g:3},{name:'Recheio: tomate + espinafre',qty:'à vontade',kcal:20,p:1,c:3,g:0},{name:'Bolacha de arroz (opcional)',qty:'1 unidade (~18g)',kcal:70,p:1,c:15,g:0.5}]},
+    {tag:'Musculação / Cardio',name:'Atum + Batata doce',tip:'Cozinhe 600g batata doce no domingo — dura 4–5 dias.',items:[{name:'Atum em água (lata)',qty:'170g ESCORRIDO',kcal:150,p:34,c:0,g:1},{name:'Batata doce cozida',qty:'150g COZIDA sem casca',kcal:129,p:2,c:30,g:0.1},{name:'Azeite + limão',qty:'5ml = 1 col de chá',kcal:44,p:0,c:0,g:5},{name:'Salada folhas',qty:'à vontade',kcal:10,p:0.5,c:1,g:0}]},
+    {tag:'Sem tempo',name:'Frango desfiado + Legumes',tip:'Batch no domingo: 400–500g frango em potinhos de 120g.',items:[{name:'Frango desfiado (cozido)',qty:'120g COZIDO DESFIADO',kcal:140,p:28,c:0,g:2},{name:'Legumes refogados',qty:'150g COZIDO',kcal:50,p:2,c:8,g:1},{name:'Arroz integral',qty:'40g CRU',kcal:140,p:3,c:29,g:1}]},
+    {tag:'Véspera musculação 🍝',name:'Macarrão com frango',tip:'SEMPRE pese o macarrão CRU. 80g cru → ~200g cozido.',items:[{name:'Macarrão (espaguete ou penne)',qty:'80g CRU (rende ~200g cozido)',kcal:280,p:10,c:58,g:1},{name:'Frango desfiado (cozido)',qty:'100g COZIDO DESFIADO',kcal:116,p:23,c:0,g:1.5},{name:'Molho de tomate (sem açúcar)',qty:'80g = 3 col de sopa',kcal:30,p:1,c:6,g:0.5},{name:'Queijo parmesão ralado',qty:'10g = 1 col de sopa rasa',kcal:40,p:3.5,c:0.3,g:2.8}]},
+    {tag:'Sem fome',name:'Iogurte grego + Whey',tip:'Misture o whey no iogurte. Cacau em pó (5g) = sabor chocolate.',items:[{name:'Iogurte grego integral',qty:'200g',kcal:120,p:12,c:6,g:5},{name:'Whey protein',qty:'1 scoop = ~30g pó seco',kcal:120,p:24,c:3,g:2},{name:'Granola sem açúcar (opcional)',qty:'20g = 2 col de sopa',kcal:80,p:2,c:14,g:2}]},
+  ]}
+};
+
+const BELISCOS=[
+  {emoji:'🍫',name:'Chocolate meio amargo 70%',qty:'20g = 2 quadradinhos',kcal:114,p:2,c:8,g:8,tip:'O mais equilibrado. Na fase lútea tem base científica (magnésio).'},
+  {emoji:'🥛',name:'Leite condensado',qty:'20g = 1 colher de sopa',kcal:65,p:1.5,c:12,g:1.5,tip:'Ótimo puro ou como cobertura leve no iogurte.'},
+  {emoji:'🍮',name:'Doce de leite',qty:'20g = 1 colher de sopa',kcal:60,p:1.5,c:11,g:1.5,tip:'Sabor mais intenso que leite condensado.'},
+  {emoji:'🍬',name:'Suspiro',qty:'3 unidades médias (~15g)',kcal:55,p:0.5,c:13,g:0,tip:'O mais leve em gordura e calorias.'},
 ];
 
-// Exercises per day (must match data-ex values in HTML)
-const DAY_EXERCISES = {
-  A: ['Hip Thrust (barra)', 'Leg Press 45°', 'Stiff', 'Cadeira Flexora', 'Glúteo na polia', 'Abdução de quadril'],
-  B: ['Puxada frontal', 'Remada curvada', 'Remada unilateral', 'Puxada polia supinada', 'Rosca direta', 'Rosca martelo'],
-  C: ['Agachamento livre', 'Leg Press 45° quad', 'Cadeira Extensora', 'Agachamento sumô', 'Panturrilha sentada', 'Panturrilha em pé'],
-  D: ['Desenvolvimento ombros', 'Elevação lateral', 'Crucifixo inverso', 'Supino inclinado', 'Tríceps pulley', 'Mergulho no banco'],
-};
-
-const DAY_COLORS = { A: '#b57bff', B: '#5fd4f4', C: '#6de8a0', D: '#ff7b7b' };
-
-// Exercise series & reps map (series, defaultReps)
-const EX_CONFIG = {
-  A: [
-    { series:4, reps:[10,10,10,10], repLabel:'10–12' },
-    { series:4, reps:[11,11,11,11], repLabel:'10–12' },
-    { series:3, reps:[11,11,11], repLabel:'10–12' },
-    { series:3, reps:[13,13,13], repLabel:'12–15' },
-    { series:3, reps:[15,15,15], repLabel:'15' },
-    { series:3, reps:[17,17,17], repLabel:'15–20' },
-  ],
-  B: [
-    { series:4, reps:[11,11,11,11], repLabel:'10–12' },
-    { series:4, reps:[11,11,11,11], repLabel:'10–12' },
-    { series:3, reps:[11,11,11], repLabel:'10–12' },
-    { series:3, reps:[12,12,12], repLabel:'12' },
-    { series:3, reps:[11,11,11], repLabel:'10–12' },
-    { series:3, reps:[11,11,11], repLabel:'10–12' },
-  ],
-  C: [
-    { series:4, reps:[9,9,9,9], repLabel:'8–10' },
-    { series:4, reps:[11,11,11,11], repLabel:'10–12' },
-    { series:3, reps:[13,13,13], repLabel:'12–15' },
-    { series:3, reps:[12,12,12], repLabel:'12' },
-    { series:4, reps:[17,17,17,17], repLabel:'15–20' },
-    { series:3, reps:[15,15,15], repLabel:'15' },
-  ],
-  D: [
-    { series:4, reps:[11,11,11,11], repLabel:'10–12' },
-    { series:3, reps:[13,13,13], repLabel:'12–15' },
-    { series:3, reps:[13,13,13], repLabel:'12–15' },
-    { series:3, reps:[11,11,11], repLabel:'10–12' },
-    { series:3, reps:[13,13,13], repLabel:'12–15' },
-    { series:3, reps:[13,13,13], repLabel:'12–15' },
-  ],
-};
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════
-let selectedMeals = { cafe:0, almoco:0, lanche:0, janta:0 };
-let selectedBelisco = null;
-let currentDay = 'A';
-let checkCounts = { A:0, B:0, C:0, D:0 };
-const TOTAL_EX = { A:6, B:6, C:6, D:6 };
+// ════════════════════════════════════════════
+let selectedDay='A';
+let checkCounts={A:0,B:0,C:0,D:0};
+let timerIntervals={};
+let selectedMeals={cafe:0,almoco:0,lanche:0,janta:0};
+let selectedBelisco=null;
+let wh=JSON.parse(localStorage.getItem('wh4')||'[]');
+let cycleConfig=JSON.parse(localStorage.getItem('cycleConfig4')||'null');
+let blockConfig=JSON.parse(localStorage.getItem('blockConfig4')||'null');
+let currentChartDay='A';
+let currentChartEx=null;
+let loadChart=null;
+let calYear,calMonth;
 
-// Per-day rest timers
-let restTimers = {};         // { 'A': { interval, seconds } }
-// Per-exercise-series rest timers
-let serieRestTimers = {};    // { 'A-0-2': { interval, seconds } }
+function save(){localStorage.setItem('wh4',JSON.stringify(wh));}
 
-// Cargas storage (in-memory)
-let cargasData = {}; // { exercicio: [{date, val, vol}] }
-let selectedCargaEx = null;
-let selectedCargaDay = 'A';
-
-// Dias / Calendar
-let workoutLog = [];     // [{date: 'YYYY-MM-DD', type: 'A'}]
-let menstrualLog = [];   // ['YYYY-MM-DD', ...] — first days of period
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
-
-// Ciclo
-const CYCLE_LENGTH = 28;
-const MENSTRUAL_LENGTH = 5;
-const FOLLICULAR_LENGTH = 9;
-const OVULATION_LENGTH = 3;
-const LUTEAL_LENGTH = 11;
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════════════
 // SCREENS
-// ══════════════════════════════════════════
-function showScreen(id, btn) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (id === 'cargas') renderCargaCharts();
-  if (id === 'dias') renderCalendar();
-  if (id === 'ciclo') renderCiclo();
+// ════════════════════════════════════════════
+function showScreen(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.top-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='evolucao')renderEvolution();
+  if(id==='calendario')renderCalendar();
+  if(id==='ciclo'){renderCycleScreen();loadCycleForm();}
+  if(id==='dieta')renderPhaseBanners();
 }
 
-// ══════════════════════════════════════════
-// BUILD SERIES TRACKERS
-// ══════════════════════════════════════════
-function buildSeriesTrackers() {
-  ['A','B','C','D'].forEach(day => {
-    const exRows = document.querySelectorAll(`#day-${day} .exercise-row[data-ex]`);
-    const color = DAY_COLORS[day];
-    exRows.forEach((row, exIdx) => {
-      const cfg = EX_CONFIG[day][exIdx];
-      if (!cfg) return;
-      const container = document.getElementById(`st-${day}-${exIdx}`);
-      if (!container) return;
-      container.innerHTML = '';
-      for (let s = 0; s < cfg.series; s++) {
-        const reps = cfg.reps[s];
-        const serieId = `${day}-${exIdx}-${s}`;
-        const div = document.createElement('div');
-        div.className = 'serie-row';
-        div.id = `serie-row-${serieId}`;
-        div.innerHTML = `
-          <div class="serie-label">Série ${s+1}</div>
-          <input class="serie-kg-input" type="number" inputmode="decimal" placeholder="kg" step="0.5" min="0"
-            id="kg-${serieId}" oninput="onSerieKgInput('${serieId}', ${reps})">
-          <div class="serie-kg-unit">kg</div>
-          <div class="serie-reps" id="vol-${serieId}">× ${reps} reps</div>
-          <div class="serie-cb" id="cb-${serieId}" onclick="toggleSerie('${serieId}', '${day}', ${reps})"></div>
-        `;
-        container.appendChild(div);
-      }
-    });
-  });
+// ════════════════════════════════════════════
+// CYCLE
+// ════════════════════════════════════════════
+function getCurrentPhase(){
+  if(!cycleConfig)return null;
+  const start=new Date(cycleConfig.startDate);
+  const today=new Date();today.setHours(0,0,0,0);
+  const diff=Math.floor((today-start)/86400000);
+  const len=cycleConfig.length||28;
+  const day=((diff%len)+len)%len+1;
+  if(day<=5)return{phase:'menstruacao',day};
+  if(day<=13)return{phase:'folicular',day};
+  if(day<=16)return{phase:'ovulacao',day};
+  return{phase:'lutea',day};
 }
 
-function onSerieKgInput(serieId, reps) {
-  const input = document.getElementById(`kg-${serieId}`);
-  const volEl = document.getElementById(`vol-${serieId}`);
-  const kg = parseFloat(input.value);
-  if (!isNaN(kg) && kg > 0) {
-    const vol = (kg * reps).toFixed(1).replace(/\.0$/, '');
-    volEl.textContent = `× ${reps} = ${vol} kg`;
-    volEl.style.color = 'var(--green)';
-  } else {
-    volEl.textContent = `× ${reps} reps`;
-    volEl.style.color = '';
+function getCurrentBlock(){
+  if(!blockConfig)return null;
+  const b=blockConfig.block;
+  const labels={'1':'Bloco 1 — Volume','2':'Bloco 2 — Intensidade','3':'Bloco 3 — Força/Pico','deload':'Deload'};
+  const colors={'1':'var(--green)','2':'var(--gold)','3':'var(--red)','deload':'var(--muted)'};
+  const reps={'1':'12–15','2':'8–10','3':'5–6','deload':'normal'};
+  const sets={'1':'4','2':'4','3':'4–5','deload':'50% vol.'};
+  const rest={'1':'60s','2':'90s','3':'2–3 min','deload':'normal'};
+  return{label:labels[b]||b,color:colors[b]||'var(--muted)',reps:reps[b],sets:sets[b],rest:rest[b]};
+}
+
+function saveCycleConfig(){
+  const date=document.getElementById('cycle-start-input').value;
+  const len=parseInt(document.getElementById('cycle-length-input').value)||28;
+  if(!date){showToast('Selecione uma data');return;}
+  cycleConfig={startDate:date,length:len};
+  localStorage.setItem('cycleConfig4',JSON.stringify(cycleConfig));
+  showToast('Ciclo salvo! 🌸');renderCycleScreen();renderPhaseBanners();
+}
+
+function saveBlockConfig(){
+  const date=document.getElementById('block-start-input').value;
+  const block=document.getElementById('block-select').value;
+  if(!date){showToast('Selecione uma data');return;}
+  blockConfig={startDate:date,block};
+  localStorage.setItem('blockConfig4',JSON.stringify(blockConfig));
+  showToast('Bloco salvo! 💪');renderPhaseBanners();
+}
+
+function renderCycleScreen(){
+  const ph=getCurrentPhase();
+  const display=document.getElementById('cycle-phase-display');
+  if(!ph){display.innerHTML='';renderCycleDots();return;}
+  const info=PHASE_INFO[ph.phase];
+  display.innerHTML=`<div class="phase-banner" style="background:${info.bg};border-color:${info.border};margin-bottom:10px">
+    <div style="font-size:10px;color:${info.color};letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px">${info.emoji} Fase atual · Dia ${ph.day} do ciclo</div>
+    <h3 style="color:${info.color};font-size:17px;margin-bottom:8px">${info.name} · ${info.days}</h3>
+    <div style="font-size:10px;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Treino</div>
+    <div style="font-size:12px;color:var(--text);line-height:1.6;margin-bottom:8px">${info.train}</div>
+    <div style="font-size:10px;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Dieta</div>
+    <div style="font-size:12px;color:var(--text);line-height:1.6;margin-bottom:8px">${info.diet}</div>
+    <div style="font-size:10px;color:var(--subtle);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Periodização</div>
+    <div style="font-size:12px;color:var(--text);line-height:1.6;margin-bottom:8px">${info.block}</div>
+    <span class="phase-tag" style="background:${info.color}20;color:${info.color}">Intensidade: ${info.intensity}</span>
+    <span class="phase-tag" style="background:rgba(255,255,255,0.05);color:var(--subtle)">${info.dietNote}</span>
+  </div>`;
+  renderCycleDots();
+}
+
+function renderCycleDots(){
+  const ph=getCurrentPhase();
+  const len=cycleConfig?.length||28;
+  const row=document.getElementById('cycle-dot-row');
+  if(!row)return;
+  const mDays=JSON.parse(localStorage.getItem('mstruDays4')||'[]');
+  const phColor=d=>{if(d<=5)return'rgba(248,113,113,0.25)';if(d<=13)return'rgba(110,231,160,0.2)';if(d<=16)return'rgba(240,180,41,0.2)';return'rgba(185,127,248,0.2)';};
+  const phText=d=>{if(d<=5)return'#f87171';if(d<=13)return'#6ee7a0';if(d<=16)return'#f0b429';return'#b97ff8';};
+  row.innerHTML=Array.from({length:len},(_,i)=>{
+    const d=i+1,isCurrent=ph&&ph.day===d,isMstr=mDays.includes(d);
+    return`<div class="cdot ${isMstr?'menstruation':''} ${isCurrent?'selected':''}"
+      style="background:${phColor(d)};color:${phText(d)};${isCurrent?`box-shadow:0 0 0 2px ${phText(d)}`:''};"
+      onclick="toggleMstruDay(${d})">${d}</div>`;
+  }).join('');
+}
+
+function toggleMstruDay(d){
+  let days=JSON.parse(localStorage.getItem('mstruDays4')||'[]');
+  const idx=days.indexOf(d);
+  if(idx>-1)days.splice(idx,1);else days.push(d);
+  localStorage.setItem('mstruDays4',JSON.stringify(days));
+  renderCycleDots();
+}
+
+function renderPhaseBanners(){
+  const ph=getCurrentPhase();
+  const bl=getCurrentBlock();
+  const banner=document.getElementById('phase-banner-treino');
+  if(ph&&banner){
+    const info=PHASE_INFO[ph.phase];
+    banner.innerHTML=`<div style="background:${info.bg};border:1px solid ${info.border};border-radius:11px;padding:9px 13px;margin-bottom:8px">
+      <span style="font-size:10px;color:${info.color};letter-spacing:1px;text-transform:uppercase">${info.emoji} ${info.name} · Dia ${ph.day} · ${info.days}</span>
+      <div style="font-size:11px;color:var(--subtle);margin-top:3px;line-height:1.4">${info.train.split('.')[0]}.</div>
+    </div>`;
+  }
+  const badge=document.getElementById('block-badge-treino');
+  if(bl&&badge){
+    badge.innerHTML=`<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid;color:${bl.color};border-color:${bl.color};background:${bl.color}12">
+      📦 ${bl.label} · ${bl.sets}×${bl.reps} · ${bl.rest}</div>`;
+  }
+  const dietTip=document.getElementById('diet-phase-tip');
+  if(dietTip&&ph){
+    const info=PHASE_INFO[ph.phase];
+    dietTip.innerHTML=`<div style="background:${info.bg};border:1px solid ${info.border};border-radius:11px;padding:10px 13px;margin-bottom:12px">
+      <div style="font-size:10px;color:${info.color};letter-spacing:1px;text-transform:uppercase;margin-bottom:3px">${info.emoji} ${info.name} — dica da fase</div>
+      <div style="font-size:12px;color:var(--subtle);line-height:1.5">${info.diet.split('.')[0]}.</div>
+      <div style="font-size:11px;color:${info.color};margin-top:5px;font-weight:500">${info.dietNote}</div>
+    </div>`;
   }
 }
 
-function toggleSerie(serieId, day, reps) {
-  const cb = document.getElementById(`cb-${serieId}`);
-  const row = document.getElementById(`serie-row-${serieId}`);
-  const isDone = cb.classList.contains(`checked`) || cb.classList.contains(`checked-B`) || cb.classList.contains(`checked-C`) || cb.classList.contains(`checked-D`);
-
-  const checkedClass = day === 'A' ? 'checked' : day === 'B' ? 'checked-B' : day === 'C' ? 'checked-C' : 'checked-D';
-
-  if (isDone) {
-    cb.classList.remove('checked', 'checked-B', 'checked-C', 'checked-D');
-    cb.textContent = '';
-    row.classList.remove('done-serie');
-    stopSerieRestTimer(serieId, day);
-  } else {
-    cb.classList.add(checkedClass);
-    cb.textContent = '✓';
-    row.classList.add('done-serie');
-    startSerieRestTimer(serieId, day);
+function loadCycleForm(){
+  if(cycleConfig){
+    document.getElementById('cycle-start-input').value=cycleConfig.startDate;
+    document.getElementById('cycle-length-input').value=cycleConfig.length;
+  }
+  if(blockConfig){
+    document.getElementById('block-start-input').value=blockConfig.startDate;
+    document.getElementById('block-select').value=blockConfig.block;
   }
 }
 
-// ══════════════════════════════════════════
-// SERIE REST TIMER (90s triggered on each serie check)
-// ══════════════════════════════════════════
-function startSerieRestTimer(serieId, day) {
-  // Stop any existing global rest timer for this day and show the inline one
-  if (restTimers[day]) {
-    clearInterval(restTimers[day].interval);
-    delete restTimers[day];
-  }
-
-  const timerEl = document.getElementById(`rest-timer-${day}`);
-  const countEl = document.getElementById(`rest-count-${day}`);
-  if (!timerEl || !countEl) return;
-
-  timerEl.classList.add('visible');
-
-  // Stop previous serie timer if any
-  if (serieRestTimers[day]) {
-    clearInterval(serieRestTimers[day].interval);
-  }
-
-  let seconds = 90;
-  updateRestDisplay(countEl, seconds);
-
-  serieRestTimers[day] = {
-    interval: setInterval(() => {
-      seconds--;
-      updateRestDisplay(countEl, seconds);
-      if (seconds <= 0) {
-        clearInterval(serieRestTimers[day].interval);
-        delete serieRestTimers[day];
-        countEl.textContent = '✓ Pronto!';
-        setTimeout(() => {
-          timerEl.classList.remove('visible');
-          countEl.textContent = '1:30';
-        }, 2500);
-      }
-    }, 1000),
-    seconds
-  };
-}
-
-function stopSerieRestTimer(serieId, day) {
-  if (serieRestTimers[day]) {
-    clearInterval(serieRestTimers[day].interval);
-    delete serieRestTimers[day];
-  }
-  const timerEl = document.getElementById(`rest-timer-${day}`);
-  const countEl = document.getElementById(`rest-count-${day}`);
-  if (timerEl) timerEl.classList.remove('visible');
-  if (countEl) countEl.textContent = '1:30';
-}
-
-function skipRestTimer(day) {
-  if (serieRestTimers[day]) {
-    clearInterval(serieRestTimers[day].interval);
-    delete serieRestTimers[day];
-  }
-  const timerEl = document.getElementById(`rest-timer-${day}`);
-  const countEl = document.getElementById(`rest-count-${day}`);
-  if (timerEl) timerEl.classList.remove('visible');
-  if (countEl) countEl.textContent = '1:30';
-}
-
-function updateRestDisplay(el, seconds) {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-}
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════════════
 // TREINO
-// ══════════════════════════════════════════
-function showDay(day, btn) {
-  currentDay = day;
-  document.querySelectorAll('.day-content').forEach(d => d.classList.add('hidden'));
-  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('day-' + day).classList.remove('hidden');
-  if (btn) btn.classList.add('active');
-}
-
-function toggleCheck(el) {
-  const day = currentDay;
-  const wasDone = el.classList.contains('done');
-  el.classList.toggle('done');
-  el.textContent = el.classList.contains('done') ? '✓' : '';
-  checkCounts[day] += wasDone ? -1 : 1;
-  updateProgress(day);
-}
-
-function updateProgress(day) {
-  const count = checkCounts[day];
-  const total = TOTAL_EX[day];
-  const pct = Math.round((count / total) * 100);
-  const progEl = document.getElementById('prog-' + day);
-  const fillEl = document.getElementById('fill-' + day);
-  if (progEl) progEl.textContent = count + '/' + total;
-  if (fillEl) fillEl.style.width = pct + '%';
-}
-
-// ══════════════════════════════════════════
-// CARDIO
-// ══════════════════════════════════════════
-function showCardio(type, btn) {
-  document.querySelectorAll('.cardio-content').forEach(d => d.classList.add('hidden'));
-  document.querySelectorAll('.cardio-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('cardio-' + type).classList.remove('hidden');
-  if (btn) btn.classList.add('active');
-}
-
-// ══════════════════════════════════════════
-// SAVE WORKOUT — volume = kg × series × reps
-// ══════════════════════════════════════════
-function saveWorkout(type) {
-  const today = getTodayStr();
-  const exists = workoutLog.find(w => w.date === today && w.type === type);
-  if (!exists) {
-    workoutLog.push({ date: today, type });
-  }
-
-  if (['A','B','C','D'].includes(type)) {
-    const dayEl = document.getElementById('day-' + type);
-    if (!dayEl) return;
-    const exRows = dayEl.querySelectorAll('.exercise-row[data-ex]');
-    let dayTotalVol = 0;
-
-    exRows.forEach((row, exIdx) => {
-      const exName = row.dataset.ex;
-      const cfg = EX_CONFIG[type][exIdx];
-      if (!cfg) return;
-
-      let exTotalVol = 0;
-      let firstKg = NaN;
-
-      for (let s = 0; s < cfg.series; s++) {
-        const serieId = `${type}-${exIdx}-${s}`;
-        const kgInput = document.getElementById(`kg-${serieId}`);
-        const kg = kgInput ? parseFloat(kgInput.value) : NaN;
-        if (!isNaN(kg) && kg > 0) {
-          const reps = cfg.reps[s];
-          const vol = kg * reps; // per-serie volume = kg × reps
-          exTotalVol += vol;
-          if (isNaN(firstKg)) firstKg = kg;
-        }
-      }
-
-      dayTotalVol += exTotalVol;
-
-      if (!isNaN(firstKg) && firstKg > 0) {
-        if (!cargasData[exName]) cargasData[exName] = [];
-        const existing = cargasData[exName].find(e => e.date === today);
-        if (existing) {
-          existing.val = firstKg;
-          existing.vol = exTotalVol;
-        } else {
-          cargasData[exName].push({ date: today, val: firstKg, vol: exTotalVol });
-        }
-        cargasData[exName].sort((a,b) => a.date.localeCompare(b.date));
-      }
-    });
-
-    // Save total volume for day type: vol = kg × series × reps (summed)
-    const key = 'vol_' + type;
-    if (!cargasData[key]) cargasData[key] = [];
-    const existVol = cargasData[key].find(e => e.date === today);
-    if (existVol) existVol.val = dayTotalVol;
-    else if (dayTotalVol > 0) cargasData[key].push({ date: today, val: dayTotalVol });
-    cargasData[key].sort((a,b) => a.date.localeCompare(b.date));
-  }
-
-  renderCalendar();
-  renderRecentList();
-  updateStreakStats();
-
-  // Visual feedback
-  const allSaveBtns = document.querySelectorAll('.save-btn');
-  allSaveBtns.forEach(b => {
-    const fn = b.getAttribute('onclick') || '';
-    if (fn.includes(`'${type}'`)) {
-      const orig = b.textContent;
-      b.textContent = '✅ Treino salvo!';
-      setTimeout(() => b.textContent = orig, 2000);
-    }
-  });
-}
-
-function getTodayStr() {
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
-
-// ══════════════════════════════════════════
-// DIETA
-// ══════════════════════════════════════════
-function renderMeal(key) {
-  const opts = MEALS[key];
-  const idx = selectedMeals[key];
-  const opt = opts[idx];
-  const el = document.getElementById('meal-' + key);
-  const colors = { kcal:'#f5c542', p:'#6de8a0', c:'#5fd4f4', g:'#ff7b7b' };
-  const mealColors = { cafe:'#f5c542', almoco:'#6de8a0', lanche:'#b57bff', janta:'#5fd4f4' };
-  const mc = mealColors[key];
-
-  let html = `<div style="border-left:3px solid ${mc};padding:12px 16px;border-bottom:1px solid var(--border)">
-    <div style="font-size:13px;color:var(--text);margin-bottom:3px;font-weight:600">${opt.name}</div>
-    <div style="font-size:11px;color:var(--text2)">${opt.tag}</div>
-  </div>`;
-
-  opt.items.forEach(item => {
-    html += `<div class="food-row">
-      <div class="food-name">${item.name}</div>
-      <div class="food-qty">${item.qty}</div>
-      <div class="food-macros">
-        <span class="food-macro" style="color:${colors.kcal};background:${colors.kcal}18">kcal: ${item.kcal}</span>
-        <span class="food-macro" style="color:${colors.p};background:${colors.p}18">P: ${item.p}g</span>
-        <span class="food-macro" style="color:${colors.c};background:${colors.c}18">C: ${item.c}g</span>
-        <span class="food-macro" style="color:${colors.g};background:${colors.g}18">G: ${item.g}g</span>
+// ════════════════════════════════════════════
+function renderExercises(){
+  const colors={A:'var(--purple)',B:'var(--cyan)',C:'var(--green)',D:'var(--red)'};
+  const titles={A:'Glúteos + Posterior de Coxa',B:'Costas + Bíceps + Postura',C:'Quadríceps + Panturrilha',D:'Ombros + Tríceps + Peito'};
+  const notes={A:'Todos bilaterais ou com apoio — adaptado para pé chato e lipedema.',B:'Costas largas e postura correta compensam o dia sentada no home office.',C:'Sem exercícios com equilíbrio unilateral sem apoio.',D:'Parte superior completa. Ombros desenvolvidos criam proporção com o quadril.'};
+  Object.keys(EXERCISES).forEach(day=>{
+    const color=colors[day];
+    const exHtml=EXERCISES[day].map((ex,i)=>`
+      <div class="ex-row">
+        <div class="ex-num" style="color:${color}">${String(i+1).padStart(2,'0')}</div>
+        <div class="ex-body">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-tags"><span class="ex-tag">${ex.sets} séries</span><span class="ex-tag">${ex.reps} reps</span><span class="ex-tag">${ex.rest}</span></div>
+          <div class="ex-tip">${ex.tip}</div>
+        </div>
+        <div class="ex-load">
+          <input class="load-input" type="number" min="0" step="2.5" id="load-${ex.id}" placeholder="kg" value="${getLastLoad(ex.id)}">
+          <div class="load-label">KG</div>
+        </div>
+        <div class="ex-check" id="check-${ex.id}" onclick="toggleCheck('${day}','${ex.id}',this)"></div>
+      </div>`).join('');
+    document.getElementById('pane-'+day).innerHTML=`
+      <div class="card">
+        <div class="card-header">
+          <div class="card-label" style="color:${color}">Treino ${day} · ~60 min</div>
+          <h2 class="card-title">${titles[day]}</h2>
+          <div class="card-note">${notes[day]}</div>
+        </div>
+        ${exHtml}
+        <div class="prog-wrap">
+          <div class="prog-top"><span>Progresso</span><span id="prog-${day}">0 / ${EXERCISES[day].length}</span></div>
+          <div class="prog-track"><div class="prog-fill" id="fill-${day}" style="width:0%;background:${color}"></div></div>
+        </div>
+        <div class="timer-section">
+          <div class="timer-btns">
+            <button class="t-btn primary" onclick="startTimer(60,'${day}')">60s</button>
+            <button class="t-btn primary" onclick="startTimer(90,'${day}')">90s</button>
+          </div>
+          <div class="timer-display" id="tdisp-${day}">--:--</div>
+          <button class="t-btn danger" onclick="resetTimer('${day}')">✕</button>
+        </div>
       </div>
-    </div>`;
+      <button class="save-btn" onclick="saveWorkout('${day}')">💾 Salvar Treino ${day}</button>`;
   });
-
-  const tot = opt.items.reduce((a,i) => ({kcal:a.kcal+i.kcal, p:a.p+i.p, c:a.c+i.c, g:a.g+i.g}), {kcal:0,p:0,c:0,g:0});
-  html += `<div class="meal-total">
-    <span style="color:${colors.kcal}">kcal: <b>${Math.round(tot.kcal)}</b></span>
-    <span style="color:${colors.p}">P: <b>${Math.round(tot.p)}g</b></span>
-    <span style="color:${colors.c}">C: <b>${Math.round(tot.c)}g</b></span>
-    <span style="color:${colors.g}">G: <b>${Math.round(tot.g)}g</b></span>
-  </div>`;
-
-  if (opt.tip) html += `<div class="tip-block">💡 ${opt.tip}</div>`;
-  el.innerHTML = html;
-  updateMacroSummary();
 }
 
-function selectMeal(key, idx, btn) {
-  selectedMeals[key] = idx;
-  const parent = btn.parentElement;
-  parent.querySelectorAll('.meal-opt-btn').forEach(b => {
-    b.classList.remove('active');
-    b.style.background = '';
-    b.style.borderColor = '';
-    b.style.color = '';
-  });
+function getLastLoad(exId){
+  for(let i=wh.length-1;i>=0;i--){const w=wh[i];if(w.loads&&w.loads[exId]!==undefined)return w.loads[exId]||'';}
+  return'';
+}
+
+function showDay(day,btn){
+  selectedDay=day;
+  document.querySelectorAll('.day-pane').forEach(p=>p.classList.add('hidden'));
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pane-'+day).classList.remove('hidden');
   btn.classList.add('active');
-  const mc = { cafe:'#f5c542', almoco:'#6de8a0', lanche:'#b57bff', janta:'#5fd4f4' }[key];
-  btn.style.background = mc;
-  btn.style.borderColor = mc;
-  btn.style.color = '#0c0c10';
-  renderMeal(key);
 }
 
-function updateMacroSummary() {
-  const goals = { kcal:1980, p:120, c:200, g:60 };
-  const total = { kcal:0, p:0, c:0, g:0 };
-  Object.keys(MEALS).forEach(key => {
-    const opt = MEALS[key][selectedMeals[key]];
-    opt.items.forEach(item => { total.kcal += item.kcal; total.p += item.p; total.c += item.c; total.g += item.g; });
-  });
-  if (selectedBelisco !== null) {
-    const b = BELISCOS[selectedBelisco];
-    total.kcal += b.kcal; total.p += b.p; total.c += b.c; total.g += b.g;
+function toggleCheck(day,exId,el){
+  const wasDone=el.classList.contains('done');
+  el.classList.toggle('done');el.textContent=el.classList.contains('done')?'✓':'';
+  checkCounts[day]+=wasDone?-1:1;
+  const total=EXERCISES[day].length;
+  document.getElementById('prog-'+day).textContent=checkCounts[day]+' / '+total;
+  document.getElementById('fill-'+day).style.width=Math.round((checkCounts[day]/total)*100)+'%';
+}
+
+function getSelectedDate(inputId){
+  const v=document.getElementById(inputId)?.value;
+  return v||todayStr();
+}
+
+function saveWorkout(day){
+  const loads={};
+  EXERCISES[day].forEach(ex=>{const inp=document.getElementById('load-'+ex.id);if(inp&&inp.value)loads[ex.id]=parseFloat(inp.value);});
+  const ph=getCurrentPhase();const bl=getCurrentBlock();
+  const date=getSelectedDate('treino-date');
+  const idx=wh.findIndex(w=>w.date===date&&w.type==='musculacao'&&w.day===day);
+  if(idx>-1)wh.splice(idx,1);
+  wh.push({date,type:'musculacao',day,loads,completed:checkCounts[day],total:EXERCISES[day].length,phase:ph?.phase||null,block:bl?.label||null});
+  save();showToast('Treino '+day+' salvo! 💪');
+  checkCounts[day]=0;
+  document.getElementById('prog-'+day).textContent='0 / '+EXERCISES[day].length;
+  document.getElementById('fill-'+day).style.width='0%';
+  document.querySelectorAll('#pane-'+day+' .ex-check').forEach(c=>{c.classList.remove('done');c.textContent='';});
+}
+
+function saveCardio(){
+  const date=getSelectedDate('cardio-date');
+  const ph=getCurrentPhase();
+  const idx=wh.findIndex(w=>w.date===date&&w.type==='cardio');
+  if(idx>-1)wh.splice(idx,1);
+  wh.push({date,type:'cardio',day:null,loads:{},completed:1,total:1,phase:ph?.phase||null});
+  save();showToast('Cardio salvo! 🚴');
+}
+
+// ════════════════════════════════════════════
+// RETROACTIVE ENTRY
+// ════════════════════════════════════════════
+document.addEventListener('change',function(e){
+  if(e.target.id==='retro-type'){
+    const isPilates=e.target.value==='pilates';
+    const fields=document.getElementById('retro-pilates-fields');
+    if(fields)isPilates?fields.classList.remove('hidden'):fields.classList.add('hidden');
   }
-  const pairs = [
-    ['m-kcal','mf-kcal', Math.round(total.kcal), goals.kcal, 'kcal'],
-    ['m-prot','mf-prot', Math.round(total.p), goals.p, 'g'],
-    ['m-carb','mf-carb', Math.round(total.c), goals.c, 'g'],
-    ['m-fat','mf-fat', Math.round(total.g), goals.g, 'g'],
-  ];
-  pairs.forEach(([txtId, fillId, val, goal, unit]) => {
-    const pct = Math.min(100, Math.round((val/goal)*100));
-    document.getElementById(txtId).textContent = val + ' / ' + goal + unit;
-    document.getElementById(fillId).style.width = pct + '%';
-  });
-}
-
-// ══════════════════════════════════════════
-// BELISCOS
-// ══════════════════════════════════════════
-function renderBeliscos() {
-  const el = document.getElementById('belisco-list');
-  const colors = { kcal:'#f5c542', p:'#6de8a0', c:'#5fd4f4', g:'#ff7b7b' };
-  el.innerHTML = BELISCOS.map((b,i) => `
-    <div class="belisco-card ${selectedBelisco===i?'sel':''}" onclick="toggleBelisco(${i})">
-      <div class="belisco-top">
-        <div>
-          <div class="belisco-name">${b.emoji} ${b.name}</div>
-          <div class="belisco-qty">${b.qty}</div>
-          <div class="belisco-tip">${b.tip}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0">
-          <span style="font-size:10px;color:${colors.kcal};background:${colors.kcal}18;padding:2px 7px;border-radius:4px;font-weight:600">kcal: ${b.kcal}</span>
-          <span style="font-size:10px;color:${colors.p};background:${colors.p}18;padding:2px 7px;border-radius:4px;font-weight:600">P: ${b.p}g</span>
-          <span style="font-size:10px;color:${colors.c};background:${colors.c}18;padding:2px 7px;border-radius:4px;font-weight:600">C: ${b.c}g</span>
-          <span style="font-size:10px;color:${colors.g};background:${colors.g}18;padding:2px 7px;border-radius:4px;font-weight:600">G: ${b.g}g</span>
-        </div>
-      </div>
-      ${selectedBelisco===i ? '<div class="belisco-badge">✓ Incluído nos macros do dia</div>' : ''}
-    </div>
-  `).join('');
-}
-
-function toggleBelisco(i) {
-  selectedBelisco = (selectedBelisco === i) ? null : i;
-  renderBeliscos();
-  updateMacroSummary();
-}
-
-// ══════════════════════════════════════════
-// CARGAS
-// ══════════════════════════════════════════
-function selectCargaDay(day, btn) {
-  selectedCargaDay = day;
-  document.querySelectorAll('.carga-day-tab').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  selectedCargaEx = null;
-  renderCargaCharts();
-}
-
-function deleteCarga(ex, idx) {
-  if (cargasData[ex]) {
-    cargasData[ex].splice(idx, 1);
-    if (cargasData[ex].length === 0) delete cargasData[ex];
-    if (selectedCargaEx === ex && !cargasData[ex]) {
-      selectedCargaEx = null;
-    }
-  }
-  renderCargaCharts();
-}
-
-function selectCargaEx(ex) {
-  selectedCargaEx = ex;
-  renderCargaCharts();
-}
-
-function renderCargaCharts() {
-  const day = selectedCargaDay;
-  const color = DAY_COLORS[day];
-  const exercises = DAY_EXERCISES[day];
-  const volKey = 'vol_' + day;
-  const volData = cargasData[volKey] || [];
-  const volBox = document.getElementById('carga-vol-box');
-  const tabsRow = document.getElementById('carga-tabs-row');
-  const chartArea = document.getElementById('carga-chart-area');
-
-  // Volume summary
-  if (volData.length === 0) {
-    volBox.innerHTML = `<div class="chart-empty" style="margin-bottom:12px">Salve um Treino ${day} com pesos preenchidos para ver o volume total (kg × séries × reps) 🏋️</div>`;
-  } else {
-    const last = volData[volData.length - 1];
-    const prev = volData.length > 1 ? volData[volData.length - 2] : null;
-    const diff = prev ? last.val - prev.val : null;
-    let diffHtml = '';
-    if (diff !== null) {
-      const dc = diff > 0 ? '#6de8a0' : diff < 0 ? '#ff7b7b' : '#4e4e63';
-      const sign = diff > 0 ? '+' : '';
-      diffHtml = `<span class="carga-vol-diff" style="color:${dc}">${sign}${Math.round(diff)} kg vs anterior</span>`;
-    }
-    volBox.innerHTML = `
-      <div class="carga-vol-summary">
-        <div class="carga-vol-icon">🏋️</div>
-        <div class="carga-vol-info">
-          <div class="carga-vol-title">Volume total — Treino ${day} (último) · kg × séries × reps</div>
-          <div><span class="carga-vol-val" style="color:${color}">${Math.round(last.val)} kg</span>${diffHtml}</div>
-        </div>
-      </div>
-      ${renderMiniVolumeChart(volData, color)}
-    `;
-  }
-
-  // Exercise tabs
-  const exWithData = exercises.filter(ex => cargasData[ex] && cargasData[ex].length > 0);
-  if (exWithData.length === 0) {
-    tabsRow.innerHTML = '';
-    chartArea.innerHTML = '<div class="chart-empty">Nenhuma carga registrada para o Treino ' + day + '.<br>Preencha os kg nas séries e salve o treino.</div>';
-    return;
-  }
-
-  if (!selectedCargaEx || !cargasData[selectedCargaEx] || !exercises.includes(selectedCargaEx)) {
-    selectedCargaEx = exWithData[0];
-  }
-
-  tabsRow.innerHTML = exWithData.map(ex => `
-    <button class="ex-tab-btn ${selectedCargaEx===ex?'active':''}" onclick="selectCargaEx('${ex.replace(/'/g,"\\'")}')">
-      ${ex.length > 16 ? ex.substring(0,14)+'…' : ex}
-    </button>
-  `).join('');
-
-  // Per-exercise chart
-  const data = cargasData[selectedCargaEx];
-  const maxVal = Math.max(...data.map(d => d.val));
-  const minVal = Math.min(...data.map(d => d.val));
-  const range = maxVal - minVal || 1;
-
-  let chartHTML = `
-    <div class="chart-container">
-      <div class="chart-title-row">
-        <div class="chart-title">${selectedCargaEx}</div>
-        <div class="chart-subtitle">${data.length} registro${data.length>1?'s':''}</div>
-      </div>
-  `;
-
-  if (data.length < 2) {
-    chartHTML += `<div class="chart-empty">Registre pelo menos 2 treinos para ver o gráfico 📊</div>`;
-  } else {
-    const W = 300, H = 100, padL = 36, padR = 10, padT = 10, padB = 20;
-    const innerW = W - padL - padR;
-    const innerH = H - padT - padB;
-    const points = data.map((d, i) => {
-      const x = padL + (i / (data.length - 1)) * innerW;
-      const y = padT + innerH - ((d.val - minVal) / range) * innerH;
-      return { x, y, val: d.val };
-    });
-    const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
-    const areaPoints = `${points[0].x},${padT + innerH} ` + polyline + ` ${points[points.length-1].x},${padT + innerH}`;
-    const ySteps = [minVal, (minVal + maxVal) / 2, maxVal];
-
-    chartHTML += `
-      <div class="chart-area">
-        <svg class="chart-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="lineGrad${day}" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${color}" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <line x1="${padL}" y1="${padT}" x2="${W-padR}" y2="${padT}" stroke="#22222e" stroke-width="0.5"/>
-          <line x1="${padL}" y1="${padT+innerH/2}" x2="${W-padR}" y2="${padT+innerH/2}" stroke="#22222e" stroke-width="0.5" stroke-dasharray="2,3"/>
-          <line x1="${padL}" y1="${padT+innerH}" x2="${W-padR}" y2="${padT+innerH}" stroke="#22222e" stroke-width="0.5"/>
-          <text x="${padL-3}" y="${padT+4}" fill="#4e4e63" font-size="7" text-anchor="end" font-family="Plus Jakarta Sans">${Math.round(ySteps[2]*2)/2}kg</text>
-          <text x="${padL-3}" y="${padT+innerH/2+4}" fill="#4e4e63" font-size="7" text-anchor="end" font-family="Plus Jakarta Sans">${Math.round(ySteps[1]*2)/2}kg</text>
-          <text x="${padL-3}" y="${padT+innerH+4}" fill="#4e4e63" font-size="7" text-anchor="end" font-family="Plus Jakarta Sans">${Math.round(ySteps[0]*2)/2}kg</text>
-          <polygon points="${areaPoints}" fill="url(#lineGrad${day})"/>
-          <polyline points="${polyline}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-          ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="${color}" stroke="#131318" stroke-width="1"/>`).join('')}
-        </svg>
-      </div>`;
-  }
-
-  // History
-  chartHTML += `<div style="margin-top:12px"><div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Histórico</div>`;
-  [...data].reverse().forEach((d, ri) => {
-    const i = data.length - 1 - ri;
-    const dateStr = formatDate(d.date);
-    const prev = data[i - 1];
-    const diff = prev ? d.val - prev.val : null;
-    let diffHtml = '';
-    if (diff !== null) {
-      const dc = diff > 0 ? '#6de8a0' : diff < 0 ? '#ff7b7b' : '#4e4e63';
-      const sign = diff > 0 ? '+' : '';
-      diffHtml = `<span style="font-size:10px;color:${dc};font-weight:700;margin-left:6px">${sign}${diff}kg</span>`;
-    }
-    const volStr = d.vol ? ` <span style="font-size:10px;color:var(--muted)">vol: ${Math.round(d.vol)}kg</span>` : '';
-    chartHTML += `
-      <div class="carga-history-row">
-        <div class="carga-history-date">${dateStr}</div>
-        <div style="display:flex;align-items:center;flex:1;justify-content:flex-end;gap:4px">
-          <div class="carga-history-val" style="color:${color}">${d.val}kg</div>
-          ${diffHtml}${volStr}
-        </div>
-        <button class="carga-del-btn" onclick="deleteCarga('${selectedCargaEx.replace(/'/g,"\\'")}', ${i})">✕</button>
-      </div>`;
-  });
-  chartHTML += '</div></div>';
-  chartArea.innerHTML = chartHTML;
-}
-
-function renderMiniVolumeChart(data, color) {
-  if (data.length < 2) return '';
-  const W = 300, H = 60, padL = 36, padR = 10, padT = 8, padB = 16;
-  const innerW = W - padL - padR;
-  const innerH = H - padT - padB;
-  const maxVal = Math.max(...data.map(d => d.val));
-  const minVal = Math.min(...data.map(d => d.val));
-  const range = maxVal - minVal || 1;
-  const points = data.map((d, i) => {
-    const x = padL + (i / (data.length - 1)) * innerW;
-    const y = padT + innerH - ((d.val - minVal) / range) * innerH;
-    return { x, y };
-  });
-  const polyline = points.map(p => `${p.x},${p.y}`).join(' ');
-  const areaPoints = `${points[0].x},${padT + innerH} ` + polyline + ` ${points[points.length-1].x},${padT + innerH}`;
-  return `
-    <div class="chart-container" style="margin-bottom:12px">
-      <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Volume total por treino (kg × séries × reps)</div>
-      <div style="width:100%;height:${H}px;position:relative">
-        <svg style="width:100%;height:100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="volGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="${color}" stop-opacity="0.25"/>
-              <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <text x="${padL-3}" y="${padT+4}" fill="#4e4e63" font-size="6" text-anchor="end">${Math.round(maxVal)}kg</text>
-          <text x="${padL-3}" y="${padT+innerH+4}" fill="#4e4e63" font-size="6" text-anchor="end">${Math.round(minVal)}kg</text>
-          <polygon points="${areaPoints}" fill="url(#volGrad)"/>
-          <polyline points="${polyline}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-          ${points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="2" fill="${color}" stroke="#131318" stroke-width="1"/>`).join('')}
-        </svg>
-      </div>
-    </div>`;
-}
-
-function formatDate(str) {
-  if (!str) return '';
-  const [y, m, d] = str.split('-');
-  const months = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-  return `${d} ${months[parseInt(m)-1]} ${y}`;
-}
-
-// ══════════════════════════════════════════
-// CALENDÁRIO / DIAS
-// ══════════════════════════════════════════
-function renderCalendar() {
-  const months = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  document.getElementById('cal-month-title').textContent = months[calMonth] + ' ' + calYear;
-  const today = new Date();
-  const firstDay = new Date(calYear, calMonth, 1).getDay();
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-
-  let html = '';
-  for (let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dateStr = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    const isToday = today.getFullYear() === calYear && today.getMonth() === calMonth && today.getDate() === d;
-    const workouts = workoutLog.filter(w => w.date === dateStr);
-    const isDone = workouts.length > 0;
-    const isMenstrual = isDateInMenstrualPeriod(dateStr);
-    const typeLabel = isDone ? workouts.map(w => w.type).join(',') : '';
-
-    let cls = 'cal-day';
-    if (isToday) cls += ' today';
-    if (isDone) cls += ' workout-done';
-    if (isMenstrual) cls += ' menstrual';
-
-    html += `<div class="${cls}" onclick="toggleDayWorkout('${dateStr}')">
-      ${d}
-      ${isDone ? `<div class="cal-day-type">${typeLabel}</div>` : (isMenstrual ? '<div class="cal-day-type">🩸</div>' : '')}
-    </div>`;
-  }
-  document.getElementById('cal-grid').innerHTML = html;
-  renderRecentList();
-  updateStreakStats();
-}
-
-function isDateInMenstrualPeriod(dateStr) {
-  // Check if date falls within 5 days of any menstrual start date
-  for (const startDate of menstrualLog) {
-    const start = new Date(startDate + 'T00:00:00');
-    const check = new Date(dateStr + 'T00:00:00');
-    const diffDays = Math.floor((check - start) / 86400000);
-    if (diffDays >= 0 && diffDays < MENSTRUAL_LENGTH) return true;
-  }
-  return false;
-}
-
-function toggleDayWorkout(dateStr) {
-  const idx = workoutLog.findIndex(w => w.date === dateStr);
-  if (idx !== -1) workoutLog.splice(idx, 1);
-  else workoutLog.push({ date: dateStr, type: '✓' });
-  renderCalendar();
-}
-
-function prevMonth() {
-  calMonth--;
-  if (calMonth < 0) { calMonth = 11; calYear--; }
-  renderCalendar();
-}
-
-function nextMonth() {
-  calMonth++;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  renderCalendar();
-}
-
-function renderRecentList() {
-  const el = document.getElementById('recent-list');
-  if (workoutLog.length === 0) {
-    el.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center;padding:16px 0">Nenhum treino salvo ainda</div>';
-    return;
-  }
-  const sorted = [...workoutLog].sort((a,b) => b.date.localeCompare(a.date)).slice(0,10);
-  const typeColors = {
-    'A': '#b57bff', 'B': '#5fd4f4', 'C': '#6de8a0', 'D': '#ff7b7b',
-    'Cardio Esteira': '#ff9d5c', 'Cardio Bike': '#ff9d5c',
-    'HIIT': '#ff9d5c', '✓': '#f5c542'
-  };
-  el.innerHTML = sorted.map((w) => {
-    const color = typeColors[w.type] || '#a09d96';
-    const origIdx = workoutLog.findIndex(x => x.date === w.date && x.type === w.type);
-    return `<div class="recent-list-item">
-      <div class="recent-date">${formatDate(w.date)}</div>
-      <span class="recent-type" style="background:${color}22;color:${color}">${w.type}</span>
-      <button class="recent-del" onclick="removeWorkoutLog(${origIdx})">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function removeWorkoutLog(idx) {
-  workoutLog.splice(idx, 1);
-  renderCalendar();
-}
-
-function updateStreakStats() {
-  const dates = [...new Set(workoutLog.map(w => w.date))].sort();
-  document.getElementById('total-treinos').textContent = workoutLog.length;
-  const thisMonthPrefix = new Date().toISOString().slice(0,7);
-  const mesCount = workoutLog.filter(w => w.date.startsWith(thisMonthPrefix)).length;
-  document.getElementById('mes-treinos').textContent = mesCount;
-  let streak = 0;
-  let checkDate = new Date();
-  for (let i = 0; i < 365; i++) {
-    const ds = checkDate.getFullYear() + '-' + String(checkDate.getMonth()+1).padStart(2,'0') + '-' + String(checkDate.getDate()).padStart(2,'0');
-    if (dates.includes(ds)) {
-      streak++;
-      checkDate.setDate(checkDate.getDate() - 1);
-    } else break;
-  }
-  document.getElementById('streak-count').textContent = streak;
-}
-
-// ══════════════════════════════════════════
-// CICLO MENSTRUAL
-// ══════════════════════════════════════════
-const CICLO_PHASES = [
-  {
-    id: 'menstrual',
-    name: 'Menstrual',
-    icon: '🩸',
-    days: '1–5',
-    daysRange: [1, 5],
-    color: '#f472b6',
-    colorDim: 'rgba(244,114,182,0.15)',
-    treino: 'Treino leve ou ativo',
-    tags: ['Yoga suave', 'Caminhada', 'Alongamento', 'Cardio leve'],
-    tip: 'Progesterona e estrogênio estão em queda. Energia mais baixa, cólicas possíveis. Priorize recuperação. Se a dor for intensa, descanse. Se estiver bem, cardio leve e alongamento são ótimos.',
-  },
-  {
-    id: 'folicular',
-    name: 'Folicular',
-    icon: '🌱',
-    days: '6–14',
-    daysRange: [6, 14],
-    color: '#6de8a0',
-    colorDim: 'rgba(109,232,160,0.15)',
-    treino: 'Força + Cardio moderado',
-    tags: ['Musculação', 'HIIT', 'Cardio', 'Cargas ↑'],
-    tip: 'O estrogênio sobe progressivamente. Energia aumenta, humor melhora, recuperação muscular é mais rápida. Ótima fase para aumentar cargas e tentar novos recordes. Seu corpo está no pico de adaptação.',
-  },
-  {
-    id: 'ovulacao',
-    name: 'Ovulação',
-    icon: '🌟',
-    days: '15–17',
-    daysRange: [15, 17],
-    color: '#f5c542',
-    colorDim: 'rgba(245,197,66,0.15)',
-    treino: 'Pico de performance',
-    tags: ['Força máxima', 'Cargas pesadas', 'PR possível', 'Alta intensidade'],
-    tip: 'Pico de estrogênio e LH. Maior força, libido elevada, humor excelente. É o melhor momento para treinos pesados e tentar novos máximos. Aproveite essa janela de 2–3 dias.',
-  },
-  {
-    id: 'luteal',
-    name: 'Lútea',
-    icon: '🌙',
-    days: '18–28',
-    daysRange: [18, 28],
-    color: '#b57bff',
-    colorDim: 'rgba(181,123,255,0.15)',
-    treino: 'Moderado → Leve',
-    tags: ['Pilates', 'Treino moderado', 'Menos HIIT', 'Hidratação ↑'],
-    tip: 'Progesterona domina. TPM pode aparecer nos últimos dias (23–28). Retenção de líquido, maior cansaço, possível queda de humor. Mantenha treinos mas reduza intensidade. Carboidratos complexos ajudam. A vontade de doce é real e fisiológica — use o petisco planejado.',
-  },
-];
-
-function getLastMenstrualDate() {
-  if (menstrualLog.length === 0) return null;
-  return [...menstrualLog].sort().reverse()[0];
-}
-
-function getCycleDay(fromDate) {
-  const last = getLastMenstrualDate();
-  if (!last) return null;
-  const start = new Date(last + 'T00:00:00');
-  const now = new Date(fromDate + 'T00:00:00');
-  const diff = Math.floor((now - start) / 86400000);
-  if (diff < 0 || diff >= CYCLE_LENGTH) return null;
-  return diff + 1; // 1-indexed
-}
-
-function getCurrentPhase(cycleDay) {
-  if (!cycleDay) return null;
-  for (const phase of CICLO_PHASES) {
-    if (cycleDay >= phase.daysRange[0] && cycleDay <= phase.daysRange[1]) return phase;
-  }
-  return null;
-}
-
-function toggleMenstrualToday() {
-  const today = getTodayStr();
-  const idx = menstrualLog.indexOf(today);
-  const btn = document.getElementById('ciclo-mark-btn');
-  if (idx !== -1) {
-    menstrualLog.splice(idx, 1);
-    btn.classList.remove('marked');
-    btn.textContent = '🩸 Marcar hoje como 1º dia da menstruação';
-  } else {
-    menstrualLog.push(today);
-    btn.classList.add('marked');
-    btn.textContent = '✓ Menstruação marcada para hoje';
-  }
-  renderCiclo();
-  renderCalendar();
-}
-
-function renderCiclo() {
-  const today = getTodayStr();
-  const todayMark = menstrualLog.includes(today);
-  const btn = document.getElementById('ciclo-mark-btn');
-  btn.classList.toggle('marked', todayMark);
-  btn.textContent = todayMark ? '✓ Menstruação marcada para hoje — toque para desmarcar' : '🩸 Marcar hoje como 1º dia da menstruação';
-
-  const cycleDay = getCycleDay(today);
-  const currentPhase = getCurrentPhase(cycleDay);
-  const infoBox = document.getElementById('ciclo-info-box');
-  const phasesList = document.getElementById('ciclo-phases-list');
-
-  if (!cycleDay) {
-    infoBox.innerHTML = `<div style="font-size:11px;color:var(--muted);text-align:center;padding:12px 0">
-      ${menstrualLog.length > 0 ? 'Nenhum ciclo ativo agora. Marque o 1º dia do próximo período quando chegar.' : 'Marque o 1º dia da menstruação para ver as fases do seu ciclo e dicas de treino personalizadas.'}
-    </div>`;
-  } else {
-    const daysLeft = CYCLE_LENGTH - cycleDay + 1;
-    const nextPeriodDays = CYCLE_LENGTH - cycleDay + 1;
-    infoBox.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <div style="font-size:32px">${currentPhase ? currentPhase.icon : '📅'}</div>
-        <div>
-          <div style="font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">Ciclo Atual</div>
-          <span class="ciclo-day-badge" style="background:${currentPhase ? currentPhase.colorDim : 'var(--surface2)'};color:${currentPhase ? currentPhase.color : 'var(--text2)'}">Dia ${cycleDay} de ${CYCLE_LENGTH} · Fase ${currentPhase ? currentPhase.name : 'Desconhecida'}</span>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:10px">${currentPhase ? currentPhase.tip : ''}</div>
-      <div class="ciclo-cycle-bar">
-        ${CICLO_PHASES.map(p => `<div class="ciclo-bar-seg ${currentPhase && currentPhase.id === p.id ? 'active' : 'inactive'}" style="background:${p.color};flex:${p.daysRange[1]-p.daysRange[0]+1}"></div>`).join('')}
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:3px">
-        ${CICLO_PHASES.map(p => `<span>${p.name}</span>`).join('')}
-      </div>
-      <div style="margin-top:10px;font-size:11px;color:var(--muted)">
-        Próxima menstruação estimada: <b style="color:var(--text2)">em ~${nextPeriodDays} dias</b>
-      </div>`;
-  }
-
-  // Phase cards
-  phasesList.innerHTML = CICLO_PHASES.map(phase => {
-    const isActive = currentPhase && currentPhase.id === phase.id;
-    return `
-      <div class="ciclo-phase-card ${isActive ? 'ciclo-phase-active' : ''}" style="${isActive ? `border-color:${phase.color};background:${phase.colorDim}` : ''}">
-        <div class="ciclo-phase-header">
-          <div class="ciclo-phase-icon">${phase.icon}</div>
-          <div class="ciclo-phase-name" style="${isActive ? `color:${phase.color}` : ''}">${phase.name}</div>
-          <div class="ciclo-phase-days">Dias ${phase.days}</div>
-        </div>
-        <div style="font-size:11px;color:var(--text2);line-height:1.4;margin-bottom:6px">${phase.treino}</div>
-        <div class="ciclo-tip-row">
-          ${phase.tags.map(t => `<span class="ciclo-tip-tag" style="background:${phase.color}22;color:${phase.color}">${t}</span>`).join('')}
-        </div>
-        ${isActive ? `<div style="margin-top:10px;font-size:11px;color:${phase.color};font-weight:600;background:${phase.colorDim};padding:8px 10px;border-radius:8px;border-left:2px solid ${phase.color}">
-          📍 Você está aqui — Dia ${cycleDay}
-        </div>` : ''}
-      </div>`;
-  }).join('');
-
-  // History
-  renderCicloHistory();
-}
-
-function renderCicloHistory() {
-  const el = document.getElementById('ciclo-history-list');
-  if (menstrualLog.length === 0) {
-    el.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center;padding:12px 0">Nenhum ciclo registrado</div>';
-    return;
-  }
-  const sorted = [...menstrualLog].sort().reverse();
-  el.innerHTML = sorted.map((date, i) => {
-    const next = sorted[i - 1]; // the previous (more recent) entry... wait, sorted desc
-    const prev = sorted[i + 1]; // older entry
-    let cycleLen = '';
-    if (prev) {
-      const d1 = new Date(date + 'T00:00:00');
-      const d2 = new Date(prev + 'T00:00:00');
-      const len = Math.floor((d1 - d2) / 86400000);
-      if (len > 0 && len < 60) cycleLen = `<span style="font-size:10px;color:var(--muted);margin-left:6px">ciclo ${len}d</span>`;
-    }
-    return `<div class="recent-list-item">
-      <div class="recent-date">${formatDate(date)}</div>
-      <div style="display:flex;align-items:center">
-        <span class="recent-type" style="background:var(--pink-dim);color:var(--pink)">🩸 Início</span>
-        ${cycleLen}
-      </div>
-      <button class="recent-del" onclick="removeMenstrual(${sorted.length - 1 - i})">✕</button>
-    </div>`;
-  }).join('');
-}
-
-function removeMenstrual(idx) {
-  menstrualLog.splice(idx, 1);
-  renderCiclo();
-  renderCalendar();
-}
-
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  buildSeriesTrackers();
-  ['cafe','almoco','lanche','janta'].forEach(k => renderMeal(k));
-  renderBeliscos();
-  selectedCargaDay = 'A';
-  renderCargaCharts();
-  calYear = new Date().getFullYear();
-  calMonth = new Date().getMonth();
-  renderCalendar();
-  renderCiclo();
-
-  // Style first active meal buttons
-  const mealColors = ['#f5c542','#6de8a0','#b57bff','#5fd4f4'];
-  document.querySelectorAll('.meal-selector').forEach((sel, i) => {
-    const firstBtn = sel.querySelector('.meal-opt-btn.active');
-    if (firstBtn) {
-      firstBtn.style.background = mealColors[i];
-      firstBtn.style.borderColor = mealColors[i];
-      firstBtn.style.color = '#0c0c10';
-    }
-  });
 });
 
-// Prevent double-tap zoom
-document.addEventListener('touchend', e => { e.preventDefault(); }, { passive: false });
+function addRetroEntry(){
+  const date=document.getElementById('retro-date').value;
+  if(!date){showToast('Selecione uma data');return;}
+  const typeVal=document.getElementById('retro-type').value;
+  let type,day=null;
+  if(typeVal.startsWith('musculacao')){type='musculacao';day=typeVal.split('-')[1];}
+  else if(typeVal==='menstruation'){type='menstruation';}
+  else{type=typeVal;}
+  const kcal=type==='pilates'?parseInt(document.getElementById('retro-pilates-kcal').value)||180:undefined;
+  const duration=type==='pilates'?parseInt(document.getElementById('retro-pilates-dur').value)||50:undefined;
+  const idx=wh.findIndex(w=>w.date===date&&w.type===type&&(day?w.day===day:true));
+  if(idx>-1)wh.splice(idx,1);
+  const ph=getCurrentPhase();
+  wh.push({date,type,day,loads:{},completed:1,total:1,phase:ph?.phase||null,kcal,duration,retroactive:true});
+  save();showToast('Adicionado: '+date+' ✅');
+  renderCalendar();
+}
+
+function deleteEntry(idx){
+  if(!confirm('Excluir este registro?'))return;
+  wh.splice(idx,1);save();renderCalendar();showToast('Removido ✓');
+}
+
+// ════════════════════════════════════════════
+// PILATES MODAL
+// ════════════════════════════════════════════
+function openPilatesModal(){
+  document.getElementById('pilates-date').value=todayStr();
+  document.getElementById('pilates-modal').classList.remove('hidden');
+}
+function closePilatesModal(){document.getElementById('pilates-modal').classList.add('hidden');}
+function savePilates(){
+  const date=document.getElementById('pilates-date').value||todayStr();
+  const dur=parseInt(document.getElementById('pilates-duration').value)||50;
+  const kcal=parseInt(document.getElementById('pilates-kcal').value)||180;
+  const ph=getCurrentPhase();
+  const idx=wh.findIndex(w=>w.date===date&&w.type==='pilates');
+  if(idx>-1)wh.splice(idx,1);
+  wh.push({date,type:'pilates',day:null,loads:{},completed:1,total:1,duration:dur,kcal,phase:ph?.phase||null});
+  save();closePilatesModal();showToast('Pilates salvo! 🧘 '+kcal+' kcal');renderCalendar();
+}
+
+// ════════════════════════════════════════════
+// TIMER
+// ════════════════════════════════════════════
+function startTimer(secs,key){
+  if(timerIntervals[key])clearInterval(timerIntervals[key]);
+  let t=secs;updateTimerDisplay(key,t);
+  timerIntervals[key]=setInterval(()=>{t--;updateTimerDisplay(key,t);if(t<=0){clearInterval(timerIntervals[key]);const el=document.getElementById('tdisp-'+key);if(el)el.textContent='✓';}},1000);
+}
+function resetTimer(key){if(timerIntervals[key])clearInterval(timerIntervals[key]);const el=document.getElementById('tdisp-'+key);if(el)el.textContent='--:--';}
+function updateTimerDisplay(key,secs){const m=Math.floor(secs/60),s=secs%60;const el=document.getElementById('tdisp-'+key);if(el)el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+
+// ════════════════════════════════════════════
+// DIETA
+// ════════════════════════════════════════════
+function renderDieta(){
+  const keys=['cafe','almoco','lanche','janta'];
+  document.getElementById('meals-container').innerHTML=keys.map(key=>{
+    const meal=MEALS_DATA[key];
+    return`<div style="margin-bottom:14px">
+      <div class="meal-label">${meal.label}</div>
+      <div class="meal-opts" id="opts-${key}">
+        ${meal.options.map((o,i)=>`<button class="meal-opt-btn${i===0?' active':''}"
+          style="${i===0?`background:${meal.color};border-color:${meal.color};color:#0c0c10`:''}"
+          onclick="selectMealOpt('${key}',${i},this)">${o.tag}</button>`).join('')}
+      </div>
+      <div class="card" id="meal-${key}"></div>
+    </div>`;
+  }).join('');
+  keys.forEach(k=>renderMealCard(k));
+  renderBeliscos();renderPhaseBanners();
+}
+
+function renderMealCard(key){
+  const meal=MEALS_DATA[key];const opt=meal.options[selectedMeals[key]];
+  const el=document.getElementById('meal-'+key);if(!el)return;
+  const C={kcal:'#f0b429',p:'#6ee7a0',c:'#5cd8f0',g:'#f87171'};
+  let html=`<div style="border-left:3px solid ${meal.color};padding:11px 16px;border-bottom:1px solid var(--border)">
+    <div style="font-size:14px;font-weight:500;margin-bottom:1px">${opt.name}</div>
+    <div style="font-size:11px;color:var(--muted)">${opt.tag}</div></div>`;
+  opt.items.forEach(it=>{html+=`<div class="food-row"><div class="food-name">${it.name}</div><div class="food-qty">${it.qty}</div>
+    <div class="food-macros">
+      <span class="food-macro" style="color:${C.kcal};background:${C.kcal}18">kcal: ${it.kcal}</span>
+      <span class="food-macro" style="color:${C.p};background:${C.p}18">P: ${it.p}g</span>
+      <span class="food-macro" style="color:${C.c};background:${C.c}18">C: ${it.c}g</span>
+      <span class="food-macro" style="color:${C.g};background:${C.g}18">G: ${it.g}g</span>
+    </div></div>`;});
+  const tot=opt.items.reduce((a,i)=>({kcal:a.kcal+i.kcal,p:a.p+i.p,c:a.c+i.c,g:a.g+i.g}),{kcal:0,p:0,c:0,g:0});
+  html+=`<div class="meal-total">
+    <span style="color:${C.kcal}">kcal: <b>${Math.round(tot.kcal)}</b></span>
+    <span style="color:${C.p}">P: <b>${Math.round(tot.p)}g</b></span>
+    <span style="color:${C.c}">C: <b>${Math.round(tot.c)}g</b></span>
+    <span style="color:${C.g}">G: <b>${Math.round(tot.g)}g</b></span></div>`;
+  if(opt.tip)html+=`<div class="tip-block">💡 ${opt.tip}</div>`;
+  el.innerHTML=html;updateMacroSummary();
+}
+
+function selectMealOpt(key,idx,btn){
+  selectedMeals[key]=idx;const meal=MEALS_DATA[key];
+  document.querySelectorAll(`#opts-${key} .meal-opt-btn`).forEach((b,i)=>{
+    if(i===idx){b.classList.add('active');b.style.background=meal.color;b.style.borderColor=meal.color;b.style.color='#0c0c10';}
+    else{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='var(--muted)';}
+  });renderMealCard(key);
+}
+
+function updateMacroSummary(){
+  const goals={kcal:1980,p:120,c:200,g:60};const tot={kcal:0,p:0,c:0,g:0};
+  Object.keys(MEALS_DATA).forEach(key=>{const opt=MEALS_DATA[key].options[selectedMeals[key]];opt.items.forEach(it=>{tot.kcal+=it.kcal;tot.p+=it.p;tot.c+=it.c;tot.g+=it.g;});});
+  if(selectedBelisco!==null){const b=BELISCOS[selectedBelisco];tot.kcal+=b.kcal;tot.p+=b.p;tot.c+=b.c;tot.g+=b.g;}
+  [['kcal','m-kcal','mf-kcal',Math.round(tot.kcal),goals.kcal,' kcal'],
+   ['p','m-prot','mf-prot',Math.round(tot.p),goals.p,'g'],
+   ['c','m-carb','mf-carb',Math.round(tot.c),goals.c,'g'],
+   ['g','m-fat','mf-fat',Math.round(tot.g),goals.g,'g']
+  ].forEach(([,txtId,fillId,val,goal,unit])=>{
+    const pct=Math.min(100,Math.round((val/goal)*100));
+    const el=document.getElementById(txtId),fl=document.getElementById(fillId);
+    if(el)el.textContent=val+' / '+goal+unit;if(fl)fl.style.width=pct+'%';
+  });
+}
+
+function renderBeliscos(){
+  const el=document.getElementById('belisco-list');if(!el)return;
+  const C={kcal:'#f0b429',p:'#6ee7a0',c:'#5cd8f0',g:'#f87171'};
+  el.innerHTML=BELISCOS.map((b,i)=>`<div class="belisco-card ${selectedBelisco===i?'sel':''}" onclick="toggleBelisco(${i})">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+      <div><div style="font-size:14px;font-weight:500;margin-bottom:2px">${b.emoji} ${b.name}</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${b.qty}</div>
+        <div style="font-size:11px;color:var(--subtle);line-height:1.4">${b.tip}</div></div>
+      <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex-shrink:0">
+        ${[['kcal',b.kcal,'kcal'],['p',b.p+'g','P'],['c',b.c+'g','C'],['g',b.g+'g','G']].map(([k,v,l])=>
+          `<span style="font-size:10px;color:${C[k]};background:${C[k]}18;padding:2px 6px;border-radius:4px">${l}: ${v}</span>`).join('')}
+      </div>
+    </div>${selectedBelisco===i?'<div class="belisco-badge">✓ Incluído nos macros</div>':''}
+  </div>`).join('');
+}
+function toggleBelisco(i){selectedBelisco=selectedBelisco===i?null:i;renderBeliscos();updateMacroSummary();}
+
+// ════════════════════════════════════════════
+// EVOLUÇÃO
+// ════════════════════════════════════════════
+function filterChartDay(day,btn){
+  currentChartDay=day;currentChartEx=null;
+  document.querySelectorAll('.chart-ex-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderExSelector();
+}
+function renderExSelector(){
+  const sel=document.getElementById('ex-selector');
+  sel.innerHTML=EXERCISES[currentChartDay].map(ex=>
+    `<button class="chart-ex-btn ${currentChartEx===ex.id?'active':''}" onclick="selectChartEx('${ex.id}',this)">${ex.name.split('(')[0].trim()}</button>`).join('');
+  renderChart();
+}
+function selectChartEx(id,btn){
+  currentChartEx=id;
+  document.querySelectorAll('#ex-selector .chart-ex-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderChart();
+}
+function renderChart(){
+  const empty=document.getElementById('chart-empty'),canvas=document.getElementById('loadChart'),statsGrid=document.getElementById('stats-grid'),titleEl=document.getElementById('chart-title');
+  if(!currentChartEx){empty.style.display='block';empty.textContent='Selecione um exercício acima';canvas.style.display='none';statsGrid.style.display='none';titleEl.textContent='—';return;}
+  const exName=EXERCISES[currentChartDay].find(e=>e.id===currentChartEx)?.name||'';
+  titleEl.textContent=exName.split('(')[0].trim();
+  const points=wh.filter(w=>w.day===currentChartDay&&w.loads&&w.loads[currentChartEx]!==undefined)
+    .map(w=>({date:w.date,load:w.loads[currentChartEx],phase:w.phase}))
+    .sort((a,b)=>a.date.localeCompare(b.date));
+  if(points.length<2){empty.style.display='block';empty.textContent=points.length===0?'Nenhum dado. Salve treinos com cargas preenchidas.':'Salve mais 1 treino para ver o gráfico.';canvas.style.display='none';statsGrid.style.display='none';return;}
+  empty.style.display='none';canvas.style.display='block';statsGrid.style.display='grid';
+  const phaseColors={menstruacao:'#f87171',folicular:'#6ee7a0',ovulacao:'#f0b429',lutea:'#b97ff8'};
+  const labels=points.map(p=>{const[y,m,d]=p.date.split('-');return d+'/'+m;});
+  const data=points.map(p=>p.load);
+  const ptColors=points.map(p=>phaseColors[p.phase]||'#f0b429');
+  if(loadChart)loadChart.destroy();
+  loadChart=new Chart(canvas,{type:'line',data:{labels,datasets:[{data,borderColor:'#f0b429',backgroundColor:'rgba(240,180,41,0.08)',borderWidth:2,pointBackgroundColor:ptColors,pointBorderColor:ptColors,pointRadius:6,pointHoverRadius:8,tension:0.3,fill:true}]},
+    options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const ph=points[ctx.dataIndex]?.phase;return ctx.parsed.y+'kg'+(ph?' · '+(PHASE_INFO[ph]?.name||''):'');}}}},
+    scales:{x:{ticks:{color:'#5a5a70',font:{size:10}},grid:{color:'#24242f'}},y:{ticks:{color:'#5a5a70',font:{size:10},callback:v=>v+'kg'},grid:{color:'#24242f'}}}}});
+  const max=Math.max(...data),first=data[0],gain=(max-first).toFixed(1);
+  document.getElementById('stat-max').textContent=max+'kg';
+  document.getElementById('stat-first').textContent=first+'kg';
+  document.getElementById('stat-gain').textContent=(gain>=0?'+':'')+gain+'kg';
+  document.getElementById('stat-sessions').textContent=points.length;
+}
+function renderEvolution(){renderExSelector();}
+
+// ════════════════════════════════════════════
+// CALENDÁRIO
+// ════════════════════════════════════════════
+function renderCalendar(){
+  const now=new Date();
+  if(calYear===undefined){calYear=now.getFullYear();calMonth=now.getMonth();}
+  const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('cal-month-title').textContent=months[calMonth]+' '+calYear;
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const todayKey=todayStr();
+  const dayMap={};
+  wh.forEach(w=>{if(!dayMap[w.date])dayMap[w.date]=w;});
+  const cells=document.getElementById('cal-cells');
+  let html='';
+  for(let i=0;i<firstDay;i++)html+='<div class="cal-cell empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const key=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const entry=dayMap[key];const type=entry?.type||'';const isToday=key===todayKey;
+    const sub=type==='musculacao'&&entry?.day?entry.day:'';
+    html+=`<div class="cal-cell ${type} ${isToday?'today':''}">${d}${sub?`<div class="cal-cell-sub">${sub}</div>`:''}`;
+    html+='</div>';
+  }
+  cells.innerHTML=html;
+  const prefix=calYear+'-'+String(calMonth+1).padStart(2,'0');
+  const me=wh.filter(w=>w.date.startsWith(prefix));
+  const musc=me.filter(w=>w.type==='musculacao').length;
+  const card=me.filter(w=>w.type==='cardio').length;
+  const pila=me.filter(w=>w.type==='pilates').length;
+  document.getElementById('cal-total').textContent=musc+card+pila;
+  document.getElementById('cal-musc').textContent=musc;
+  document.getElementById('cal-cardio').textContent=card;
+  document.getElementById('cal-pilates').textContent=pila;
+  const histEl=document.getElementById('history-list');
+  const sorted=[...wh].map((w,i)=>({...w,_idx:i})).sort((a,b)=>b.date.localeCompare(a.date));
+  if(sorted.length===0){histEl.innerHTML='<div class="chart-empty">Nenhum registro ainda</div>';return;}
+  const typeColors={musculacao:'var(--purple)',cardio:'var(--orange)',pilates:'var(--gold)',descanso:'var(--muted)',menstruation:'var(--red)'};
+  const typeLabels={musculacao:'Musculação',cardio:'Cardio',pilates:'Pilates',descanso:'Descanso',menstruation:'Menstruação'};
+  histEl.innerHTML=sorted.map(w=>{
+    const[y,m,d]=w.date.split('-');
+    const ph=w.phase?PHASE_INFO[w.phase]:null;
+    return`<div class="history-item">
+      <div class="history-dot" style="background:${typeColors[w.type]||'var(--muted)'}"></div>
+      <div style="flex:1">
+        <div class="history-type">${typeLabels[w.type]||w.type}${w.day?' · Treino '+w.day:''}${w.retroactive?' <span style="font-size:10px;color:var(--muted)">(retroativo)</span>':''}</div>
+        <div class="history-detail">${w.type==='musculacao'?w.completed+'/'+w.total+' exercícios':''}${w.kcal?' · '+w.kcal+' kcal':''}${w.duration?' · '+w.duration+' min':''}${ph?' · '+ph.emoji+' '+ph.name:''}</div>
+      </div>
+      <div class="history-date">${d}/${m}/${y.slice(2)}</div>
+      <button class="del-btn" onclick="deleteEntry(${w._idx})">✕</button>
+    </div>`;
+  }).join('');
+}
+function changeMonth(dir){calMonth+=dir;if(calMonth<0){calMonth=11;calYear--;}if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+
+// ════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════
+function todayStr(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('treino-date').value=todayStr();
+  document.getElementById('cardio-date').value=todayStr();
+  document.getElementById('retro-date').value=todayStr();
+  renderExercises();
+  renderDieta();
+  renderExSelector();
+  renderCalendar();
+  renderPhaseBanners();
+  renderCycleScreen();
+  if(cycleConfig)loadCycleForm();
+});
 </script>
 </body>
 </html>
