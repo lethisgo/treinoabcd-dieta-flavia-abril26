@@ -226,8 +226,12 @@ h1,h2,h3{font-family:'Instrument Serif',serif;font-weight:400;}
   <!-- Retroactive date selector -->
   <div class="retro-section">
     <div class="retro-title">📅 Salvando para qual data?</div>
-    <div class="field-group" style="margin-bottom:0">
+    <div class="field-group" style="margin-bottom:10px">
       <input type="date" class="field-input" id="treino-date" style="font-size:14px">
+    </div>
+    <div class="field-group" style="margin-bottom:0">
+      <div class="field-label">🔥 Calorias queimadas (kcal) — opcional</div>
+      <input type="number" class="field-input" id="treino-kcal" placeholder="ex: 320" min="0" max="2000" style="font-size:14px">
     </div>
   </div>
 
@@ -443,7 +447,7 @@ h1,h2,h3{font-family:'Instrument Serif',serif;font-weight:400;}
     <p class="modal-sub">Adicione os dados da sessão</p>
     <div class="field-group"><div class="field-label">Data</div><input type="date" class="field-input" id="pilates-date"></div>
     <div class="field-group"><div class="field-label">Duração (minutos)</div><input type="number" class="field-input" id="pilates-duration" value="50" min="10" max="120"></div>
-    <div class="field-group"><div class="field-label">Calorias estimadas (kcal)</div><input type="number" class="field-input" id="pilates-kcal" value="180" min="50" max="600"></div>
+    <div class="field-group"><div class="field-label">🔥 Calorias queimadas (kcal)</div><input type="number" class="field-input" id="pilates-kcal" value="180" min="50" max="600"></div>
     <div class="field-group"><div class="field-label">Tipo</div>
       <select class="field-input" id="pilates-type">
         <option value="pilates">Pilates solo (tapete)</option>
@@ -790,13 +794,16 @@ function saveWorkout(day){
   EXERCISES[day].forEach(ex=>{const inp=document.getElementById('load-'+ex.id);if(inp&&inp.value)loads[ex.id]=parseFloat(inp.value);});
   const ph=getCurrentPhase();const bl=getCurrentBlock();
   const date=getSelectedDate('treino-date');
+  const kcalInput=document.getElementById('treino-kcal');
+  const kcal=kcalInput&&kcalInput.value?parseInt(kcalInput.value):undefined;
   const idx=wh.findIndex(w=>w.date===date&&w.type==='musculacao'&&w.day===day);
   if(idx>-1)wh.splice(idx,1);
-  wh.push({date,type:'musculacao',day,loads,completed:checkCounts[day],total:EXERCISES[day].length,phase:ph?.phase||null,block:bl?.label||null});
+  wh.push({date,type:'musculacao',day,loads,completed:checkCounts[day],total:EXERCISES[day].length,phase:ph?.phase||null,block:bl?.label||null,kcal});
   save();showToast('Treino '+day+' salvo! 💪');
   checkCounts[day]=0;
   document.getElementById('prog-'+day).textContent='0 / '+EXERCISES[day].length;
   document.getElementById('fill-'+day).style.width='0%';
+  if(kcalInput)kcalInput.value='';
   document.querySelectorAll('#pane-'+day+' .ex-check').forEach(c=>{c.classList.remove('done');c.textContent='';});
 }
 
